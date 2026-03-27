@@ -187,7 +187,7 @@
         <div id="quickCarTab" class="tab-content">
             <div class="search-wrapper">
                 <i class="fas fa-search search-icon"></i>
-                <input type="number" id="quickCarSearch" placeholder="أدخل رقم العجلة للفحص..." onkeyup="if(event.key === 'Enter') runQuickCarSearch()">
+                <input type="text" inputmode="search" id="quickCarSearch" placeholder="أدخل رقم العجلة للفحص..." onkeyup="if(event.key === 'Enter') runQuickCarSearch()">
             </div>
             <button class="btn-search" onclick="runQuickCarSearch()" id="btnSearchQuick"><i class="fas fa-search"></i> بحث في السجلات</button>
             <div id="quickCarResult"></div>
@@ -207,7 +207,7 @@
             <div id="secureSearchSection" style="display: none;">
                 <div class="search-wrapper">
                     <i class="fas fa-search search-icon"></i>
-                    <input type="number" id="secureCarSearch" placeholder="أدخل رقم العجلة لعرض التفاصيل..." onkeyup="if(event.key === 'Enter') runSecureCarSearch()">
+                    <input type="text" inputmode="search" id="secureCarSearch" placeholder="أدخل رقم العجلة لعرض التفاصيل..." onkeyup="if(event.key === 'Enter') runSecureCarSearch()">
                 </div>
                 <button class="btn-search" onclick="runSecureCarSearch()" id="btnSearchSecure"><i class="fas fa-search"></i> عرض التفاصيل</button>
                 <div id="secureCarResult"></div>
@@ -468,7 +468,15 @@
             const resultDiv = document.getElementById('quickCarResult');
             if(!query) { resultDiv.innerHTML = ''; return; }
 
-            const found = carDb.find(car => car.plate === query);
+            // التحقق من وجود ملف cars.js بشكل سليم
+            if (typeof carDb === 'undefined') {
+                const msg = currentLang === 'ar' ? "⚠️ عذراً، ملف السيارات (cars.js) غير متصل. تأكد من اسم الملف أو انتظر تحديث السيرفر." : "⚠️ Error: cars.js file is missing or still loading.";
+                resultDiv.innerHTML = `<div class="result-box notfound-box" style="font-size:1rem; text-align:right;"><i class="fas fa-exclamation-triangle"></i> ${msg}</div>`;
+                return;
+            }
+
+            // البحث بالمطابقة (يقبل حروف وأرقام)
+            const found = carDb.find(car => car.plate == query);
             
             if(found) {
                 const msg = currentLang === 'ar' ? "مسموح بالدخول" : "Entry Allowed";
@@ -482,7 +490,7 @@
         // تسجيل الدخول للاستعلام الأمني
         function checkPassword() {
             const pass = document.getElementById('passInput').value;
-            // الرمز السري تم تحديثه هنا
+            // الرمز السري تم تحديثه هنا حسب طلبك
             if(pass === "cctvHMY") { 
                 document.getElementById('authSection').style.display = 'none';
                 document.getElementById('secureSearchSection').style.display = 'block';
@@ -497,7 +505,15 @@
             const resultDiv = document.getElementById('secureCarResult');
             if(!query) { resultDiv.innerHTML = ''; return; }
 
-            const found = carDb.find(car => car.plate === query);
+            // التحقق من وجود ملف cars.js بشكل سليم
+            if (typeof carDb === 'undefined') {
+                const msg = currentLang === 'ar' ? "⚠️ عذراً، ملف السيارات (cars.js) غير متصل. تأكد من اسم الملف أو انتظر تحديث السيرفر." : "⚠️ Error: cars.js file is missing or still loading.";
+                resultDiv.innerHTML = `<div class="result-box notfound-box" style="font-size:1rem; text-align:right;"><i class="fas fa-exclamation-triangle"></i> ${msg}</div>`;
+                return;
+            }
+
+            // البحث بالمطابقة
+            const found = carDb.find(car => car.plate == query);
             
             if(found) {
                 const title = currentLang === 'ar' ? "تفاصيل العجلة المكتشفة" : "Vehicle Details";
