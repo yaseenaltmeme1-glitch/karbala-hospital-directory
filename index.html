@@ -75,7 +75,7 @@
         .tab-content { display: none; animation: slideUp 0.4s ease-out; }
         .tab-content.active { display: block; }
 
-        .search-wrapper { position: relative; margin-bottom: 15px; margin-top: 15px;}
+        .search-wrapper { position: relative; margin-bottom: 5px; margin-top: 15px;}
         .search-wrapper input {
             width: 100%; padding: 14px 45px 14px 15px; border: 2px solid #e0e6ed; border-radius: 12px;
             font-family: inherit; font-size: 1rem; box-sizing: border-box; transition: 0.3s;
@@ -85,6 +85,14 @@
         html[dir="rtl"] .search-icon { right: 15px; left: auto; }
         html[dir="ltr"] .search-icon { left: 15px; right: auto; }
         html[dir="ltr"] .search-wrapper input { padding: 14px 15px 14px 45px; }
+
+        /* زر البحث الجديد */
+        .btn-search {
+            background: var(--secondary-color); color: white; border: none; padding: 12px;
+            border-radius: 12px; font-family: inherit; font-size: 1rem; font-weight: bold;
+            cursor: pointer; width: 100%; margin-top: 5px; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,124,119,0.2);
+        }
+        .btn-search:hover { background: var(--primary-color); transform: translateY(-2px); }
 
         .main-content { max-width: 800px; margin: 20px auto; padding: 0 15px; }
 
@@ -179,8 +187,9 @@
         <div id="quickCarTab" class="tab-content">
             <div class="search-wrapper">
                 <i class="fas fa-search search-icon"></i>
-                <input type="number" id="quickCarSearch" placeholder="أدخل رقم العجلة للفحص..." onkeyup="runQuickCarSearch()">
+                <input type="number" id="quickCarSearch" placeholder="أدخل رقم العجلة للفحص..." onkeyup="if(event.key === 'Enter') runQuickCarSearch()">
             </div>
+            <button class="btn-search" onclick="runQuickCarSearch()" id="btnSearchQuick"><i class="fas fa-search"></i> بحث في السجلات</button>
             <div id="quickCarResult"></div>
         </div>
 
@@ -189,7 +198,7 @@
                 <i class="fas fa-user-shield" style="font-size:3rem; color:var(--primary-color); margin-bottom:15px;"></i>
                 <h3 id="authTitle" style="color:var(--text-main); margin-top:0;">سجل العجلات السري</h3>
                 <div class="search-wrapper" style="margin-bottom:15px;">
-                    <input type="password" id="passInput" placeholder="أدخل رمز المرور..." style="text-align: center;">
+                    <input type="password" id="passInput" placeholder="أدخل رمز المرور..." style="text-align: center;" onkeyup="if(event.key === 'Enter') checkPassword()">
                 </div>
                 <button class="lang-btn" style="width:100%; background:var(--primary-color); color:white; padding:10px; border-radius:12px;" onclick="checkPassword()" id="authBtn">تسجيل الدخول</button>
                 <p id="authError" style="color: red; display: none; margin-top: 10px; font-weight: bold;">الرمز غير صحيح ❌</p>
@@ -198,8 +207,9 @@
             <div id="secureSearchSection" style="display: none;">
                 <div class="search-wrapper">
                     <i class="fas fa-search search-icon"></i>
-                    <input type="number" id="secureCarSearch" placeholder="أدخل رقم العجلة لعرض التفاصيل..." onkeyup="runSecureCarSearch()">
+                    <input type="number" id="secureCarSearch" placeholder="أدخل رقم العجلة لعرض التفاصيل..." onkeyup="if(event.key === 'Enter') runSecureCarSearch()">
                 </div>
+                <button class="btn-search" onclick="runSecureCarSearch()" id="btnSearchSecure"><i class="fas fa-search"></i> عرض التفاصيل</button>
                 <div id="secureCarResult"></div>
             </div>
         </div>
@@ -357,7 +367,8 @@
                 modalP2: "<strong>للآندرويد (Chrome):</strong> اضغط على الثلاث نقاط بالأعلى ⋮ ثم اختر 'إضافة إلى الشاشة الرئيسية'.", modalBtn: "فهمت / Got it",
                 tabPhone: "دليل الهواتف", tabQuick: "فحص العجلات", tabSecure: "استعلام أمني",
                 searchCarQuick: "أدخل رقم العجلة للفحص...", searchCarSecure: "أدخل رقم العجلة لعرض التفاصيل...",
-                authTitle: "سجل العجلات السري", passHolder: "أدخل رمز المرور...", authBtn: "تسجيل الدخول", authErr: "الرمز غير صحيح ❌"
+                authTitle: "سجل العجلات السري", passHolder: "أدخل رمز المرور...", authBtn: "تسجيل الدخول", authErr: "الرمز غير صحيح ❌",
+                btnSearchQuick: "بحث في السجلات", btnSearchSecure: "عرض التفاصيل"
             },
             en: {
                 langBtn: "عربي", title: "Imam Al-Hassan Hospital", sub: "Central Directory",
@@ -367,7 +378,8 @@
                 modalP2: "<strong>Android (Chrome):</strong> Tap the menu ⋮ above, then 'Add to Home Screen'.", modalBtn: "Understood",
                 tabPhone: "Directory", tabQuick: "Car Check", tabSecure: "Secure Search",
                 searchCarQuick: "Enter plate number for quick check...", searchCarSecure: "Enter plate number for details...",
-                authTitle: "Secure Car Registry", passHolder: "Enter Passcode...", authBtn: "Login", authErr: "Incorrect Passcode ❌"
+                authTitle: "Secure Car Registry", passHolder: "Enter Passcode...", authBtn: "Login", authErr: "Incorrect Passcode ❌",
+                btnSearchQuick: "Search Records", btnSearchSecure: "View Details"
             }
         };
 
@@ -398,6 +410,8 @@
             document.getElementById('passInput').placeholder = langData.passHolder;
             document.getElementById('authBtn').innerText = langData.authBtn;
             document.getElementById('authError').innerText = langData.authErr;
+            document.getElementById('btnSearchQuick').innerHTML = `<i class="fas fa-search"></i> ${langData.btnSearchQuick}`;
+            document.getElementById('btnSearchSecure').innerHTML = `<i class="fas fa-search"></i> ${langData.btnSearchSecure}`;
             
             smartSearch();
             if(document.getElementById('quickCarSearch').value) runQuickCarSearch();
@@ -468,8 +482,8 @@
         // تسجيل الدخول للاستعلام الأمني
         function checkPassword() {
             const pass = document.getElementById('passInput').value;
-            // الرمز السري هو 1234 - تكدر تغيره منا
-            if(pass === "1234") { 
+            // الرمز السري تم تحديثه هنا
+            if(pass === "cctvHMY") { 
                 document.getElementById('authSection').style.display = 'none';
                 document.getElementById('secureSearchSection').style.display = 'block';
             } else {
@@ -503,7 +517,7 @@
                     </div>`;
             } else {
                 const msg = currentLang === 'ar' ? "لا توجد بيانات لهذه العجلة" : "No data found for this plate";
-                resultDiv.innerHTML = `<div style="text-align:center; padding:20px; color:red; font-weight:bold;">${msg}</div>`;
+                resultDiv.innerHTML = `<div style="text-align:center; padding:20px; color:red; font-weight:bold; margin-top:15px;">${msg}</div>`;
             }
         }
 
