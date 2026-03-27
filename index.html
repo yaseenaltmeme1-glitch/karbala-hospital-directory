@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="theme-color" content="#004b49">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon.png">
+    
     <title id="pageTitle">دليل مستشفى الإمام الحسن المجتبى (ع)</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -163,7 +168,6 @@
     <div id="toast" class="toast"><i class="fas fa-check-circle"></i> <span id="toastText">تم نسخ الرقم بنجاح</span></div>
 
     <script>
-        // البيانات باللغتين
         const db = [
             {ar: "استعلامات الادارة", en: "Administration Reception", ext: "1025"},
             {ar: "الاستعلامات الرئيسية", en: "Main Reception", ext: "0319"},
@@ -364,7 +368,6 @@
             const searchWords = query.split(' ').filter(word => word.length > 0);
 
             const filteredData = db.filter(item => {
-                // البحث يشمل اللغتين والرقم دائماً
                 const textToSearch = `${item.ar} ${item.en} ${item.ext}`.toLowerCase();
                 return searchWords.every(word => textToSearch.includes(word));
             });
