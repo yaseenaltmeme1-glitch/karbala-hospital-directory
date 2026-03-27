@@ -3,229 +3,560 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <meta name="theme-color" content="#004b49">
-    <title>دليل مستشفى الإمام الحسن المجتبى (ع)</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon.png">
+    
+    <title id="pageTitle">دليل مستشفى الإمام الحسن المجتبى (ع)</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
-        :root { --primary: #004b49; --secondary: #007c77; --bg: #f8f9fa; --card: #ffffff; --text: #2c3e50; --muted: #7f8c8d; --gold: #d4af37; }
-        body { margin: 0; padding: 0; background-color: var(--bg); color: var(--text); font-family: 'Cairo', sans-serif; padding-bottom: 70px; }
-        
-        .header-container { position: sticky; top: 0; background: white; z-index: 1000; padding: 15px 20px 0; border-bottom: 3px solid var(--primary); }
-        .tabs { display: flex; justify-content: space-around; margin-top: 10px; border-top: 1px solid #eee; }
-        .tab-btn { background: none; border: none; font-family: inherit; font-size: 0.8rem; font-weight: bold; color: var(--muted); padding: 12px 5px; cursor: pointer; flex: 1; border-bottom: 3px solid transparent; }
-        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
-        .tab-content { display: none; padding: 15px; animation: fadeIn 0.4s; }
+
+        :root {
+            --primary-color: #004b49; --secondary-color: #007c77;
+            --bg-color: #f8f9fa; --card-bg: #ffffff;
+            --text-main: #2c3e50; --text-muted: #7f8c8d; --gold-accent: #d4af37; 
+        }
+
+        body {
+            margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-main);
+            font-family: 'Cairo', sans-serif; padding-bottom: 60px; transition: all 0.3s ease;
+        }
+
+        /* نافذة التعليمات */
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px);
+            z-index: 9999; display: flex; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: 0.3s;
+        }
+        .overlay.show { opacity: 1; visibility: visible; }
+        .install-box {
+            background: white; width: 90%; max-width: 400px; padding: 25px;
+            border-radius: 15px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transform: translateY(20px); transition: 0.3s;
+        }
+        .overlay.show .install-box { transform: translateY(0); }
+        .install-box i { font-size: 3rem; color: var(--primary-color); margin-bottom: 15px; }
+        .install-box h2 { margin: 0 0 10px 0; color: var(--primary-color); font-size: 1.4rem; }
+        .install-box p { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 15px; line-height: 1.6; }
+        .install-box .btn-gotit {
+            background: var(--primary-color); color: white; border: none; padding: 10px 25px;
+            border-radius: 20px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.3s;
+        }
+
+        /* الهيدر */
+        .header-container {
+            position: sticky; top: 0; background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px); box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            z-index: 1000; padding: 15px 20px 0; border-bottom: 3px solid var(--primary-color);
+        }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .animated-icons { display: flex; gap: 15px; color: var(--secondary-color); font-size: 1.2rem; }
+        .animated-icons i { animation: bounceIcon 2s infinite ease-in-out; }
+        .animated-icons i:nth-child(2) { animation-delay: 0.3s; color: #e74c3c; animation: pulseHeart 1.5s infinite; }
+        .lang-btn {
+            background: var(--card-bg); border: 1px solid var(--primary-color); color: var(--primary-color);
+            padding: 5px 15px; border-radius: 15px; font-weight: bold; cursor: pointer; transition: 0.3s;
+        }
+        .lang-btn:hover { background: var(--primary-color); color: white; }
+
+        .hospital-title { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .hospital-logo { width: 45px; height: 45px; border-radius: 50%; background: var(--primary-color); color: white; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; }
+        .title-text h1 { margin: 0; font-size: 1.2rem; font-weight: 900; color: var(--primary-color); }
+        .title-text p { margin: 0; font-size: 0.8rem; color: var(--gold-accent); font-weight: 700; }
+
+        /* التبويبات */
+        .tabs { display: flex; justify-content: space-around; border-top: 1px solid #eee; padding-top: 10px; }
+        .tab-btn { background: none; border: none; font-family: inherit; font-size: 0.9rem; font-weight: bold; color: var(--text-muted); padding: 10px; cursor: pointer; border-bottom: 3px solid transparent; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 5px; flex: 1; }
+        .tab-btn i { font-size: 1.2rem; }
+        .tab-btn.active { color: var(--primary-color); border-bottom: 3px solid var(--primary-color); }
+        .tab-content { display: none; animation: slideUp 0.4s ease-out; }
         .tab-content.active { display: block; }
 
-        .search-wrapper { position: relative; margin: 15px 0; }
-        .search-wrapper input { width: 100%; padding: 14px 15px; border: 2px solid #e0e6ed; border-radius: 12px; font-family: inherit; font-size: 1rem; box-sizing: border-box; }
+        .search-wrapper { position: relative; margin-bottom: 5px; margin-top: 15px;}
+        .search-wrapper input {
+            width: 100%; padding: 14px 45px 14px 15px; border: 2px solid #e0e6ed; border-radius: 12px;
+            font-family: inherit; font-size: 1rem; box-sizing: border-box; transition: 0.3s;
+        }
+        .search-wrapper input:focus { border-color: var(--secondary-color); outline: none; }
+        .search-icon { position: absolute; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1.2rem; }
+        html[dir="rtl"] .search-icon { right: 15px; left: auto; }
+        html[dir="ltr"] .search-icon { left: 15px; right: auto; }
+        html[dir="ltr"] .search-wrapper input { padding: 14px 15px 14px 45px; }
+
+        /* زر البحث الجديد */
+        .btn-search {
+            background: var(--secondary-color); color: white; border: none; padding: 12px;
+            border-radius: 12px; font-family: inherit; font-size: 1rem; font-weight: bold;
+            cursor: pointer; width: 100%; margin-top: 5px; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,124,119,0.2);
+        }
+        .btn-search:hover { background: var(--primary-color); transform: translateY(-2px); }
+
+        .main-content { max-width: 800px; margin: 20px auto; padding: 0 15px; }
+
+        .card {
+            background: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 15px;
+            display: flex; justify-content: space-between; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            border: 1px solid #f0f0f0; border-right: 5px solid var(--primary-color); transition: 0.3s ease; animation: slideUp 0.5s ease-out;
+        }
+        html[dir="ltr"] .card { border-right: 1px solid #f0f0f0; border-left: 5px solid var(--primary-color); }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
+
+        .card-info { display: flex; align-items: center; gap: 15px; flex: 1; }
+        .card-icon { background: rgba(0, 75, 73, 0.05); color: var(--primary-color); width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; flex-shrink: 0;  }
+        .card-text h3 { margin: 0 0 5px 0; font-size: 1.1rem; color: var(--text-main); }
+        .card-text p { margin: 0; font-size: 0.85rem; color: var(--text-muted); }
+
+        .number-box { background: var(--primary-color); color: white; padding: 8px 20px; border-radius: 8px; font-size: 1.3rem; font-weight: bold; letter-spacing: 1px; cursor: pointer; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+        .number-text { direction: ltr; display: inline-block; }
+
+        /* تصميم نتائج السيارات */
+        .result-box { text-align: center; padding: 20px; border-radius: 12px; font-size: 1.2rem; font-weight: bold; margin-top: 20px; }
+        .found-box { background: #e8f8f5; color: #27ae60; border: 2px solid #27ae60; }
+        .notfound-box { background: #fdedec; color: #e74c3c; border: 2px solid #e74c3c; }
+        .auth-box { text-align: center; padding: 30px 20px; background: white; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-top:20px; }
         
-        .card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-right: 5px solid var(--primary); box-shadow: 0 3px 10px rgba(0,0,0,0.02); }
-        .number-box { background: var(--primary); color: white; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        
-        .btn-main { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .auth-container { max-width: 400px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        
-        .car-card { background: #fff; padding: 15px; border-radius: 10px; border-top: 4px solid var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .car-detail { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #eee; }
-        
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .developer-footer { position: fixed; bottom: 0; width: 100%; background: white; text-align: center; padding: 10px 0; font-size: 0.8rem; border-top: 1px solid #eee; }
+        .car-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.08); border-top: 5px solid var(--primary-color); margin-top: 15px; text-align: right;}
+        html[dir="ltr"] .car-card { text-align: left; }
+        .car-detail { display: flex; justify-content: space-between; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px dashed #eee; font-size: 0.95rem; }
+
+        .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--text-main); color: white; padding: 10px 20px; border-radius: 30px; font-size: 0.9rem; opacity: 0; transition: 0.3s; z-index: 2000; }
+        .toast.show { opacity: 1; bottom: 100px; }
+
+        .developer-footer { position: fixed; bottom: 0; width: 100%; background: white; border-top: 1px solid #eee; text-align: center; padding: 10px 0; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; z-index: 1000; }
+        .developer-footer span { color: var(--primary-color); font-weight: 900; }
+
+        @keyframes bounceIcon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        @keyframes pulseHeart { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 600px) {
+            .card { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .number-box { width: 100%; justify-content: center; box-sizing: border-box; }
+        }
     </style>
 </head>
 <body>
 
+    <div class="overlay" id="installModal">
+        <div class="install-box">
+            <i class="fas fa-mobile-alt"></i>
+            <h2 id="modalTitle">تثبيت التطبيق 📱</h2>
+            <p id="modalP1"><strong>للآيفون (Safari):</strong> اضغط على زر المشاركة بالأسفل ⍗ ثم اختر "إضافة إلى الشاشة الرئيسية".</p>
+            <p id="modalP2"><strong>للآندرويد (Chrome):</strong> اضغط على الثلاث نقاط بالأعلى ⋮ ثم اختر "إضافة إلى الشاشة الرئيسية".</p>
+            <button class="btn-gotit" onclick="closeModal()" id="modalBtn">فهمت / Got it</button>
+        </div>
+    </div>
+
     <div class="header-container">
-        <div style="display:flex; align-items:center; gap:10px; padding-bottom:10px;">
-            <div style="width:35px; height:35px; background:var(--primary); color:white; border-radius:50%; display:flex; justify-content:center; align-items:center;"><i class="fas fa-hospital"></i></div>
-            <h1 style="font-size:1.1rem; margin:0; color:var(--primary);">مستشفى الإمام الحسن (ع)</h1>
+        <div class="top-bar">
+            <div class="animated-icons">
+                <i class="fas fa-ambulance"></i>
+                <i class="fas fa-heartbeat"></i>
+                <i class="fas fa-user-md"></i>
+            </div>
+            <button class="lang-btn" onclick="toggleLanguage()"><i class="fas fa-globe"></i> <span id="langText">English</span></button>
         </div>
-        <div class="tabs">
-            <button class="tab-btn active" onclick="showTab('phones', this)"><i class="fas fa-phone"></i> الهواتف</button>
-            <button class="tab-btn" onclick="showTab('quick', this)"><i class="fas fa-car"></i> فحص سريع</button>
-            <button class="tab-btn" onclick="showTab('secure', this)"><i class="fas fa-shield-alt"></i> أمني</button>
-            <button id="adminTabBtn" class="tab-btn" onclick="showTab('admin', this)" style="display:none; color:var(--gold);"><i class="fas fa-user-crown"></i> الإدارة</button>
-        </div>
-    </div>
 
-    <div class="main-content" style="max-width: 600px; margin: auto;">
+        <div class="hospital-title">
+            <div class="hospital-logo"><i class="fas fa-hospital"></i></div>
+            <div class="title-text">
+                <h1 id="mainTitle">مستشفى الإمام الحسن المجتبى (ع)</h1>
+                <p id="subTitle">دليل الاتصالات المركزي</p>
+            </div>
+        </div>
         
-        <div id="phones" class="tab-content active">
-            <div class="search-wrapper">
-                <input type="text" id="phoneSearch" placeholder="بحث عن قسم أو رقم..." onkeyup="searchPhones()">
-            </div>
-            <div id="phoneResults"></div>
-        </div>
-
-        <div id="quick" class="tab-content">
-            <div class="search-wrapper">
-                <input type="text" id="quickInput" placeholder="أدخل رقم اللوحة...">
-            </div>
-            <button class="btn-search btn-main" onclick="checkCarQuick()">فحص العجلة</button>
-            <div id="quickRes"></div>
-        </div>
-
-        <div id="secure" class="tab-content">
-            <div id="secureAuthSection" class="auth-container">
-                <h3 style="text-align:center;">تسجيل الدخول للموظفين</h3>
-                <div id="regFields" style="display:none;">
-                    <input type="text" id="regName" placeholder="الاسم الثلاثي" style="width:100%; padding:10px; margin:5px 0;">
-                    <input type="text" id="regDept" placeholder="القسم" style="width:100%; padding:10px; margin:5px 0;">
-                </div>
-                <input type="text" id="loginUser" placeholder="اسم المستخدم" style="width:100%; padding:10px; margin:5px 0;">
-                <input type="password" id="loginPass" placeholder="كلمة المرور" style="width:100%; padding:10px; margin:5px 0;">
-                <button class="btn-main" onclick="handleAuth()">دخول</button>
-                <p id="toggleTxt" style="text-align:center; font-size:0.8rem; cursor:pointer; color:var(--muted);" onclick="toggleReg()">ليس لديك حساب؟ سجل الآن</p>
-            </div>
-
-            <div id="secureSearchSection" style="display:none;">
-                <div class="search-wrapper">
-                    <input type="text" id="secureInput" placeholder="رقم اللوحة للتفاصيل...">
-                </div>
-                <button class="btn-main" onclick="checkCarSecure()">بحث مفصل</button>
-                <div id="secureRes"></div>
-                <button onclick="logout()" style="margin-top:20px; background:none; border:none; color:red; cursor:pointer; width:100%;">تسجيل خروج</button>
-            </div>
-        </div>
-
-        <div id="admin" class="tab-content">
-            <div id="pendingUsers"></div>
-            <button class="btn-main" style="background:var(--gold);" onclick="importFromJs()">رفع بيانات cars.js للـ Database</button>
-            <div id="activityLogs" style="margin-top:20px; font-size:0.8rem;"></div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('phoneTab', this)" id="tabPhone"><i class="fas fa-phone-alt"></i> دليل الهواتف</button>
+            <button class="tab-btn" onclick="switchTab('quickCarTab', this)" id="tabQuick"><i class="fas fa-car"></i> فحص العجلات</button>
+            <button class="tab-btn" onclick="switchTab('secureCarTab', this)" id="tabSecure"><i class="fas fa-lock"></i> استعلام أمني</button>
         </div>
     </div>
 
-    <div class="developer-footer">Developed by Yaseen ALtmeme &copy; 2026</div>
+    <div class="main-content">
+        <div id="phoneTab" class="tab-content active">
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="searchInput" placeholder="ابحث عن قسم، عيادة، أو رقم الهاتف..." onkeyup="smartSearch()">
+            </div>
+            <div id="contactList"></div>
+        </div>
+
+        <div id="quickCarTab" class="tab-content">
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" inputmode="search" id="quickCarSearch" placeholder="أدخل رقم العجلة للفحص..." onkeyup="if(event.key === 'Enter') runQuickCarSearch()">
+            </div>
+            <button class="btn-search" onclick="runQuickCarSearch()" id="btnSearchQuick"><i class="fas fa-search"></i> بحث في السجلات</button>
+            <div id="quickCarResult"></div>
+        </div>
+
+        <div id="secureCarTab" class="tab-content">
+            <div id="authSection" class="auth-box">
+                <i class="fas fa-user-shield" style="font-size:3rem; color:var(--primary-color); margin-bottom:15px;"></i>
+                <h3 id="authTitle" style="color:var(--text-main); margin-top:0;">سجل العجلات السري</h3>
+                <div class="search-wrapper" style="margin-bottom:15px;">
+                    <input type="password" id="passInput" placeholder="أدخل رمز المرور..." style="text-align: center;" onkeyup="if(event.key === 'Enter') checkPassword()">
+                </div>
+                <button class="lang-btn" style="width:100%; background:var(--primary-color); color:white; padding:10px; border-radius:12px;" onclick="checkPassword()" id="authBtn">تسجيل الدخول</button>
+                <p id="authError" style="color: red; display: none; margin-top: 10px; font-weight: bold;">الرمز غير صحيح ❌</p>
+            </div>
+
+            <div id="secureSearchSection" style="display: none;">
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" inputmode="search" id="secureCarSearch" placeholder="أدخل رقم العجلة لعرض التفاصيل..." onkeyup="if(event.key === 'Enter') runSecureCarSearch()">
+                </div>
+                <button class="btn-search" onclick="runSecureCarSearch()" id="btnSearchSecure"><i class="fas fa-search"></i> عرض التفاصيل</button>
+                <div id="secureCarResult"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="developer-footer">
+        <span id="devText">System Developed & Designed by</span> <span>Yaseen ALtmeme</span> &copy; 2026
+    </div>
+
+    <div id="toast" class="toast"><i class="fas fa-check-circle"></i> <span id="toastText">تم نسخ الرقم بنجاح</span></div>
 
     <script src="cars.js"></script>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getDatabase, ref, set, get, update, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyA1Uh51j1JLdXWtunD2tj5i8ZLjHuTMxeQ",
-            authDomain: "karbala-hospital.firebaseapp.com",
-            projectId: "karbala-hospital",
-            storageBucket: "karbala-hospital.firebasestorage.app",
-            messagingSenderId: "1096505040807",
-            appId: "1:1096505040807:web:0cd4bb00f2a949b639a082"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getDatabase(app);
-
-        let userApproved = false;
-        let adminMode = false;
-        let userName = "ضيف";
-
-        // --- Tabs ---
-        window.showTab = (id, btn) => {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            btn.classList.add('active');
-        };
-
-        // --- Phone Logic ---
-        const phones = [
-            {ar: "استعلامات الادارة", ext: "1025"},
-            {ar: "الاستعلامات الرئيسية", ext: "0319"},
-            {ar: "الاشعة", ext: "0196"},
-            {ar: "الاشعة استعلامات", ext: "0248"}
+    <script>
+        const db = [
+            {ar: "استعلامات الادارة", en: "Administration Reception", ext: "1025"},
+            {ar: "الاستعلامات الرئيسية", en: "Main Reception", ext: "0319"},
+            {ar: "الاشعة", en: "Radiology", ext: "0196"},
+            {ar: "الاشعة استعلامات", en: "Radiology Reception", ext: "0248"},
+            {ar: "الاشعة ادارة", en: "Radiology Admin", ext: "0220"},
+            {ar: "الاشعة السونار", en: "Ultrasound", ext: "0064 - 0246"},
+            {ar: "الاشعة المفراس", en: "CT Scan", ext: "0245"},
+            {ar: "الاعاشة", en: "Catering", ext: "4001"},
+            {ar: "الاعلام", en: "Media Center", ext: "1004"},
+            {ar: "الاحصاء", en: "Statistics", ext: "1073"},
+            {ar: "الاسعاف الفوري", en: "Paramedics / EMS", ext: "0153"},
+            {ar: "الامنية البوابة الاولى", en: "Security Gate 1", ext: "9002"},
+            {ar: "الامنية البوابة الثانية", en: "Security Gate 2", ext: "3639"},
+            {ar: "الاورام استعلامات", en: "Oncology Reception", ext: "0311"},
+            {ar: "الاورام الصيدلية", en: "Oncology Pharmacy", ext: "0315"},
+            {ar: "الاورام الطبيب", en: "Oncology Doctor", ext: "0306 -0309"},
+            {ar: "الاورام سحب الدم", en: "Oncology Blood Draw", ext: "0304"},
+            {ar: "الاورام كبار طابق خامس", en: "Adult Oncology 5th Floor", ext: "5115 - 5057"},
+            {ar: "الاورام المعجل الخطي", en: "Oncology Linear Accelerator", ext: "0053 - 0055"},
+            {ar: "التاهيل العلاج الطبيعي", en: "Physiotherapy", ext: "0092"},
+            {ar: "التدريب والتطوير", en: "Training & Development", ext: "0214"},
+            {ar: "التذاكر والباصات", en: "Tickets & Buses", ext: "0335"},
+            {ar: "التعقيم المركزي", en: "Central Sterilization (CSSD)", ext: "1325 - 1129"},
+            {ar: "الجناح الخاص", en: "Private Ward", ext: "2806"},
+            {ar: "الجناح الخاص التمريض", en: "Private Ward Nursing", ext: "2881"},
+            {ar: "الجناح الخاص مختبر", en: "Private Ward Lab", ext: "5047"},
+            {ar: "الخدج", en: "Premature Infants (NICU)", ext: "3419"},
+            {ar: "الخدمات الفندقية", en: "Hotel Services", ext: "1019"},
+            {ar: "الديلزة", en: "Dialysis", ext: "0181"},
+            {ar: "الديلزة استعلامات", en: "Dialysis Reception", ext: "0088"},
+            {ar: "الديلزة قاعة العلاج", en: "Dialysis Treatment Hall", ext: "0093"},
+            {ar: "الديلزة الردهة", en: "Dialysis Ward", ext: "0183"},
+            {ar: "استشارية السمع والتخاطب العلاج", en: "Audiology & Speech Therapy", ext: "0100"},
+            {ar: "استشارية السمع والتخاطب تدريب النطق", en: "Speech Training Clinic", ext: "0098"},
+            {ar: "الصيانة الخافرة", en: "On-call Maintenance", ext: "1119 - 1217"},
+            {ar: "الصيانة الادارة", en: "Maintenance Admin", ext: "1125"},
+            {ar: "الصيانة غرفة المهندسين", en: "Engineers Room", ext: "1121"},
+            {ar: "الصيانة مهندس مقيم", en: "Resident Engineer", ext: "1135"},
+            {ar: "BMS", en: "Building Management System (BMS)", ext: "1331"},
+            {ar: "استشارية الاطفال سحب الدم", en: "Pediatric Blood Draw", ext: "0057"},
+            {ar: "استشارية الباطنية سحب الدم رجال", en: "Internal Med Blood Draw (Men)", ext: "0018"},
+            {ar: "استشارية الباطنية سحب الدم نساء", en: "Internal Med Blood Draw (Women)", ext: "0014"},
+            {ar: "استشارية الباطنية الايكو", en: "Internal Med ECHO", ext: "0031"},
+            {ar: "استشارية الباطنية تخطيط القلب نساء", en: "Internal Med ECG (Women)", ext: "0026"},
+            {ar: "استشارية الباطنية تخطيط القلب رجال", en: "Internal Med ECG (Men)", ext: "0028"},
+            {ar: "استشارية البولية الطبيب", en: "Urology Doctor", ext: "0276 -0267"},
+            {ar: "استشارية البولية عمليات صغرى", en: "Urology Minor Surgeries", ext: "0278"},
+            {ar: "استشارية الجلدية استعلامات", en: "Dermatology Reception", ext: "0271"},
+            {ar: "استشارية الجلدية الطبيب", en: "Dermatology Doctor", ext: "0258"},
+            {ar: "استشارية الجلدية جراحة وضماد", en: "Dermatology Surgery & Dressing", ext: "0260"},
+            {ar: "استشارية القلبية استعلامات", en: "Cardiology Reception", ext: "0296"},
+            {ar: "استشارية الكسور استعلامات", en: "Orthopedics Reception", ext: "0267"},
+            {ar: "استشارية الكسور الطبيب", en: "Orthopedics Doctor", ext: "0266"},
+            {ar: "استشارية الكسور الفحص", en: "Orthopedics Examination", ext: "0263"},
+            {ar: "استشارية النسائية", en: "Gynecology Clinic", ext: "0338"},
+            {ar: "استشارية النسائية الطبيب", en: "Gynecology Doctor", ext: "0327"},
+            {ar: "استشارية انف واذن وحنجرة استعلامات", en: "ENT Reception", ext: "0013"},
+            {ar: "استشارية انف واذن وحنجرة الطبيب", en: "ENT Doctor", ext: "0011"},
+            {ar: "استشارية جراحة الجملة العصبية الاستعلامات", en: "Neurosurgery Reception", ext: "0012"},
+            {ar: "استشارية جراحة الجملة العصبية الاستراحة", en: "Neurosurgery Lounge", ext: "1210"},
+            {ar: "استشارية جراحة الجملة العصبية الضماد", en: "Neurosurgery Dressing", ext: "1211"},
+            {ar: "استشارية جراحة الجملة العصبية الطبيب", en: "Neurosurgery Doctor", ext: "1212"},
+            {ar: "استشارية زرع الكلى الطبيب", en: "Kidney Transplant Doctor", ext: "0326"},
+            {ar: "استشارية كبار السن", en: "Geriatrics Clinic", ext: "0023"},
+            {ar: "استشارية كبار السن الطبيب", en: "Geriatrics Doctor", ext: "0020 - 0021"},
+            {ar: "الاجازات والتقارير", en: "Leaves & Medical Reports", ext: "0257"},
+            {ar: "الناظور المسؤول", en: "Endoscopy In-Charge", ext: "1340 - 1341"},
+            {ar: "الناظور الطبيب", en: "Endoscopy Doctor", ext: "1158"},
+            {ar: "الناظور الاستعلامات", en: "Endoscopy Reception", ext: "1341"},
+            {ar: "ردهة العناية القلبية   ICU", en: "Cardiac ICU", ext: "2659"},
+            {ar: "ردهة الانعاش  CCU", en: "Coronary Care Unit (CCU)", ext: "2683"},
+            {ar: "الردهة النسائية", en: "Women's Ward", ext: "3234"},
+            {ar: "العمليات الطابق الثاني استعلامات", en: "OR 2nd Floor Reception", ext: "2974 - 2670"},
+            {ar: "العمليات الطابق الثاني استلام المريض", en: "OR Patient Receiving", ext: "2722"},
+            {ar: "القلب المفتوح", en: "Open Heart Surgery", ext: "2658 - 2666 - 2762"},
+            {ar: "ردهة الباطنية نساء", en: "Internal Med Ward (Women)", ext: "1446 - 1445 - 1444"},
+            {ar: "ردهة الباطنية رجال", en: "Internal Med Ward (Men)", ext: "1294"},
+            {ar: "ردهة الحميات", en: "Fever/Isolation Ward", ext: "1441"},
+            {ar: "ردهة جراحة رجال", en: "Surgery Ward (Men)", ext: "2884"},
+            {ar: "ردهة جراحة نساء", en: "Surgery Ward (Women)", ext: "2983 - 3334"},
+            {ar: "الردهة النفسية", en: "Psychiatric Ward", ext: "0108"},
+            {ar: "ردهة عناية العمليات", en: "Post-Op Care Unit", ext: "2653"},
+            {ar: "ردهة الجملة العصبية", en: "Neurosurgery Ward", ext: "1441 - 1308"},
+            {ar: "استعلامات الطوارئ", en: "ER Reception", ext: "0161"},
+            {ar: "البلانت", en: "Plant / Generators", ext: "8001"},
+            {ar: "ردهة الاطفال", en: "Pediatric Ward", ext: "6054"},
+            {ar: "شؤون التمريض", en: "Nursing Affairs", ext: "1041 - 1027"},
+            {ar: "القسطرة", en: "Catheterization Lab", ext: "2788 - 2780 - 2807"},
+            {ar: "مصرف الدم", en: "Blood Bank", ext: "0171 - 1116"},
+            {ar: "وحدة الاعلام", en: "Media Unit", ext: "1004"},
+            {ar: "اورام الاطفال طابق السادس", en: "Pediatric Oncology 6th Floor", ext: "6054"},
+            {ar: "الحروق", en: "Burns Unit", ext: "0347"},
+            {ar: "الغسيل", en: "Laundry", ext: "1123"},
+            {ar: "المتابعة", en: "Follow-up Dept", ext: "1020"},
+            {ar: "المختبر الادارة", en: "Laboratory Admin", ext: "1355 - 1352"},
+            {ar: "المكتبة العلمية", en: "Scientific Library", ext: "0243"},
+            {ar: "المعجل الخطي", en: "Linear Accelerator", ext: "1303 - 0388"},
+            {ar: "استعلامات طابق ثالث", en: "3rd Floor Reception", ext: "3325"},
+            {ar: "الديلزة مسؤول القسم", en: "Dialysis Supervisor", ext: "0179"},
+            {ar: "الصيانة مدير الشعبة", en: "Maintenance Manager", ext: "1109"},
+            {ar: "شعبة الصيدلة الادارة", en: "Pharmacy Admin", ext: "1038 - 1030"},
+            {ar: "الصيدلية الاستشارية", en: "Consulting Pharmacy", ext: "0289"},
+            {ar: "الصيدلية الداخلية", en: "Inpatient Pharmacy", ext: "1436"},
+            {ar: "العلاج الطبيعي نساء", en: "Physiotherapy (Women)", ext: "0091"},
+            {ar: "العمليات استلام المريض", en: "OR Patient Intake", ext: "2722"},
+            {ar: "العمليات الاستعلامات", en: "OR Reception", ext: "2670 - 2974"},
+            {ar: "القانونية", en: "Legal Department", ext: "1024 - 1093"},
+            {ar: "المختبر الاحياء المجهرية", en: "Microbiology Lab", ext: "1351"},
+            {ar: "المختبر الطفيليات", en: "Parasitology Lab", ext: "1180"},
+            {ar: "المختبر امراض دم", en: "Hematology Lab", ext: "1350 - 1354"},
+            {ar: "المخزن العام", en: "General Store", ext: "1153"},
+            {ar: "المذخر الجراحي", en: "Surgical Supply", ext: "1149"},
+            {ar: "المذخر الدوائي", en: "Medical Supply", ext: "1146"},
+            {ar: "المذخر استراحة الكادر", en: "Supply Staff Lounge", ext: "1148"},
+            {ar: "المعاون الاداري الخافر", en: "On-call Admin Assistant", ext: "6565"},
+            {ar: "مكننة المعلومات", en: "IT / Data Processing", ext: "1032"},
+            {ar: "ردهة الطوارئ", en: "Emergency Ward", ext: "0189"},
+            {ar: "المهن الصحية", en: "Health Professions", ext: "1039"},
+            {ar: "تخطيط الاعصاب", en: "EEG / Nerve Conduction", ext: "0024"},
+            {ar: "حفظ الجثث", en: "Morgue", ext: "4002 - 8000"},
+            {ar: "دار الاطباء", en: "Doctors Residence", ext: "7040 - 7055"},
+            {ar: "طبابة الحشد", en: "PMF Medical Unit", ext: "0085"},
+            {ar: "مكتب المدير", en: "Director's Office", ext: "1011"},
+            {ar: "مكتب المدير السكرتير", en: "Director's Secretary", ext: "1312"},
+            {ar: "مكتب المدير الكامرات", en: "CCTV / Cameras Office", ext: "0000"},
+            {ar: "مكتب المدير مدير المكتب", en: "Office Manager", ext: "1010 - 1018"},
+            {ar: "مكتب المدير الحاسبة", en: "Director's IT Desk", ext: "1000"},
+            {ar: "فحص المقبلين على الزواج", en: "Premarital Screening", ext: "0016"},
+            {ar: "استشارية جراحة نساء", en: "Women's Surgery Clinic", ext: "0016"},
+            {ar: "نداء العمليات", en: "OR Paging", ext: "0153"}
         ];
-        window.searchPhones = () => {
-            const q = document.getElementById('phoneSearch').value.toLowerCase();
-            const res = phones.filter(p => p.ar.includes(q) || p.ext.includes(q));
-            document.getElementById('phoneResults').innerHTML = res.map(p => `
-                <div class="card">
-                    <b>${p.ar}</b>
-                    <div class="number-box" onclick="navigator.clipboard.writeText('${p.ext}');alert('تم النسخ')">${p.ext}</div>
+
+        let currentLang = 'ar';
+        const t = {
+            ar: {
+                langBtn: "English", title: "مستشفى الإمام الحسن المجتبى (ع)", sub: "دليل الاتصالات المركزي",
+                searchPlaceholder: "ابحث عن قسم، عيادة، أو رقم الهاتف...", notFound: "لا توجد نتائج مطابقة لبحثك",
+                toast: "تم نسخ الرقم بنجاح", dev: "تم التطوير والتصميم بواسطة",
+                modalTitle: "تثبيت التطبيق 📱", modalP1: "<strong>للآيفون (Safari):</strong> اضغط على زر المشاركة بالأسفل ⍗ ثم اختر 'إضافة إلى الشاشة الرئيسية'.",
+                modalP2: "<strong>للآندرويد (Chrome):</strong> اضغط على الثلاث نقاط بالأعلى ⋮ ثم اختر 'إضافة إلى الشاشة الرئيسية'.", modalBtn: "فهمت / Got it",
+                tabPhone: "دليل الهواتف", tabQuick: "فحص العجلات", tabSecure: "استعلام أمني",
+                searchCarQuick: "أدخل رقم العجلة للفحص...", searchCarSecure: "أدخل رقم العجلة لعرض التفاصيل...",
+                authTitle: "سجل العجلات السري", passHolder: "أدخل رمز المرور...", authBtn: "تسجيل الدخول", authErr: "الرمز غير صحيح ❌",
+                btnSearchQuick: "بحث في السجلات", btnSearchSecure: "عرض التفاصيل"
+            },
+            en: {
+                langBtn: "عربي", title: "Imam Al-Hassan Hospital", sub: "Central Directory",
+                searchPlaceholder: "Search department, clinic, or number...", notFound: "No matching results found",
+                toast: "Number copied successfully", dev: "System Developed & Designed by",
+                modalTitle: "Install App 📱", modalP1: "<strong>iOS (Safari):</strong> Tap the Share button ⍗ below, then 'Add to Home Screen'.",
+                modalP2: "<strong>Android (Chrome):</strong> Tap the menu ⋮ above, then 'Add to Home Screen'.", modalBtn: "Understood",
+                tabPhone: "Directory", tabQuick: "Car Check", tabSecure: "Secure Search",
+                searchCarQuick: "Enter plate number for quick check...", searchCarSecure: "Enter plate number for details...",
+                authTitle: "Secure Car Registry", passHolder: "Enter Passcode...", authBtn: "Login", authErr: "Incorrect Passcode ❌",
+                btnSearchQuick: "Search Records", btnSearchSecure: "View Details"
+            }
+        };
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            const langData = t[currentLang];
+            
+            document.getElementById('htmlTag').dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('langText').innerText = langData.langBtn;
+            document.getElementById('mainTitle').innerText = langData.title;
+            document.getElementById('pageTitle').innerText = langData.title;
+            document.getElementById('subTitle').innerText = langData.sub;
+            document.getElementById('searchInput').placeholder = langData.searchPlaceholder;
+            document.getElementById('toastText').innerText = langData.toast;
+            document.getElementById('devText').innerText = langData.dev;
+            
+            document.getElementById('modalTitle').innerText = langData.modalTitle;
+            document.getElementById('modalP1').innerHTML = langData.modalP1;
+            document.getElementById('modalP2').innerHTML = langData.modalP2;
+            document.getElementById('modalBtn').innerText = langData.modalBtn;
+
+            document.getElementById('tabPhone').innerHTML = `<i class="fas fa-phone-alt"></i> ${langData.tabPhone}`;
+            document.getElementById('tabQuick').innerHTML = `<i class="fas fa-car"></i> ${langData.tabQuick}`;
+            document.getElementById('tabSecure').innerHTML = `<i class="fas fa-lock"></i> ${langData.tabSecure}`;
+            document.getElementById('quickCarSearch').placeholder = langData.searchCarQuick;
+            document.getElementById('secureCarSearch').placeholder = langData.searchCarSecure;
+            document.getElementById('authTitle').innerText = langData.authTitle;
+            document.getElementById('passInput').placeholder = langData.passHolder;
+            document.getElementById('authBtn').innerText = langData.authBtn;
+            document.getElementById('authError').innerText = langData.authErr;
+            document.getElementById('btnSearchQuick').innerHTML = `<i class="fas fa-search"></i> ${langData.btnSearchQuick}`;
+            document.getElementById('btnSearchSecure').innerHTML = `<i class="fas fa-search"></i> ${langData.btnSearchSecure}`;
+            
+            smartSearch();
+            if(document.getElementById('quickCarSearch').value) runQuickCarSearch();
+            if(document.getElementById('secureCarSearch').value) runSecureCarSearch();
+        }
+
+        // التبديل بين التبويبات
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        function renderContacts(items) {
+            const list = document.getElementById('contactList');
+            if(items.length === 0) {
+                list.innerHTML = `<div style="text-align:center; padding:30px; color:#7f8c8d;">${t[currentLang].notFound}</div>`;
+                return;
+            }
+
+            list.innerHTML = items.map((item, index) => `
+                <div class="card" style="animation-delay: ${index * 0.02}s">
+                    <div class="card-info">
+                        <div class="card-icon"><i class="fas fa-notes-medical"></i></div>
+                        <div class="card-text">
+                            <h3>${item[currentLang]}</h3> 
+                            <p>${currentLang === 'ar' ? item.en : item.ar}</p>
+                        </div>
+                    </div>
+                    <div class="number-box" onclick="copyNumber('${item.ext}')" title="Copy Number">
+                        <span class="number-text">${item.ext}</span> <i class="far fa-copy" style="font-size:0.9rem; opacity:0.7;"></i>
+                    </div>
                 </div>
             `).join('');
-        };
-        searchPhones();
+        }
 
-        // --- Quick Car Check (Public) ---
-        window.checkCarQuick = () => {
-            const plate = document.getElementById('quickInput').value.trim();
-            if(!plate) return;
-            const found = carDb.find(c => c.plate == plate);
-            document.getElementById('quickRes').innerHTML = found ? 
-                `<div style="color:green; text-align:center; padding:10px;"><b>مسموح ✅</b></div>` :
-                `<div style="color:red; text-align:center; padding:10px;"><b>غير موجود ❌</b></div>`;
-        };
+        function smartSearch() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            const searchWords = query.split(' ').filter(word => word.length > 0);
 
-        // --- Auth & Secure Logic ---
-        let isReg = false;
-        window.toggleReg = () => {
-            isReg = !isReg;
-            document.getElementById('regFields').style.display = isReg ? 'block' : 'none';
-            document.getElementById('toggleTxt').innerText = isReg ? "لديك حساب؟ دخول" : "سجل الآن";
-        };
+            const filteredData = db.filter(item => {
+                const textToSearch = `${item.ar} ${item.en} ${item.ext}`.toLowerCase();
+                return searchWords.every(word => textToSearch.includes(word));
+            });
 
-        window.handleAuth = async () => {
-            const u = document.getElementById('loginUser').value;
-            const p = document.getElementById('loginPass').value;
-            const email = u + "@hosp.com";
-            if(isReg) {
-                const n = document.getElementById('regName').value;
-                const d = document.getElementById('regDept').value;
-                const res = await createUserWithEmailAndPassword(auth, email, p);
-                await set(ref(db, 'users/' + res.user.uid), {name:n, dept:d, status:'pending', role:'user'});
-                alert("تم الإرسال.. انتظر الموافقة");
-            } else {
-                try { await signInWithEmailAndPassword(auth, email, p); } catch(e) { alert("خطأ في البيانات"); }
+            renderContacts(filteredData);
+        }
+
+        // بحث السيارات السريع (مسموح / غير مسموح)
+        function runQuickCarSearch() {
+            const query = document.getElementById('quickCarSearch').value.trim();
+            const resultDiv = document.getElementById('quickCarResult');
+            if(!query) { resultDiv.innerHTML = ''; return; }
+
+            // التحقق من وجود ملف cars.js بشكل سليم
+            if (typeof carDb === 'undefined') {
+                const msg = currentLang === 'ar' ? "⚠️ عذراً، ملف السيارات (cars.js) غير متصل. تأكد من اسم الملف أو انتظر تحديث السيرفر." : "⚠️ Error: cars.js file is missing or still loading.";
+                resultDiv.innerHTML = `<div class="result-box notfound-box" style="font-size:1rem; text-align:right;"><i class="fas fa-exclamation-triangle"></i> ${msg}</div>`;
+                return;
             }
-        };
 
-        onAuthStateChanged(auth, async (user) => {
-            if(user) {
-                const snap = await get(ref(db, 'users/' + user.uid));
-                const data = snap.val();
-                if(data && data.status === 'approved') {
-                    document.getElementById('secureAuthSection').style.display = 'none';
-                    document.getElementById('secureSearchSection').style.display = 'block';
-                    userName = data.name;
-                    if(data.role === 'admin') {
-                        document.getElementById('adminTabBtn').style.display = 'block';
-                        loadAdmin();
-                    }
-                }
-            }
-        });
-
-        window.checkCarSecure = async () => {
-            const plate = document.getElementById('secureInput').value.trim();
-            const found = carDb.find(c => c.plate == plate);
-            push(ref(db, 'logs'), {user: userName, plate, time: new Date().toLocaleString('ar-IQ')});
+            // البحث بالمطابقة (يقبل حروف وأرقام)
+            const found = carDb.find(car => car.plate == query);
+            
             if(found) {
-                document.getElementById('secureRes').innerHTML = `
+                const msg = currentLang === 'ar' ? "مسموح بالدخول" : "Entry Allowed";
+                resultDiv.innerHTML = `<div class="result-box found-box"><i class="fas fa-check-circle"></i> ${msg}</div>`;
+            } else {
+                const msg = currentLang === 'ar' ? "غير مسموح - عجلة غريبة" : "Not Allowed - Unknown Vehicle";
+                resultDiv.innerHTML = `<div class="result-box notfound-box"><i class="fas fa-times-circle"></i> ${msg}</div>`;
+            }
+        }
+
+        // تسجيل الدخول للاستعلام الأمني
+        function checkPassword() {
+            const pass = document.getElementById('passInput').value;
+            // الرمز السري تم تحديثه هنا حسب طلبك
+            if(pass === "cctvHMY") { 
+                document.getElementById('authSection').style.display = 'none';
+                document.getElementById('secureSearchSection').style.display = 'block';
+            } else {
+                document.getElementById('authError').style.display = 'block';
+            }
+        }
+
+        // بحث السيارات المفصل (الاستعلام الأمني)
+        function runSecureCarSearch() {
+            const query = document.getElementById('secureCarSearch').value.trim();
+            const resultDiv = document.getElementById('secureCarResult');
+            if(!query) { resultDiv.innerHTML = ''; return; }
+
+            // التحقق من وجود ملف cars.js بشكل سليم
+            if (typeof carDb === 'undefined') {
+                const msg = currentLang === 'ar' ? "⚠️ عذراً، ملف السيارات (cars.js) غير متصل. تأكد من اسم الملف أو انتظر تحديث السيرفر." : "⚠️ Error: cars.js file is missing or still loading.";
+                resultDiv.innerHTML = `<div class="result-box notfound-box" style="font-size:1rem; text-align:right;"><i class="fas fa-exclamation-triangle"></i> ${msg}</div>`;
+                return;
+            }
+
+            // البحث بالمطابقة
+            const found = carDb.find(car => car.plate == query);
+            
+            if(found) {
+                const title = currentLang === 'ar' ? "تفاصيل العجلة المكتشفة" : "Vehicle Details";
+                const labels = currentLang === 'ar' ? 
+                    ['الاسم:', 'القسم:', 'العنوان الوظيفي:', 'السيارة:', 'اللون:', 'رقم الهاتف:'] : 
+                    ['Name:', 'Dept:', 'Title:', 'Car:', 'Color:', 'Phone:'];
+
+                resultDiv.innerHTML = `
                     <div class="car-card">
-                        <div class="car-detail"><span>الاسم:</span> <b>${found.name}</b></div>
-                        <div class="car-detail"><span>القسم:</span> <b>${found.dept}</b></div>
-                        <div class="car-detail"><span>السيارة:</span> <b>${found.type}</b></div>
+                        <h3 style="color:var(--primary-color); margin-top:0; border-bottom:1px solid #eee; padding-bottom:10px;">${title}</h3>
+                        <div class="car-detail"><span>${labels[0]}</span> <strong>${found.name || '-'}</strong></div>
+                        <div class="car-detail"><span>${labels[1]}</span> <strong>${found.dept || '-'}</strong></div>
+                        <div class="car-detail"><span>${labels[2]}</span> <strong>${found.title || '-'}</strong></div>
+                        <div class="car-detail"><span>${labels[3]}</span> <strong>${found.type || '-'}</strong></div>
+                        <div class="car-detail"><span>${labels[4]}</span> <strong>${found.color || '-'}</strong></div>
+                        <div class="car-detail"><span>${labels[5]}</span> <strong><a href="tel:${found.phone}">${found.phone || '-'}</a></strong></div>
                     </div>`;
-            } else { alert("غير موجود"); }
-        };
+            } else {
+                const msg = currentLang === 'ar' ? "لا توجد بيانات لهذه العجلة" : "No data found for this plate";
+                resultDiv.innerHTML = `<div style="text-align:center; padding:20px; color:red; font-weight:bold; margin-top:15px;">${msg}</div>`;
+            }
+        }
 
-        window.logout = () => signOut(auth).then(()=>location.reload());
-
-        function loadAdmin() {
-            onValue(ref(db, 'users'), s => {
-                const users = s.val();
-                let h = '';
-                for(let id in users) if(users[id].status === 'pending') h += `<button onclick="approveUser('${id}')">موافقة على ${users[id].name}</button>`;
-                document.getElementById('pendingUsers').innerHTML = h;
+        function copyNumber(number) {
+            navigator.clipboard.writeText(number).then(() => {
+                const toast = document.getElementById('toast');
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
             });
         }
-        window.approveUser = (id) => update(ref(db, 'users/'+id), {status:'approved'});
-        window.importFromJs = async () => {
-            for(let c of carDb) await push(ref(db, 'cars'), c);
-            alert("تم الرفع");
+
+        window.onload = function() {
+            if(!localStorage.getItem('hideInstallGuide')) {
+                document.getElementById('installModal').classList.add('show');
+            }
         };
+
+        function closeModal() {
+            document.getElementById('installModal').classList.remove('show');
+            localStorage.setItem('hideInstallGuide', 'true');
+        }
+
+        renderContacts(db);
     </script>
 </body>
 </html>
