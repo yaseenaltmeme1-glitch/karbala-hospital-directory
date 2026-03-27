@@ -1,0 +1,15 @@
+{
+  "name": "دليل هواتف مستشفى الإمام الحسن (ع)",
+  "short_name": "دليل الإمام الحسن (ع)",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "index.html",
+  "display": "standalone",
+  "theme_color": "#004b49",
+  "background_color": "#ffffff"
+}
