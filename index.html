@@ -64,18 +64,9 @@
         .install-box p { font-size: 0.9rem; color: var(--text); margin-bottom: 20px; line-height: 1.5; }
         .install-box .btn-close { background: #eee; color: var(--text); margin-top: 10px; }
 
-        /* أزرار التواصل والتأثير المشع (الجديد) في صفحة حول */
+        /* أزرار التواصل في صفحة حول */
         .social-btn { display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; border-radius: 50%; color: white; font-size: 1.4rem; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
         .social-btn:active { transform: scale(0.9); }
-        
-        .neon-text {
-            color: var(--text);
-            font-weight: 900;
-            font-size: 1.6rem;
-            text-align: center;
-            margin: 0 auto;
-            text-shadow: 0 0 5px var(--gold), 0 0 15px var(--gold), 0 0 30px var(--gold);
-        }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .developer-footer { position: fixed; bottom: 0; width: 100%; background: white; text-align: center; padding: 10px 0; font-size: 0.8rem; border-top: 1px solid #eee; z-index: 900; }
@@ -123,7 +114,7 @@
             
             <p style="color: var(--secondary); font-weight: bold; margin-bottom: 5px; font-size: 0.9rem;">تطوير وتصميم وبرمجة</p>
             
-            <h3 class="neon-text" dir="ltr">Yaseen ALtmeme</h3>
+            <h3 style="color: var(--text); font-weight: 900; margin-top: 0; margin-bottom: 15px; font-size: 1.4rem; text-align: center; display: block; width: 100%;">Yaseen ALtmeme</h3>
             
             <p style="color: var(--muted); font-size: 0.85rem; margin-top: 15px; margin-bottom: 10px;">للتواصل والدعم الفني:</p>
             
@@ -379,19 +370,19 @@
             }
         }, 100);
 
+        // --- التعديل الثاني: إيقاظ المخططات بالموبايل ---
         window.showTab = (id, btn) => {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             btn.classList.add('active');
             
-            // إجبار المخطط على التحديث للظهور في الموبايل
             if(id === 'admin') {
                 setTimeout(() => {
                     window.dispatchEvent(new Event('resize'));
-                    if(typeof chart1 !== 'undefined' && chart1) chart1.resize();
-                    if(typeof chart2 !== 'undefined' && chart2) chart2.resize();
-                }, 100);
+                    if(typeof chart1 !== 'undefined' && chart1) { chart1.resize(); chart1.update(); }
+                    if(typeof chart2 !== 'undefined' && chart2) { chart2.resize(); chart2.update(); }
+                }, 250);
             }
         };
 
