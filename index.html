@@ -64,9 +64,18 @@
         .install-box p { font-size: 0.9rem; color: var(--text); margin-bottom: 20px; line-height: 1.5; }
         .install-box .btn-close { background: #eee; color: var(--text); margin-top: 10px; }
 
-        /* أزرار التواصل في صفحة حول */
+        /* أزرار التواصل والتأثير المشع (الجديد) في صفحة حول */
         .social-btn { display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; border-radius: 50%; color: white; font-size: 1.4rem; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
         .social-btn:active { transform: scale(0.9); }
+        
+        .neon-text {
+            color: var(--text);
+            font-weight: 900;
+            font-size: 1.6rem;
+            text-align: center;
+            margin: 0 auto;
+            text-shadow: 0 0 5px var(--gold), 0 0 15px var(--gold), 0 0 30px var(--gold);
+        }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .developer-footer { position: fixed; bottom: 0; width: 100%; background: white; text-align: center; padding: 10px 0; font-size: 0.8rem; border-top: 1px solid #eee; z-index: 900; }
@@ -113,7 +122,8 @@
             <hr style="border: 0; border-top: 1px dashed #ddd; margin: 25px 0;">
             
             <p style="color: var(--secondary); font-weight: bold; margin-bottom: 5px; font-size: 0.9rem;">تطوير وتصميم وبرمجة</p>
-            <h3 style="color: var(--text); font-weight: 900; margin-top: 0; font-size: 1.4rem;">Yaseen ALtmeme</h3>
+            
+            <h3 class="neon-text" dir="ltr">Yaseen ALtmeme</h3>
             
             <p style="color: var(--muted); font-size: 0.85rem; margin-top: 15px; margin-bottom: 10px;">للتواصل والدعم الفني:</p>
             
@@ -294,6 +304,7 @@
         <div class="install-box">
             <i class="fas fa-download" style="font-size: 3rem; color: var(--primary); margin-bottom: 15px;"></i>
             <h3>تثبيت التطبيق</h3>
+            <p style="font-size: 0.8rem; color: var(--gold); font-weight: bold; margin-bottom: 5px;">تطوير وتصميم: Yaseen ALtmeme</p>
             <p>للحصول على أفضل تجربة، قم بتثبيت النظام كبرنامج على هاتفك:</p>
             <p style="font-size: 0.85rem; color: var(--muted); text-align: right;">
                 <b>لأجهزة الأندرويد:</b> اضغط على النقاط الثلاث بالأعلى واختر "الإضافة إلى الشاشة الرئيسية" (Add to Home screen).<br><br>
@@ -340,7 +351,7 @@
         let currentEditCarKey = null; 
         let currentEditPhoneKey = null; 
         
-        // إظهار نافذة التثبيت إذا كان متصفح عادي
+        // إظهار نافذة التثبيت إذا كان متصفح عادي (وتظهر مرة واحدة فقط)
         window.onload = () => {
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
             const hasSeenPrompt = localStorage.getItem('pwa_prompt_seen');
@@ -374,12 +385,13 @@
             document.getElementById(id).classList.add('active');
             btn.classList.add('active');
             
+            // إجبار المخطط على التحديث للظهور في الموبايل
             if(id === 'admin') {
                 setTimeout(() => {
                     window.dispatchEvent(new Event('resize'));
                     if(typeof chart1 !== 'undefined' && chart1) chart1.resize();
                     if(typeof chart2 !== 'undefined' && chart2) chart2.resize();
-                }, 150);
+                }, 100);
             }
         };
 
@@ -551,7 +563,6 @@
                 
                 document.getElementById('countLogs').innerText = todayCount;
                 
-                // التعديل: إظهار أحدث 100 عملية فقط بشكل مرتب
                 const recentLogs = liveLogs.sort((a,b) => b.timestamp - a.timestamp).slice(0, 100);
                 document.getElementById('liveLogs').innerHTML = recentLogs.map(l => 
                     `<div class="log-item" style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #f0f0f0;">
@@ -632,17 +643,11 @@
             const email = u.includes('@') ? u : u + "@hosp.com";
             
             try {
-                // حفظ نسخة من بيانات الأدمن الحالي قبل العملية
                 const adminUser = auth.currentUser;
-                
-                // إنشاء تطبيق فايربيس ثانوي (خدعة لتفعيل المستخدم دون طرد الأدمن)
                 const secondaryApp = initializeApp(firebaseConfig, "SecondaryApp");
                 const secondaryAuth = getAuth(secondaryApp);
-                
-                // إنشاء الحساب بالتطبيق الثانوي
                 const res = await createUserWithEmailAndPassword(secondaryAuth, email, p);
                 
-                // إضافة البيانات لقاعدة البيانات وتفعيل الحساب فوراً
                 await set(ref(db, 'users/' + res.user.uid), { 
                     name: n, 
                     dept: d, 
@@ -651,16 +656,13 @@
                     role: 'user' 
                 });
                 
-                // تسجيل خروج التطبيق الثانوي للحفاظ على جلسة الأدمن
                 await signOut(secondaryAuth);
-                
                 alert("✅ تم إنشاء حساب الموظف وتفعيله بنجاح!");
                 
                 document.getElementById('directName').value = '';
                 document.getElementById('directDept').value = '';
                 document.getElementById('directUser').value = '';
                 document.getElementById('directPass').value = '';
-                
             } catch(e) { 
                 alert("❌ خطأ: قد يكون اسم المستخدم مستخدم مسبقاً، جرب اسماً آخر."); 
             }
