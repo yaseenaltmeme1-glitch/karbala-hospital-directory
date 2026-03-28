@@ -93,9 +93,9 @@
         
         <div class="tabs">
             <button class="tab-btn" onclick="showTab('phones', this)"><i class="fas fa-phone-alt"></i> الهواتف</button>
-            <button class="tab-btn active" onclick="showTab('about', this)"><i class="fas fa-info-circle"></i> حول</button>
             <button class="tab-btn" onclick="showTab('quick', this)"><i class="fas fa-car"></i> فحص</button>
             <button class="tab-btn" onclick="showTab('secure', this)"><i class="fas fa-shield-alt"></i> أمني</button>
+            <button class="tab-btn active" onclick="showTab('about', this)"><i class="fas fa-info-circle"></i> حول</button>
             <button id="adminTabBtn" class="tab-btn" onclick="showTab('admin', this)" style="display:none; color:var(--gold);"><i class="fas fa-user-cog"></i> الإدارة</button>
         </div>
     </div>
@@ -580,7 +580,7 @@
                                 <span>${u.role}</span>
                             </div>
                             <div style="display:flex; gap:5px; width:100%;">
-                                ${u.status === 'pending' ? `<button class="btn-main" style="margin:0; padding:5px; background:#27ae60;" onclick="adminAction('approve', '${id}')">تفعيل</button>` : ''}
+                                ${u.status === 'pending' ? `<button class="btn-main" style="margin:0; padding:5px; background:#27ae60;" onclick="adminAction('approve', '${id}')">tفعيl</button>` : ''}
                                 <button class="btn-main btn-danger" style="margin:0; padding:5px;" onclick="adminAction('delete', '${id}')">حذف نهائي</button>
                             </div>
                         </div>`;
