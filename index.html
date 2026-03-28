@@ -274,6 +274,8 @@
         let liveCars = [];
         let livePhones = [];
         let liveLogs = [];
+        let currentEditCarKey = null; // مفتاح سري لتحديث السيارة
+        let currentEditPhoneKey = null; // مفتاح سري لتحديث الهاتف
         
         // مصفوفة الهواتف القديمة لغرض الرفع لمرة واحدة
         const legacyPhones = [
@@ -533,14 +535,33 @@
                 phone: document.getElementById('admCarPhone').value
             };
             
-            const existing = liveCars.find(c => c.plate == plate);
-            if(existing) {
-                await update(ref(db, 'cars/' + existing.key), data);
-                alert("تم تحديث معلومات السيارة");
+            let keyToUpdate = currentEditCarKey;
+            
+            // احتياط: إذا نسي يضغط "جلب" وبس كتب رقم اللوحة، ندور عليه
+            if(!keyToUpdate) {
+                const existing = liveCars.find(c => c.plate == plate);
+                if(existing) keyToUpdate = existing.key;
+            }
+
+            if(keyToUpdate) {
+                await update(ref(db, 'cars/' + keyToUpdate), data);
+                alert("✅ تم تحديث معلومات السيارة (استبدال القديمة) بنجاح!");
             } else {
                 await push(ref(db, 'cars'), data);
-                alert("تمت إضافة السيارة الجديدة");
+                alert("✅ تمت إضافة السيارة كـ سيارة جديدة بنجاح!");
             }
+
+            // تفريغ الحقول بعد الحفظ للترتيب
+            currentEditCarKey = null;
+            document.getElementById('searchCarEditInput').value = '';
+            document.getElementById('admCarPlate').value = '';
+            document.getElementById('admCarName').value = '';
+            document.getElementById('admCarDept').value = '';
+            document.getElementById('admCarTitle').value = '';
+            document.getElementById('admCarType').value = '';
+            document.getElementById('admCarColor').value = '';
+            document.getElementById('admCarBadge').value = '';
+            document.getElementById('admCarPhone').value = '';
         };
 
         window.deleteCar = async () => {
@@ -557,10 +578,26 @@
             const ext = document.getElementById('admPhoneExt').value.trim();
             if(!name || !ext) return alert("اكمل الاسم والرقم");
             
-            const existing = livePhones.find(p => p.name === name);
-            if(existing) await update(ref(db, 'phones/' + existing.key), {name, ext});
-            else await push(ref(db, 'phones'), {name, ext});
-            alert("تم الحفظ");
+            let keyToUpdate = currentEditPhoneKey;
+
+            if(!keyToUpdate) {
+                const existing = livePhones.find(p => p.name === name);
+                if(existing) keyToUpdate = existing.key;
+            }
+
+            if(keyToUpdate) {
+                await update(ref(db, 'phones/' + keyToUpdate), {name, ext});
+                alert("✅ تم تحديث الهاتف (استبدال القديم) بنجاح!");
+            } else {
+                await push(ref(db, 'phones'), {name, ext});
+                alert("✅ تمت إضافة الهاتف كـ قسم جديد بنجاح!");
+            }
+
+            // تفريغ الحقول بعد الحفظ للترتيب
+            currentEditPhoneKey = null;
+            document.getElementById('searchPhoneEditInput').value = '';
+            document.getElementById('admPhoneName').value = '';
+            document.getElementById('admPhoneExt').value = '';
         };
 
         window.deletePhone = async () => {
@@ -579,7 +616,8 @@
             if(!plate) return alert("اكتب رقم اللوحة اولاً ثم اضغط بحث وجلب");
             const car = liveCars.find(c => c.plate == plate);
             if(car) {
-                document.getElementById('admCarPlate').value = car.plate || ''; // تعبئة الرقم الأساسي
+                currentEditCarKey = car.key; // حفظ المفتاح السري للاستبدال
+                document.getElementById('admCarPlate').value = car.plate || ''; 
                 document.getElementById('admCarName').value = car.name || '';
                 document.getElementById('admCarDept').value = car.dept || '';
                 document.getElementById('admCarTitle').value = car.title || '';
@@ -587,7 +625,7 @@
                 document.getElementById('admCarColor').value = car.color || '';
                 document.getElementById('admCarBadge').value = car.badge || '';
                 document.getElementById('admCarPhone').value = car.phone || '';
-                alert("✅ تم سحب البيانات! كدر تعدل عليها هسه وتدوس حفظ.");
+                alert("✅ تم سحب البيانات! كدر تعدل عليها هسه وتدوس إضافة/تحديث.");
             } else {
                 alert("❌ هذه السيارة غير موجودة في السجلات!");
             }
@@ -598,9 +636,10 @@
             if(!name) return alert("اكتب اسم القسم اولاً ثم اضغط بحث وجلب");
             const phone = livePhones.find(p => p.name == name);
             if(phone) {
-                document.getElementById('admPhoneName').value = phone.name || ''; // تعبئة الاسم الأساسي
+                currentEditPhoneKey = phone.key; // حفظ المفتاح السري للاستبدال
+                document.getElementById('admPhoneName').value = phone.name || ''; 
                 document.getElementById('admPhoneExt').value = phone.ext || '';
-                alert("✅ تم سحب الرقم! كدر تعدله وتدوس حفظ.");
+                alert("✅ تم سحب الرقم! كدر تعدله وتدوس حفظ/تحديث.");
             } else {
                 alert("❌ هذا القسم غير موجود!");
             }
