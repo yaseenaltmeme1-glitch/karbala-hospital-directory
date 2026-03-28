@@ -183,7 +183,9 @@
         <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap: wrap;">
             <div class="stat-box"><h4>السيارات</h4><span id="countCars">0</span></div>
             <div class="stat-box"><h4>الهواتف</h4><span id="countPhones">0</span></div>
-            <div class="stat-box"><h4>عمليات البحث</h4><span id="countLogs">0</span></div>
+            <div class="stat-box"><h4>إجمالي الزيارات</h4><span id="countVisits">0</span></div>
+            <div class="stat-box"><h4>زوار فريدين</h4><span id="countUniqueVisitors">0</span></div>
+            <div class="stat-box" style="display:none;"><h4>عمليات البحث</h4><span id="countLogs">0</span></div>
             <div class="stat-box"><h4>المستخدمين</h4><span id="countUsers">0</span></div>
         </div>
 
@@ -383,6 +385,22 @@
         window.globalUsersData = {};
         window.currentEditingProfileId = null;
 
+        // --- تسجيل زيارات الأجهزة (الزوار) ---
+        let deviceId = localStorage.getItem('device_id');
+        if (!deviceId) {
+            deviceId = 'device_' + Math.random().toString(36).substr(2, 9) + Date.now();
+            localStorage.setItem('device_id', deviceId);
+        }
+        setTimeout(() => {
+            try {
+                push(ref(db, 'visits'), {
+                    deviceId: deviceId,
+                    time: new Date().toLocaleString('ar-IQ'),
+                    timestamp: Date.now()
+                });
+            } catch(e) {}
+        }, 2000);
+
         window.onload = () => {
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
             const hasSeenPrompt = localStorage.getItem('pwa_prompt_seen');
@@ -518,7 +536,6 @@
             document.getElementById('countCars').innerText = liveCars.length;
         });
 
-        // التعديل: تسجيل البحث عن الهواتف للزوار والموظفين
         window.searchPhones = () => {
             const q = document.getElementById('phoneSearch').value.trim().toLowerCase();
             const res = livePhones.filter(p => p.name.includes(q) || p.ext.includes(q));
@@ -529,7 +546,6 @@
                 </div>
             `).join('') || '<p style="text-align:center;">لا توجد نتائج</p>';
 
-            // تسجيل المراقبة عند البحث (إذا كان هنالك نص مكتوب)
             if(q.length > 2) {
                 const userName = (myData && myData.status === 'approved') ? myData.name : 'زائر عام';
                 try {
@@ -552,7 +568,6 @@
             });
         };
 
-        // التعديل: تسجيل الفحص للزوار
         window.checkCar = (mode) => {
             const inputId = mode === 'quick' ? 'quickInput' : 'secureInput';
             const resId = mode === 'quick' ? 'quickRes' : 'secureRes';
@@ -561,7 +576,6 @@
 
             const found = liveCars.find(c => c.plate == plate);
             
-            // تسجيل المراقبة للجميع (زائر أو موظف)
             const userName = (myData && myData.status === 'approved') ? myData.name : 'زائر عام';
             try {
                 push(ref(db, 'logs'), {
@@ -596,21 +610,32 @@
         };
 
         function initAdminPanel() {
+            // مستمع الزيارات الجديد
+            onValue(ref(db, 'visits'), s => {
+                const data = s.val();
+                let totalVisits = 0;
+                let uniqueDevices = new Set();
+                if(data) {
+                    for(let k in data) {
+                        totalVisits++;
+                        if(data[k].deviceId) uniqueDevices.add(data[k].deviceId);
+                    }
+                }
+                if(document.getElementById('countVisits')) document.getElementById('countVisits').innerText = totalVisits;
+                if(document.getElementById('countUniqueVisitors')) document.getElementById('countUniqueVisitors').innerText = uniqueDevices.size;
+            });
+
             onValue(ref(db, 'logs'), s => {
                 liveLogs = [];
                 const data = s.val();
-                let todayCount = 0;
                 let userActivity = {};
                 
                 if(data) {
                     for(let k in data) {
                         liveLogs.push(data[k]);
-                        if(Date.now() - data[k].timestamp < 86400000) todayCount++;
                         userActivity[data[k].user] = (userActivity[data[k].user] || 0) + 1;
                     }
                 }
-                
-                document.getElementById('countLogs').innerText = todayCount;
                 
                 const recentLogs = liveLogs.sort((a,b) => b.timestamp - a.timestamp).slice(0, 100);
                 document.getElementById('liveLogs').innerHTML = recentLogs.map(l => 
@@ -714,7 +739,6 @@
                 options: { responsive: true, maintainAspectRatio: false }
             });
 
-            // التعديل: مخطط خاص بعمليات البحث عن الهواتف
             const ctx3 = document.getElementById('phonesChart');
             if(chart3) chart3.destroy();
             chart3 = new Chart(ctx3, {
@@ -951,10 +975,15 @@
             "عمليات البحث": "Searches",
             "المستخدمين": "Users",
             "الرقابة والتحليل (Charts)": "Monitoring & Analysis (Charts)",
+            "استيراد البيانات الأولية": "Import Initial Data",
+            "استخدم هذه الأزرار مرة واحدة فقط لرفع البيانات من الكود وملف JS إلى السيرفر.": "Use these buttons once to upload data.",
+            "رفع دليل الهواتف": "Upload Phone Directory",
+            "رفع سجل العجلات (cars.js)": "Upload Vehicle Log (cars.js)",
             "إدارة العجلات": "Vehicle Management",
             "بحث عن عجلة لتعديلها": "Search for vehicle to edit",
             "أدخل رقم اللوحة للبحث...": "Enter plate number to search...",
             "بحث وجلب": "Search & Fetch",
+            "بيانات العجلة (للإضافة الجديدة أو بعد البحث)": "Vehicle Data (New or Edited)",
             "رقم اللوحة (أساسي)": "Plate Number (Primary)",
             "اسم المالك": "Owner Name",
             "القسم": "Department",
@@ -981,7 +1010,9 @@
             "تم النسخ": "Copied",
             "غير مصرح (غير موجود بالسجلات) ❌": "Unauthorized (Not in records) ❌",
             "مسموح بالدخول ✅": "Access Granted ✅",
-            "لا توجد نتائج": "No Results Found"
+            "لا توجد نتائج": "No Results Found",
+            "إجمالي الزيارات": "Total Visits",
+            "زوار فريدين": "Unique Visitors"
         };
         
         const reverseUiDict = Object.fromEntries(Object.entries(uiDict).map(([k, v]) => [v, k]));
