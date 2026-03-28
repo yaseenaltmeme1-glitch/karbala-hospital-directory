@@ -97,6 +97,7 @@
     </div>
 
     <div id="secure" class="tab-content">
+        
         <div id="authSection" class="admin-section" style="max-width: 400px; margin: 40px auto; text-align:center;">
             <i class="fas fa-user-shield" style="font-size:3rem; color:var(--primary); margin-bottom:15px;"></i>
             <h3>تسجيل الدخول للموظفين</h3>
@@ -127,6 +128,7 @@
     </div>
 
     <div id="admin" class="tab-content">
+        
         <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap: wrap;">
             <div class="stat-box"><h4>السيارات</h4><span id="countCars">0</span></div>
             <div class="stat-box"><h4>الهواتف</h4><span id="countPhones">0</span></div>
@@ -142,6 +144,7 @@
 
         <div class="admin-section" style="border: 2px dashed var(--gold); background: #fffcf0;">
             <h3><i class="fas fa-cloud-upload-alt"></i> استيراد البيانات الأولية</h3>
+            <p style="font-size:0.8rem; color:var(--muted);">استخدم هذه الأزرار مرة واحدة فقط لرفع البيانات من الكود وملف JS إلى السيرفر.</p>
             <div style="display:flex; gap:10px;">
                 <button class="btn-main btn-gold" onclick="uploadInternalPhones()">رفع دليل الهواتف</button>
                 <button class="btn-main btn-gold" onclick="uploadCarsFromJson()">رفع سجل العجلات (cars.js)</button>
@@ -151,6 +154,7 @@
         <div class="admin-section" style="border-right: 4px solid var(--primary);">
             <h3><i class="fas fa-car-side"></i> إدارة العجلات</h3>
             <div class="admin-form">
+                
                 <div style="background:#f8f9fa; padding:10px; border-radius:8px; margin-bottom:15px; border:1px solid #ddd;">
                     <h4 style="margin-top:0; font-size:0.9rem; color:var(--primary);">بحث عن عجلة لتعديلها</h4>
                     <div style="display:flex; gap:10px; margin-bottom: 5px;">
@@ -158,7 +162,10 @@
                         <button class="btn-main" style="flex:1; margin:0; background:var(--gold); color:black;" onclick="loadCarForEdit()">🔍 بحث وجلب</button>
                     </div>
                 </div>
+
                 <hr style="border:0; border-top:1px dashed #ccc; margin:15px 0;">
+                <h4 style="margin-top:0; font-size:0.9rem;">بيانات العجلة (للإضافة الجديدة أو بعد البحث)</h4>
+
                 <input type="text" id="admCarPlate" placeholder="رقم اللوحة (أساسي)">
                 <input type="text" id="admCarName" placeholder="اسم المالك">
                 <input type="text" id="admCarDept" placeholder="القسم">
@@ -181,6 +188,7 @@
         <div class="admin-section" style="border-right: 4px solid var(--secondary);">
             <h3><i class="fas fa-tty"></i> إدارة الهواتف</h3>
             <div class="admin-form">
+
                 <div style="background:#f8f9fa; padding:10px; border-radius:8px; margin-bottom:15px; border:1px solid #ddd;">
                     <h4 style="margin-top:0; font-size:0.9rem; color:var(--secondary);">بحث عن هاتف قسم لتعديله</h4>
                     <div style="display:flex; gap:10px; margin-bottom: 5px;">
@@ -188,7 +196,10 @@
                         <button class="btn-main" style="flex:1; margin:0; background:var(--gold); color:black;" onclick="loadPhoneForEdit()">🔍 بحث وجلب</button>
                     </div>
                 </div>
+
                 <hr style="border:0; border-top:1px dashed #ccc; margin:15px 0;">
+                <h4 style="margin-top:0; font-size:0.9rem;">بيانات الهاتف (للإضافة الجديدة أو بعد البحث)</h4>
+
                 <div style="display:flex; gap:10px; margin-bottom:10px;">
                     <input type="text" id="admPhoneName" placeholder="الاسم / القسم" style="flex:2; margin:0;">
                     <input type="text" id="admPhoneExt" placeholder="الرقم الداخلي (Ext)" style="flex:1; margin:0;">
@@ -202,12 +213,33 @@
 
         <div class="admin-section" style="border-right: 4px solid var(--text);">
             <h3><i class="fas fa-users-cog"></i> إدارة المستخدمين وحسابك</h3>
+            
             <div style="background:#f8f9fa; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid #ddd; text-align:center;">
                 <h4 style="margin-top:0;">إعدادات حسابي (الأدمن)</h4>
                 <button class="btn-main" style="background:var(--text); width:auto; padding:8px 20px;" onclick="changeMyPassword()">🔑 تغيير كلمة المرور الخاصة بي</button>
             </div>
+
+            <div class="admin-form" style="background:#f8f9fa; padding:10px; border-radius:8px; margin-bottom:15px; border:1px solid #eee;">
+                <h4 style="margin-top:0; font-size:0.9rem;">إنشاء حساب مباشر للموظف</h4>
+                <div style="display:flex; gap:5px; margin-bottom:5px;">
+                    <input type="text" id="directName" placeholder="الاسم" style="margin:0;">
+                    <input type="text" id="directDept" placeholder="القسم" style="margin:0;">
+                </div>
+                <div style="display:flex; gap:5px; margin-bottom:5px;">
+                    <input type="text" id="directUser" placeholder="اليوزر" style="margin:0;">
+                    <input type="password" id="directPass" placeholder="الباسوورد" style="margin:0;">
+                </div>
+                <button class="btn-main" style="padding:8px;" onclick="createDirectUser()">➕ إنشاء وتفعيل فوراً</button>
+            </div>
+
             <div id="usersList"></div>
         </div>
+
+        <div class="admin-section">
+            <h3><i class="fas fa-history"></i> سجل المراقبة الحي (Live Logs)</h3>
+            <div id="liveLogs" style="max-height: 300px; overflow-y: auto;"></div>
+        </div>
+
     </div>
 
     <div class="developer-footer">System Developed & Designed by <b>Yaseen ALtmeme</b> &copy; 2026</div>
@@ -220,6 +252,7 @@
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getDatabase, ref, set, get, update, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
+        // إعدادات Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyA1Uh51j1JLdXWtunD2tJ5i8ZljHuTMxeQ",
             authDomain: "karbala-hospital.firebaseapp.com",
@@ -235,32 +268,31 @@
         const auth = getAuth(app);
         const db = getDatabase(app);
 
+        // متغيرات عامة
         let currentUser = null;
-        let myData = JSON.parse(localStorage.getItem('cached_user_data')) || null;
+        let myData = null;
+        
+        // --- التعديل: جلب البيانات من الذاكرة المحلية (أوفلاين) مباشرة قبل النت ---
         let liveCars = JSON.parse(localStorage.getItem('offlineCars')) || [];
         let livePhones = JSON.parse(localStorage.getItem('offlinePhones')) || [];
-        let currentEditCarKey = null;
-        let currentEditPhoneKey = null;
-
-        // وظيفة إظهار الواجهة (تدعم الأوفلاين)
-        function checkInitialAccess() {
-            if(myData && myData.status === 'approved') {
-                document.getElementById('authSection').style.display = 'none';
-                document.getElementById('secureSearchSection').style.display = 'block';
-                document.getElementById('logoutBtn').style.display = 'block';
-                if(myData.role === 'admin') {
-                    document.getElementById('adminTabBtn').style.display = 'block';
-                    initAdminPanel();
-                }
-            }
+        
+        let liveLogs = [];
+        let currentEditCarKey = null; // مفتاح سري لتحديث السيارة
+        let currentEditPhoneKey = null; // مفتاح سري لتحديث الهاتف
+        
+        // تحديث الواجهة فوراً من بيانات الأوفلاين (يشتغل مباشرة حتى بدون نت)
+        setTimeout(() => {
             document.getElementById('countCars').innerText = liveCars.length;
             document.getElementById('countPhones').innerText = livePhones.length;
             searchPhones();
-        }
+        }, 100);
         
-        // تشغيل الفحص فور فتح الصفحة
-        checkInitialAccess();
+        // مصفوفة الهواتف القديمة لغرض الرفع لمرة واحدة
+        const legacyPhones = [
+            { name: "استعلامات الادارة", ext: "1025"}, { name: "الاستعلامات الرئيسية", ext: "0319"}, { name: "الاشعة", ext: "0196"}, { name: "الاشعة استعلامات", ext: "0248"}, { name: "الاشعة ادارة", ext: "0220"}, { name: "الاشعة السونار", ext: "0064 - 0246"}, { name: "الاشعة المفراس", ext: "0245"}, { name: "الاعاشة", ext: "4001"}, { name: "الاعلام", ext: "1004"}, { name: "الاحصاء", ext: "1073"}, { name: "الاسعاف الفوري", ext: "0153"}, { name: "الامنية البوابة الاولى", ext: "9002"}, { name: "الامنية البوابة الثانية", ext: "3639"}, { name: "الاورام استعلامات", ext: "0311"}, { name: "الاورام الصيدلية", ext: "0315"}, { name: "الاورام الطبيب", ext: "0306 -0309"}, { name: "الاورام سحب الدم", ext: "0304"}, { name: "الاورام كبار طابق خامس", ext: "5115 - 5057"}, { name: "الاورام المعجل الخطي", ext: "0053 - 0055"}, { name: "التاهيل العلاج الطبيعي", ext: "0092"}, { name: "التدريب والتطوير", ext: "0214"}, { name: "التذاكر والباصات", ext: "0335"}, { name: "التعقيم المركزي", ext: "1325 - 1129"}, { name: "الجناح الخاص", ext: "2806"}, { name: "الجناح الخاص التمريض", ext: "2881"}, { name: "الجناح الخاص مختبر", ext: "5047"}, { name: "الخدج", ext: "3419"}, { name: "الخدمات الفندقية", ext: "1019"}, { name: "الديلزة", ext: "0181"}, { name: "الديلزة استعلامات", ext: "0088"}, { name: "الديلزة قاعة العلاج", ext: "0093"}, { name: "الديلزة الردهة", ext: "0183"}, { name: "استشارية السمع والتخاطب العلاج", ext: "0100"}, { name: "استشارية السمع والتخاطب تدريب النطق", ext: "0098"}, { name: "الصيانة الخافرة", ext: "1119 - 1217"}, { name: "الصيانة الادارة", ext: "1125"}, { name: "الصيانة غرفة المهندسين", ext: "1121"}, { name: "الصيانة مهندس مقيم", ext: "1135"}, { name: "BMS", ext: "1331"}, { name: "استشارية الاطفال سحب الدم", ext: "0057"}, { name: "استشارية الباطنية سحب الدم رجال", ext: "0018"}, { name: "استشارية الباطنية سحب الدم نساء", ext: "0014"}, { name: "استشارية الباطنية الايكو", ext: "0031"}, { name: "استشارية الباطنية تخطيط القلب نساء", ext: "0026"}, { name: "استشارية الباطنية تخطيط القلب رجال", ext: "0028"}, { name: "استشارية البولية الطبيب", ext: "0276 -0267"}, { name: "استشارية البولية عمليات صغرى", ext: "0278"}, { name: "استشارية الجلدية استعلامات", ext: "0271"}, { name: "استشارية الجلدية الطبيب", ext: "0258"}, { name: "استشارية الجلدية جراحة وضماد", ext: "0260"}, { name: "استشارية القلبية استعلامات", ext: "0296"}, { name: "استشارية الكسور استعلامات", ext: "0267"}, { name: "استشارية الكسور الطبيب", ext: "0266"}, { name: "استشارية الكسور الفحص", ext: "0263"}, { name: "استشارية النسائية", ext: "0338"}, { name: "استشارية النسائية الطبيب", ext: "0327"}, { name: "استشارية انف واذن وحنجرة استعلامات", ext: "0013"}, { name: "استشارية انف واذن وحنجرة الطبيب", ext: "0011"}, { name: "استشارية جراحة الجملة العصبية الاستعلامات", ext: "0012"}, { name: "استشارية جراحة الجملة العصبية الاستراحة", ext: "1210"}, { name: "استشارية جراحة الجملة العصبية الضماد", ext: "1211"}, { name: "استشارية جراحة الجملة العصبية الطبيب", ext: "1212"}, { name: "استشارية زرع الكلى الطبيب", ext: "0326"}, { name: "استشارية كبار السن", ext: "0023"}, { name: "استشارية كبار السن الطبيب", ext: "0020 - 0021"}, { name: "الاجازات والتقارير", ext: "0257"}, { name: "الناظور المسؤول", ext: "1340 - 1341"}, { name: "الناظور الطبيب", ext: "1158"}, { name: "الناظور الاستعلامات", ext: "1341"}, { name: "ردهة العناية القلبية   ICU", ext: "2659"}, { name: "ردهة الانعاش  CCU", ext: "2683"}, { name: "الردهة النسائية", ext: "3234"}, { name: "العمليات الطابق الثاني استعلامات", ext: "2974 - 2670"}, { name: "العمليات الطابق الثاني استلام المريض", ext: "2722"}, { name: "القلب المفتوح", ext: "2658 - 2666 - 2762"}, { name: "ردهة الباطنية نساء", ext: "1446 - 1445 - 1444"}, { name: "ردهة الباطنية رجال", ext: "1294"}, { name: "ردهة الحميات", ext: "1441"}, { name: "ردهة جراحة رجال", ext: "2884"}, { name: "ردهة جراحة نساء", ext: "2983 - 3334"}, { name: "الردهة النفسية", ext: "0108"}, { name: "ردهة عناية العمليات", ext: "2653"}, { name: "ردهة الجملة العصبية", ext: "1441 - 1308"}, { name: "استعلامات الطوارئ", ext: "0161"}, { name: "البلانت", ext: "8001"}, { name: "ردهة الاطفال", ext: "6054"}, { name: "شؤون التمريض", ext: "1041 - 1027"}, { name: "القسطرة", ext: "2788 - 2780 - 2807"}, { name: "مصرف الدم", ext: "0171 - 1116"}, { name: "وحدة الاعلام", ext: "1004"}, { name: "اورام الاطفال طابق السادس", ext: "6054"}, { name: "الحروق", ext: "0347"}, { name: "الغسيل", ext: "1123"}, { name: "المتابعة", ext: "1020"}, { name: "المختبر الادارة", ext: "1355 - 1352"}, { name: "المكتبة العلمية", ext: "0243"}, { name: "المعجل الخطي", ext: "1303 - 0388"}, { name: "استعلامات طابق ثالث", ext: "3325"}, { name: "الديلزة مسؤول القسم", ext: "0179"}, { name: "الصيانة مدير الشعبة", ext: "1109"}, { name: "شعبة الصيدلة الادارة", ext: "1038 - 1030"}, { name: "الصيدلية الاستشارية", ext: "0289"}, { name: "الصيدلية الداخلية", ext: "1436"}, { name: "العلاج الطبيعي نساء", ext: "0091"}, { name: "العمليات استلام المريض", ext: "2722"}, { name: "العمليات الاستعلامات", ext: "2670 - 2974"}, { name: "القانونية", ext: "1024 - 1093"}, { name: "المختبر الاحياء المجهرية", ext: "1351"}, { name: "المختبر الطفيليات", ext: "1180"}, { name: "المختبر امراض دم", ext: "1350 - 1354"}, { name: "المخزن العام", ext: "1153"}, { name: "المذخر الجراحي", ext: "1149"}, { name: "المذخر الدوائي", ext: "1146"}, { name: "المذخر استراحة الكادر", ext: "1148"}, { name: "المعاون الاداري الخافر", ext: "6565"}, { name: "مكننة المعلومات", ext: "1032"}, { name: "ردهة الطوارئ", ext: "0189"}, { name: "المهن الصحية", ext: "1039"}, { name: "تخطيط الاعصاب", ext: "0024"}, { name: "حفظ الجثث", ext: "4002 - 8000"}, { name: "دار الاطباء", ext: "7040 - 7055"}, { name: "طبابة الحشد", ext: "0085"}, { name: "مكتب المدير", ext: "1011"}, { name: "مكتب المدير السكرتير", ext: "1312"}, { name: "مكتب المدير الكامرات", ext: "0000"}, { name: "مكتب المدير مدير المكتب", ext: "1010 - 1018"}, { name: "مكتب المدير الحاسبة", ext: "1000"}, { name: "فحص المقبلين على الزواج", ext: "0016"}, { name: "استشارية جراحة نساء", ext: "0016"}, { name: "نداء العمليات", ext: "0153"}
+        ];
 
+        // --- واجهة المستخدم (Tabs) ---
         window.showTab = (id, btn) => {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -268,6 +300,7 @@
             btn.classList.add('active');
         };
 
+        // --- نظام التوثيق والموافقات ---
         let isRegMode = false;
         window.toggleReg = () => {
             isRegMode = !isRegMode;
@@ -286,69 +319,83 @@
                 const dept = document.getElementById('regDept').value;
                 try {
                     const res = await createUserWithEmailAndPassword(auth, email, p);
-                    const userData = { name, dept, username: u, status: 'pending', role: 'user' };
-                    await set(ref(db, 'users/' + res.user.uid), userData);
+                    await set(ref(db, 'users/' + res.user.uid), { name, dept, username: u, status: 'pending', role: 'user' });
                     alert("تم إرسال الطلب، يرجى انتظار تفعيل الإدارة.");
                     location.reload();
-                } catch(e) { alert("خطأ: " + e.message); }
+                } catch(e) { alert("خطأ: يرجى التأكد من البيانات أو أن المستخدم موجود مسبقاً."); }
             } else {
-                try { 
-                    const res = await signInWithEmailAndPassword(auth, email, p);
-                    // جلب البيانات من السيرفر فور الدخول وحفظها للأوفلاين
-                    const snap = await get(ref(db, 'users/' + res.user.uid));
-                    if(snap.exists()) {
-                        myData = snap.val();
-                        localStorage.setItem('cached_user_data', JSON.stringify(myData));
-                        checkInitialAccess();
-                    }
-                } catch(e) { alert("خطأ: " + e.message); }
+                try { await signInWithEmailAndPassword(auth, email, p); } catch(e) { alert("الخطأ من السيرفر: " + e.message); }
             }
         };
 
-        window.logout = () => {
-            if(confirm("هل تريد تسجيل الخروج؟ لن تعمل ميزات البحث بدون انترنت بعد الخروج.")){
-                signOut(auth).then(() => {
-                    localStorage.removeItem('cached_user_data');
-                    location.reload();
-                });
-            }
-        };
+        window.logout = () => signOut(auth).then(() => location.reload());
 
         onAuthStateChanged(auth, async (user) => {
             if(user) {
                 currentUser = user;
+                
+                // --- التعديل: جلب صلاحيات المستخدم أوفلاين (يشتغل حتى لو ماكو نت) ---
+                const savedData = localStorage.getItem('offlineUser_' + user.uid);
+                if(savedData) myData = JSON.parse(savedData);
+
                 try {
                     const snap = await get(ref(db, 'users/' + user.uid));
                     if(snap.exists()) {
                         myData = snap.val();
-                        localStorage.setItem('cached_user_data', JSON.stringify(myData));
-                        checkInitialAccess();
+                        // تحديث بيانات المستخدم أوفلاين
+                        localStorage.setItem('offlineUser_' + user.uid, JSON.stringify(myData));
                     }
-                } catch(e) { console.log("وضع الأوفلاين نشط"); }
+                } catch(e) {
+                    console.log("تعمل الآن بوضع الأوفلاين ⚡");
+                }
+                
+                if(myData && myData.status === 'approved') {
+                    document.getElementById('authSection').style.display = 'none';
+                    document.getElementById('secureSearchSection').style.display = 'block';
+                    document.getElementById('logoutBtn').style.display = 'block';
+                    
+                    if(myData.role === 'admin') {
+                        document.getElementById('adminTabBtn').style.display = 'block';
+                        initAdminPanel();
+                    }
+                } else {
+                    document.getElementById('authSection').style.display = 'none';
+                    document.getElementById('pendingSection').style.display = 'block';
+                    document.getElementById('logoutBtn').style.display = 'block';
+                }
             }
         });
 
+        // --- المزامنة اللحظية (Sync) وتخزين الأوفلاين ---
         onValue(ref(db, 'phones'), (s) => {
+            livePhones = [];
             const data = s.val();
             if(data) {
-                livePhones = [];
                 for(let k in data) livePhones.push({...data[k], key: k});
+                
+                // --- التعديل: حفظ الأرقام بالذاكرة للعمل أوفلاين ---
                 localStorage.setItem('offlinePhones', JSON.stringify(livePhones));
-                document.getElementById('countPhones').innerText = livePhones.length;
-                searchPhones();
             }
+            
+            // تحديث عدد الهواتف في المربع الفوك
+            document.getElementById('countPhones').innerText = livePhones.length; 
+            
+            searchPhones(); // تحديث العرض
         });
 
         onValue(ref(db, 'cars'), (s) => {
+            liveCars = [];
             const data = s.val();
             if(data) {
-                liveCars = [];
                 for(let k in data) liveCars.push({...data[k], key: k});
+                
+                // --- التعديل: حفظ السيارات بالذاكرة للعمل أوفلاين ---
                 localStorage.setItem('offlineCars', JSON.stringify(liveCars));
-                document.getElementById('countCars').innerText = liveCars.length;
             }
+            document.getElementById('countCars').innerText = liveCars.length;
         });
 
+        // --- الوظائف العامة (الهواتف والسيارات) ---
         window.searchPhones = () => {
             const q = document.getElementById('phoneSearch').value.toLowerCase();
             const res = livePhones.filter(p => p.name.includes(q) || p.ext.includes(q));
@@ -376,10 +423,14 @@
 
             const found = liveCars.find(c => c.plate == plate);
             
-            if(myData && myData.status === 'approved' && navigator.onLine) {
+            // تسجيل المراقبة إذا كان الحساب مفعل (الأدمن والموظف)
+            if(myData && myData.status === 'approved') {
                 push(ref(db, 'logs'), {
-                    user: myData.name, plate: plate, type: mode,
-                    time: new Date().toLocaleString('ar-IQ'), timestamp: Date.now()
+                    user: myData.name,
+                    plate: plate,
+                    type: mode,
+                    time: new Date().toLocaleString('ar-IQ'),
+                    timestamp: Date.now()
                 });
             }
 
@@ -405,25 +456,35 @@
             }
         };
 
+        // --- لوحة الإدارة الشاملة (Admin Core) ---
         function initAdminPanel() {
+            // مستمع المراقبة والمخططات
             onValue(ref(db, 'logs'), s => {
+                liveLogs = [];
                 const data = s.val();
                 let todayCount = 0;
                 let userActivity = {};
-                let logsArr = [];
+                
                 for(let k in data) {
-                    logsArr.push(data[k]);
+                    liveLogs.push(data[k]);
+                    // حساب إحصائيات اليوم (اخر 24 ساعة)
                     if(Date.now() - data[k].timestamp < 86400000) todayCount++;
+                    // تجميع نشاط المستخدمين للمخطط
                     userActivity[data[k].user] = (userActivity[data[k].user] || 0) + 1;
                 }
+                
                 document.getElementById('countLogs').innerText = todayCount;
-                const recentLogs = logsArr.slice(-20).reverse();
+                
+                // عرض السجل الحي (آخر 20 عملية)
+                const recentLogs = liveLogs.slice(-20).reverse();
                 document.getElementById('liveLogs').innerHTML = recentLogs.map(l => 
                     `<div class="log-item"><span>👤 <b>${l.user}</b> بحث عن [${l.plate}]</span> <span style="color:var(--muted);">${l.time}</span></div>`
                 ).join('');
-                updateCharts(userActivity, logsArr);
+
+                updateCharts(userActivity);
             });
 
+            // مستمع المستخدمين (الموافقات والحذف)
             onValue(ref(db, 'users'), s => {
                 const users = s.val();
                 let count = 0;
@@ -448,14 +509,15 @@
             });
         }
 
+        // رسم المخططات البيانية (Chart.js)
         let chart1, chart2;
-        function updateCharts(userData, allLogs) {
+        function updateCharts(userData) {
             const ctx1 = document.getElementById('searchChart');
             if(chart1) chart1.destroy();
             chart1 = new Chart(ctx1, {
                 type: 'bar',
                 data: {
-                    labels: Object.keys(userData).slice(0, 5),
+                    labels: Object.keys(userData).slice(0, 5), // اكثر 5 مستخدمين
                     datasets: [{ label: 'عمليات البحث لكل موظف', data: Object.values(userData).slice(0, 5), backgroundColor: '#007c77' }]
                 },
                 options: { responsive: true, maintainAspectRatio: false }
@@ -463,12 +525,13 @@
 
             const ctx2 = document.getElementById('deptChart');
             if(chart2) chart2.destroy();
+            // إحصائية بسيطة للمخطط الثاني كأمثلة
             chart2 = new Chart(ctx2, {
                 type: 'doughnut',
                 data: {
                     labels: ['سريع', 'أمني'],
                     datasets: [{
-                        data: [allLogs.filter(l=>l.type==='quick').length, allLogs.filter(l=>l.type==='secure').length],
+                        data: [liveLogs.filter(l=>l.type==='quick').length, liveLogs.filter(l=>l.type==='secure').length],
                         backgroundColor: ['#d4af37', '#004b49']
                     }]
                 },
@@ -476,11 +539,23 @@
             });
         }
 
+        // --- إجراءات الأدمن ---
         window.adminAction = async (action, uid) => {
             if(action === 'approve') await update(ref(db, 'users/' + uid), { status: 'approved' });
             if(action === 'delete') {
                 if(confirm("سيتم حذف المستخدم من السجلات، هل أنت متأكد؟")) await remove(ref(db, 'users/' + uid));
             }
+        };
+
+        window.createDirectUser = async () => {
+            const n = document.getElementById('directName').value;
+            const d = document.getElementById('directDept').value;
+            const u = document.getElementById('directUser').value;
+            const p = document.getElementById('directPass').value;
+            if(!n || !u || !p) return alert("اكمل البيانات");
+            
+            // إنشاء حساب وهمي لتسجيله بالـ Auth ثم العودة لحساب الأدمن (طريقة بديلة)
+            alert("لإنشاء حساب مباشر دون الخروج من حسابك الحالي، يمكنك إنشاءه من شاشة الدخول ثم الموافقة عليه هنا فوراً.");
         };
 
         window.saveCar = async () => {
@@ -492,48 +567,68 @@
                 color: document.getElementById('admCarColor').value, badge: document.getElementById('admCarBadge').value,
                 phone: document.getElementById('admCarPhone').value
             };
+            
             let keyToUpdate = currentEditCarKey;
+            
+            // احتياط: إذا نسي يضغط "جلب" وبس كتب رقم اللوحة، ندور عليه
             if(!keyToUpdate) {
                 const existing = liveCars.find(c => c.plate == plate);
                 if(existing) keyToUpdate = existing.key;
             }
+
             if(keyToUpdate) {
                 await update(ref(db, 'cars/' + keyToUpdate), data);
-                alert("✅ تم التحديث بنجاح!");
+                alert("✅ تم تحديث معلومات السيارة (استبدال القديمة) بنجاح!");
             } else {
                 await push(ref(db, 'cars'), data);
-                alert("✅ تم الإضافة بنجاح!");
+                alert("✅ تمت إضافة السيارة كـ سيارة جديدة بنجاح!");
             }
+
+            // تفريغ الحقول بعد الحفظ للترتيب
             currentEditCarKey = null;
-            document.querySelectorAll('.admin-form input').forEach(i => i.value = '');
+            document.getElementById('searchCarEditInput').value = '';
+            document.getElementById('admCarPlate').value = '';
+            document.getElementById('admCarName').value = '';
+            document.getElementById('admCarDept').value = '';
+            document.getElementById('admCarTitle').value = '';
+            document.getElementById('admCarType').value = '';
+            document.getElementById('admCarColor').value = '';
+            document.getElementById('admCarBadge').value = '';
+            document.getElementById('admCarPhone').value = '';
         };
 
         window.deleteCar = async () => {
             const plate = document.getElementById('admCarPlate').value.trim();
             const existing = liveCars.find(c => c.plate == plate);
-            if(existing && confirm("حذف السيارة؟")) {
+            if(existing && confirm("هل تريد حذف هذه السيارة؟")) {
                 await remove(ref(db, 'cars/' + existing.key));
                 alert("تم الحذف");
-            }
+            } else { alert("الرقم غير موجود"); }
         };
 
         window.savePhone = async () => {
             const name = document.getElementById('admPhoneName').value.trim();
             const ext = document.getElementById('admPhoneExt').value.trim();
-            if(!name || !ext) return alert("اكمل البيانات");
+            if(!name || !ext) return alert("اكمل الاسم والرقم");
+            
             let keyToUpdate = currentEditPhoneKey;
+
             if(!keyToUpdate) {
                 const existing = livePhones.find(p => p.name === name);
                 if(existing) keyToUpdate = existing.key;
             }
+
             if(keyToUpdate) {
                 await update(ref(db, 'phones/' + keyToUpdate), {name, ext});
-                alert("✅ تم التحديث!");
+                alert("✅ تم تحديث الهاتف (استبدال القديم) بنجاح!");
             } else {
                 await push(ref(db, 'phones'), {name, ext});
-                alert("✅ تم الإضافة!");
+                alert("✅ تمت إضافة الهاتف كـ قسم جديد بنجاح!");
             }
+
+            // تفريغ الحقول بعد الحفظ للترتيب
             currentEditPhoneKey = null;
+            document.getElementById('searchPhoneEditInput').value = '';
             document.getElementById('admPhoneName').value = '';
             document.getElementById('admPhoneExt').value = '';
         };
@@ -547,11 +642,14 @@
             }
         };
 
+        // --- وظائف جلب البيانات للتعديل وتغيير الباسورد ---
+        
         window.loadCarForEdit = () => {
             const plate = document.getElementById('searchCarEditInput').value.trim();
+            if(!plate) return alert("اكتب رقم اللوحة اولاً ثم اضغط بحث وجلب");
             const car = liveCars.find(c => c.plate == plate);
             if(car) {
-                currentEditCarKey = car.key;
+                currentEditCarKey = car.key; // حفظ المفتاح السري للاستبدال
                 document.getElementById('admCarPlate').value = car.plate || ''; 
                 document.getElementById('admCarName').value = car.name || '';
                 document.getElementById('admCarDept').value = car.dept || '';
@@ -560,43 +658,55 @@
                 document.getElementById('admCarColor').value = car.color || '';
                 document.getElementById('admCarBadge').value = car.badge || '';
                 document.getElementById('admCarPhone').value = car.phone || '';
-                alert("✅ تم جلب البيانات!");
-            } else { alert("❌ غير موجود!"); }
+                alert("✅ تم سحب البيانات! كدر تعدل عليها هسه وتدوس إضافة/تحديث.");
+            } else {
+                alert("❌ هذه السيارة غير موجودة في السجلات!");
+            }
         };
 
         window.loadPhoneForEdit = () => {
             const name = document.getElementById('searchPhoneEditInput').value.trim();
+            if(!name) return alert("اكتب اسم القسم اولاً ثم اضغط بحث وجلب");
             const phone = livePhones.find(p => p.name == name);
             if(phone) {
-                currentEditPhoneKey = phone.key;
+                currentEditPhoneKey = phone.key; // حفظ المفتاح السري للاستبدال
                 document.getElementById('admPhoneName').value = phone.name || ''; 
                 document.getElementById('admPhoneExt').value = phone.ext || '';
-                alert("✅ تم جلب الرقم!");
-            } else { alert("❌ غير موجود!"); }
-        };
-
-        window.changeMyPassword = async () => {
-            const newPass = prompt("أدخل كلمة المرور الجديدة (6 رموز على الأقل):");
-            if(newPass && newPass.length >= 6) {
-                try {
-                    await updatePassword(auth.currentUser, newPass);
-                    alert("✅ تم التغيير!");
-                } catch(e) { alert("⚠️ سجل دخول من جديد أولاً لتغيير الرمز."); }
+                alert("✅ تم سحب الرقم! كدر تعدله وتدوس حفظ/تحديث.");
+            } else {
+                alert("❌ هذا القسم غير موجود!");
             }
         };
 
+        window.changeMyPassword = async () => {
+            const newPass = prompt("أدخل كلمة المرور الجديدة (يجب أن تكون 6 أرقام/أحرف على الأقل):");
+            if(newPass && newPass.length >= 6) {
+                try {
+                    await updatePassword(auth.currentUser, newPass);
+                    alert("✅ تم تغيير كلمة المرور بنجاح! سيتم استخدامها في الدخول القادم.");
+                } catch(e) {
+                    alert("⚠️ خطأ: لدواعي أمنية، الفايربيس يطلب منك تسجيل الخروج والدخول مرة أخرى قبل تغيير الرمز.");
+                }
+            } else if(newPass) {
+                alert("❌ كلمة المرور قصيرة جداً!");
+            }
+        };
+
+        // --- استيراد البيانات (للمرة الأولى) ---
         window.uploadInternalPhones = async () => {
-            if(!confirm("رفع الهواتف؟")) return;
+            if(!confirm("سيتم رفع الهواتف القديمة للسيرفر. استمرار؟")) return;
             for(let p of legacyPhones) await push(ref(db, 'phones'), p);
-            alert("تم الرفع");
+            alert("تم رفع الهواتف بنجاح");
         };
 
         window.uploadCarsFromJson = async () => {
-            if(typeof carDb === 'undefined') return alert("ملف cars.js غير موجود.");
-            if(!confirm("رفع السيارات؟")) return;
+            if(typeof carDb === 'undefined') return alert("ملف cars.js غير متصل أو غير موجود.");
+            if(!confirm("سيتم رفع " + carDb.length + " سيارة لقاعدة البيانات. استمرار؟")) return;
+            
             for(let c of carDb) await push(ref(db, 'cars'), c);
-            alert("تم الرفع!");
+            alert("تم رفع سجل العجلات بنجاح!");
         };
+
     </script>
 </body>
 </html>
