@@ -59,6 +59,14 @@
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .developer-footer { position: fixed; bottom: 0; width: 100%; background: white; text-align: center; padding: 10px 0; font-size: 0.8rem; border-top: 1px solid #eee; z-index: 900; }
+        
+        /* تنسيقات زر الترجمة لإخفاء شريط جوجل وجعله أنيقاً */
+        .goog-te-banner-frame.skiptranslate { display: none !important; }
+        body { top: 0px !important; }
+        .goog-te-gadget-simple { border: 1px solid #ddd !important; border-radius: 8px !important; padding: 5px 8px !important; background: var(--bg) !important; display: flex; align-items: center; }
+        .goog-te-gadget-icon { display: none !important; }
+        .goog-te-menu-value span { font-family: 'Cairo', sans-serif !important; font-weight: bold !important; color: var(--primary) !important; text-decoration: none !important; font-size: 0.9rem !important; }
+        .goog-te-menu-value span:nth-child(3), .goog-te-menu-value span:nth-child(5) { display: none !important; }
     </style>
 </head>
 <body>
@@ -72,7 +80,11 @@
                     <p style="margin:0; font-size:0.75rem; color:var(--muted);">النظام المركزي - Yaseen ALtmeme</p>
                 </div>
             </div>
-            <button id="logoutBtn" onclick="logout()" style="display:none; background:none; border:none; color:var(--danger); font-size:1.2rem; cursor:pointer;"><i class="fas fa-sign-out-alt"></i></button>
+            
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div id="google_translate_element"></div>
+                <button id="logoutBtn" onclick="logout()" style="display:none; background:none; border:none; color:var(--danger); font-size:1.2rem; cursor:pointer;"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
         </div>
         
         <div class="tabs">
@@ -250,6 +262,17 @@
     <div id="toast" class="toast"><i class="fas fa-check-circle"></i> تم النسخ</div>
 
     <script src="cars.js"></script>
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'ar',
+                includedLanguages: 'ar,en',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
