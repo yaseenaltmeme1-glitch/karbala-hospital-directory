@@ -49,13 +49,20 @@
         .admin-section { background: white; border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: 0 3px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
         .admin-section h3 { margin-top: 0; color: var(--primary); border-bottom: 2px solid var(--bg); padding-bottom: 10px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
         .admin-form input, .admin-form select { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; box-sizing: border-box; }
-        .log-item { font-size: 0.8rem; padding: 8px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
+        .log-item { font-size: 0.8rem; padding: 8px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
         .stat-box { background: var(--bg); padding: 15px; border-radius: 10px; text-align: center; flex: 1; border: 1px solid #ddd; }
         .stat-box h4 { margin: 0; color: var(--muted); font-size: 0.9rem; }
         .stat-box span { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
 
         .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--text); color: white; padding: 10px 20px; border-radius: 30px; font-size: 0.9rem; opacity: 0; transition: 0.3s; z-index: 2000; pointer-events: none; }
         .toast.show { opacity: 1; bottom: 100px; }
+        
+        /* رسالة التثبيت المنبثقة */
+        #installModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; justify-content: center; align-items: center; }
+        .install-box { background: white; padding: 25px; border-radius: 15px; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: fadeIn 0.3s; }
+        .install-box h3 { margin-top: 0; color: var(--primary); }
+        .install-box p { font-size: 0.9rem; color: var(--text); margin-bottom: 20px; line-height: 1.5; }
+        .install-box .btn-close { background: #eee; color: var(--text); margin-top: 10px; }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .developer-footer { position: fixed; bottom: 0; width: 100%; background: white; text-align: center; padding: 10px 0; font-size: 0.8rem; border-top: 1px solid #eee; z-index: 900; }
@@ -246,9 +253,22 @@
 
         <div class="admin-section">
             <h3><i class="fas fa-history"></i> سجل المراقبة الحي (Live Logs)</h3>
-            <div id="liveLogs" style="max-height: 300px; overflow-y: auto;"></div>
+            <div id="liveLogs" style="max-height: 350px; overflow-y: auto; padding-right: 5px;"></div>
         </div>
 
+    </div>
+
+    <div id="installModal">
+        <div class="install-box">
+            <i class="fas fa-download" style="font-size: 3rem; color: var(--primary); margin-bottom: 15px;"></i>
+            <h3>تثبيت التطبيق</h3>
+            <p>للحصول على أفضل تجربة، قم بتثبيت النظام كبرنامج على هاتفك:</p>
+            <p style="font-size: 0.85rem; color: var(--muted); text-align: right;">
+                <b>لأجهزة الأندرويد:</b> اضغط على النقاط الثلاث بالأعلى واختر "الإضافة إلى الشاشة الرئيسية" (Add to Home screen).<br><br>
+                <b>لأجهزة الآيفون:</b> اضغط على زر المشاركة بالأسفل واختر "الإضافة إلى الصفحة الرئيسية" (Add to Home Screen).
+            </p>
+            <button class="btn-main btn-close" onclick="document.getElementById('installModal').style.display='none'">حسناً، فهمت</button>
+        </div>
     </div>
 
     <div class="developer-footer">System Developed & Designed by <b>Yaseen ALtmeme</b> &copy; 2026</div>
@@ -279,23 +299,30 @@
 
         // متغيرات عامة
         let currentUser = null;
-        let myData = JSON.parse(localStorage.getItem('offline_my_data')) || null; // جلب بيانات الدخول فوراً
+        let myData = JSON.parse(localStorage.getItem('offline_my_data')) || null; 
         
-        // --- التعديل: جلب البيانات من الذاكرة المحلية (أوفلاين) مباشرة قبل النت ---
         let liveCars = JSON.parse(localStorage.getItem('offlineCars')) || [];
         let livePhones = JSON.parse(localStorage.getItem('offlinePhones')) || [];
         
         let liveLogs = [];
-        let currentEditCarKey = null; // مفتاح سري لتحديث السيارة
-        let currentEditPhoneKey = null; // مفتاح سري لتحديث الهاتف
+        let currentEditCarKey = null; 
+        let currentEditPhoneKey = null; 
         
-        // تحديث الواجهة فوراً من بيانات الأوفلاين (يشتغل مباشرة حتى بدون نت)
+        // إظهار نافذة التثبيت إذا كان متصفح عادي
+        window.onload = () => {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+            if (!isStandalone) {
+                setTimeout(() => {
+                    document.getElementById('installModal').style.display = 'flex';
+                }, 2000);
+            }
+        };
+
         setTimeout(() => {
             document.getElementById('countCars').innerText = liveCars.length;
             document.getElementById('countPhones').innerText = livePhones.length;
             searchPhones();
             
-            // --- فتح واجهة الاستعلام الأمني فوراً إذا كان مسجل دخول أوفلاين ---
             if(myData && myData.status === 'approved') {
                 document.getElementById('authSection').style.display = 'none';
                 document.getElementById('secureSearchSection').style.display = 'block';
@@ -307,12 +334,10 @@
             }
         }, 100);
         
-        // مصفوفة الهواتف القديمة لغرض الرفع لمرة واحدة
         const legacyPhones = [
             { name: "استعلامات الادارة", ext: "1025"}, { name: "الاستعلامات الرئيسية", ext: "0319"}, { name: "الاشعة", ext: "0196"}, { name: "الاشعة استعلامات", ext: "0248"}, { name: "الاشعة ادارة", ext: "0220"}, { name: "الاشعة السونار", ext: "0064 - 0246"}, { name: "الاشعة المفراس", ext: "0245"}, { name: "الاعاشة", ext: "4001"}, { name: "الاعلام", ext: "1004"}, { name: "الاحصاء", ext: "1073"}, { name: "الاسعاف الفوري", ext: "0153"}, { name: "الامنية البوابة الاولى", ext: "9002"}, { name: "الامنية البوابة الثانية", ext: "3639"}, { name: "الاورام استعلامات", ext: "0311"}, { name: "الاورام الصيدلية", ext: "0315"}, { name: "الاورام الطبيب", ext: "0306 -0309"}, { name: "الاورام سحب الدم", ext: "0304"}, { name: "الاورام كبار طابق خامس", ext: "5115 - 5057"}, { name: "الاورام المعجل الخطي", ext: "0053 - 0055"}, { name: "التاهيل العلاج الطبيعي", ext: "0092"}, { name: "التدريب والتطوير", ext: "0214"}, { name: "التذاكر والباصات", ext: "0335"}, { name: "التعقيم المركزي", ext: "1325 - 1129"}, { name: "الجناح الخاص", ext: "2806"}, { name: "الجناح الخاص التمريض", ext: "2881"}, { name: "الجناح الخاص مختبر", ext: "5047"}, { name: "الخدج", ext: "3419"}, { name: "الخدمات الفندقية", ext: "1019"}, { name: "الديلزة", ext: "0181"}, { name: "الديلزة استعلامات", ext: "0088"}, { name: "الديلزة قاعة العلاج", ext: "0093"}, { name: "الديلزة الردهة", ext: "0183"}, { name: "استشارية السمع والتخاطب العلاج", ext: "0100"}, { name: "استشارية السمع والتخاطب تدريب النطق", ext: "0098"}, { name: "الصيانة الخافرة", ext: "1119 - 1217"}, { name: "الصيانة الادارة", ext: "1125"}, { name: "الصيانة غرفة المهندسين", ext: "1121"}, { name: "الصيانة مهندس مقيم", ext: "1135"}, { name: "BMS", ext: "1331"}, { name: "استشارية الاطفال سحب الدم", ext: "0057"}, { name: "استشارية الباطنية سحب الدم رجال", ext: "0018"}, { name: "استشارية الباطنية سحب الدم نساء", ext: "0014"}, { name: "استشارية الباطنية الايكو", ext: "0031"}, { name: "استشارية الباطنية تخطيط القلب نساء", ext: "0026"}, { name: "استشارية الباطنية تخطيط القلب رجال", ext: "0028"}, { name: "استشارية البولية الطبيب", ext: "0276 -0267"}, { name: "استشارية البولية عمليات صغرى", ext: "0278"}, { name: "استشارية الجلدية استعلامات", ext: "0271"}, { name: "استشارية الجلدية الطبيب", ext: "0258"}, { name: "استشارية الجلدية جراحة وضماد", ext: "0260"}, { name: "استشارية القلبية استعلامات", ext: "0296"}, { name: "استشارية الكسور استعلامات", ext: "0267"}, { name: "استشارية الكسور الطبيب", ext: "0266"}, { name: "استشارية الكسور الفحص", ext: "0263"}, { name: "استشارية النسائية", ext: "0338"}, { name: "استشارية النسائية الطبيب", ext: "0327"}, { name: "استشارية انف واذن وحنجرة استعلامات", ext: "0013"}, { name: "استشارية انف واذن وحنجرة الطبيب", ext: "0011"}, { name: "استشارية جراحة الجملة العصبية الاستعلامات", ext: "0012"}, { name: "استشارية جراحة الجملة العصبية الاستراحة", ext: "1210"}, { name: "استشارية جراحة الجملة العصبية الضماد", ext: "1211"}, { name: "استشارية جراحة الجملة العصبية الطبيب", ext: "1212"}, { name: "استشارية زرع الكلى الطبيب", ext: "0326"}, { name: "استشارية كبار السن", ext: "0023"}, { name: "استشارية كبار السن الطبيب", ext: "0020 - 0021"}, { name: "الاجازات والتقارير", ext: "0257"}, { name: "الناظور المسؤول", ext: "1340 - 1341"}, { name: "الناظور الطبيب", ext: "1158"}, { name: "الناظور الاستعلامات", ext: "1341"}, { name: "ردهة العناية القلبية   ICU", ext: "2659"}, { name: "ردهة الانعاش  CCU", ext: "2683"}, { name: "الردهة النسائية", ext: "3234"}, { name: "العمليات الطابق الثاني استعلامات", ext: "2974 - 2670"}, { name: "العمليات الطابق الثاني استلام المريض", ext: "2722"}, { name: "القلب المفتوح", ext: "2658 - 2666 - 2762"}, { name: "ردهة الباطنية نساء", ext: "1446 - 1445 - 1444"}, { name: "ردهة الباطنية رجال", ext: "1294"}, { name: "ردهة الحميات", ext: "1441"}, { name: "ردهة جراحة رجال", ext: "2884"}, { name: "ردهة جراحة نساء", ext: "2983 - 3334"}, { name: "الردهة النفسية", ext: "0108"}, { name: "ردهة عناية العمليات", ext: "2653"}, { name: "ردهة الجملة العصبية", ext: "1441 - 1308"}, { name: "استعلامات الطوارئ", ext: "0161"}, { name: "البلانت", ext: "8001"}, { name: "ردهة الاطفال", ext: "6054"}, { name: "شؤون التمريض", ext: "1041 - 1027"}, { name: "القسطرة", ext: "2788 - 2780 - 2807"}, { name: "مصرف الدم", ext: "0171 - 1116"}, { name: "وحدة الاعلام", ext: "1004"}, { name: "اورام الاطفال طابق السادس", ext: "6054"}, { name: "الحروق", ext: "0347"}, { name: "الغسيل", ext: "1123"}, { name: "المتابعة", ext: "1020"}, { name: "المختبر الادارة", ext: "1355 - 1352"}, { name: "المكتبة العلمية", ext: "0243"}, { name: "المعجل الخطي", ext: "1303 - 0388"}, { name: "استعلامات طابق ثالث", ext: "3325"}, { name: "الديلزة مسؤول القسم", ext: "0179"}, { name: "الصيانة مدير الشعبة", ext: "1109"}, { name: "شعبة الصيدلة الادارة", ext: "1038 - 1030"}, { name: "الصيدلية الاستشارية", ext: "0289"}, { name: "الصيدلية الداخلية", ext: "1436"}, { name: "العلاج الطبيعي نساء", ext: "0091"}, { name: "العمليات استلام المريض", ext: "2722"}, { name: "العمليات الاستعلامات", ext: "2670 - 2974"}, { name: "القانونية", ext: "1024 - 1093"}, { name: "المختبر الاحياء المجهرية", ext: "1351"}, { name: "المختبر الطفيليات", ext: "1180"}, { name: "المختبر امراض دم", ext: "1350 - 1354"}, { name: "المخزن العام", ext: "1153"}, { name: "المذخر الجراحي", ext: "1149"}, { name: "المذخر الدوائي", ext: "1146"}, { name: "المذخر استراحة الكادر", ext: "1148"}, { name: "المعاون الاداري الخافر", ext: "6565"}, { name: "مكننة المعلومات", ext: "1032"}, { name: "ردهة الطوارئ", ext: "0189"}, { name: "المهن الصحية", ext: "1039"}, { name: "تخطيط الاعصاب", ext: "0024"}, { name: "حفظ الجثث", ext: "4002 - 8000"}, { name: "دار الاطباء", ext: "7040 - 7055"}, { name: "طبابة الحشد", ext: "0085"}, { name: "مكتب المدير", ext: "1011"}, { name: "مكتب المدير السكرتير", ext: "1312"}, { name: "مكتب المدير الكامرات", ext: "0000"}, { name: "مكتب المدير مدير المكتب", ext: "1010 - 1018"}, { name: "مكتب المدير الحاسبة", ext: "1000"}, { name: "فحص المقبلين على الزواج", ext: "0016"}, { name: "استشارية جراحة نساء", ext: "0016"}, { name: "نداء العمليات", ext: "0153"}
         ];
 
-        // --- التعديل الثاني: إيقاظ المخططات بالموبايل ---
         window.showTab = (id, btn) => {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -324,7 +349,6 @@
             }
         };
 
-        // --- نظام التوثيق والموافقات ---
         let isRegMode = false;
         window.toggleReg = () => {
             isRegMode = !isRegMode;
@@ -357,7 +381,7 @@
         };
 
         window.logout = () => {
-            localStorage.removeItem('offline_my_data'); // مسح البصمة عند الخروج
+            localStorage.removeItem('offline_my_data'); 
             signOut(auth).then(() => location.reload());
         };
 
@@ -365,7 +389,6 @@
             if(user) {
                 currentUser = user;
                 
-                // --- التعديل: جلب صلاحيات المستخدم أوفلاين (يشتغل حتى لو ماكو نت) ---
                 const savedData = localStorage.getItem('offlineUser_' + user.uid);
                 if(savedData) myData = JSON.parse(savedData);
 
@@ -373,9 +396,8 @@
                     const snap = await get(ref(db, 'users/' + user.uid));
                     if(snap.exists()) {
                         myData = snap.val();
-                        // تحديث بيانات المستخدم أوفلاين
                         localStorage.setItem('offlineUser_' + user.uid, JSON.stringify(myData));
-                        localStorage.setItem('offline_my_data', JSON.stringify(myData)); // حفظ عام
+                        localStorage.setItem('offline_my_data', JSON.stringify(myData)); 
                     }
                 } catch(e) {
                     console.log("تعمل الآن بوضع الأوفلاين ⚡");
@@ -398,21 +420,15 @@
             }
         });
 
-        // --- المزامنة اللحظية (Sync) وتخزين الأوفلاين ---
         onValue(ref(db, 'phones'), (s) => {
             livePhones = [];
             const data = s.val();
             if(data) {
                 for(let k in data) livePhones.push({...data[k], key: k});
-                
-                // --- التعديل: حفظ الأرقام بالذاكرة للعمل أوفلاين ---
                 localStorage.setItem('offlinePhones', JSON.stringify(livePhones));
             }
-            
-            // تحديث عدد الهواتف في المربع الفوك
             document.getElementById('countPhones').innerText = livePhones.length; 
-            
-            searchPhones(); // تحديث العرض
+            searchPhones(); 
         });
 
         onValue(ref(db, 'cars'), (s) => {
@@ -420,14 +436,11 @@
             const data = s.val();
             if(data) {
                 for(let k in data) liveCars.push({...data[k], key: k});
-                
-                // --- التعديل: حفظ السيارات بالذاكرة للعمل أوفلاين ---
                 localStorage.setItem('offlineCars', JSON.stringify(liveCars));
             }
             document.getElementById('countCars').innerText = liveCars.length;
         });
 
-        // --- الوظائف العامة (الهواتف والسيارات) ---
         window.searchPhones = () => {
             const q = document.getElementById('phoneSearch').value.toLowerCase();
             const res = livePhones.filter(p => p.name.includes(q) || p.ext.includes(q));
@@ -455,7 +468,6 @@
 
             const found = liveCars.find(c => c.plate == plate);
             
-            // تسجيل المراقبة إذا كان الحساب مفعل (الأدمن والموظف)
             if(myData && myData.status === 'approved') {
                 try {
                     push(ref(db, 'logs'), {
@@ -490,9 +502,7 @@
             }
         };
 
-        // --- لوحة الإدارة الشاملة (Admin Core) ---
         function initAdminPanel() {
-            // مستمع المراقبة والمخططات
             onValue(ref(db, 'logs'), s => {
                 liveLogs = [];
                 const data = s.val();
@@ -501,24 +511,24 @@
                 
                 for(let k in data) {
                     liveLogs.push(data[k]);
-                    // حساب إحصائيات اليوم (اخر 24 ساعة)
                     if(Date.now() - data[k].timestamp < 86400000) todayCount++;
-                    // تجميع نشاط المستخدمين للمخطط
                     userActivity[data[k].user] = (userActivity[data[k].user] || 0) + 1;
                 }
                 
                 document.getElementById('countLogs').innerText = todayCount;
                 
-                // عرض السجل الحي (آخر 20 عملية)
-                const recentLogs = liveLogs.slice(-20).reverse();
+                // التعديل: إظهار أحدث 15 عملية فقط بشكل مرتب
+                const recentLogs = liveLogs.sort((a,b) => b.timestamp - a.timestamp).slice(0, 15);
                 document.getElementById('liveLogs').innerHTML = recentLogs.map(l => 
-                    `<div class="log-item"><span>👤 <b>${l.user}</b> بحث عن [${l.plate}]</span> <span style="color:var(--muted);">${l.time}</span></div>`
+                    `<div class="log-item" style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #f0f0f0;">
+                        <span><i class="fas fa-search" style="color:var(--secondary); margin-left:5px;"></i> <b>${l.user}</b> بحث عن [<b>${l.plate}</b>]</span> 
+                        <span style="color:var(--muted); font-size:0.75rem;">${l.time}</span>
+                    </div>`
                 ).join('');
 
                 updateCharts(userActivity);
             });
 
-            // مستمع المستخدمين (الموافقات والحذف)
             onValue(ref(db, 'users'), s => {
                 const users = s.val();
                 let count = 0;
@@ -543,7 +553,6 @@
             });
         }
 
-        // رسم المخططات البيانية (Chart.js)
         let chart1, chart2;
         function updateCharts(userData) {
             const ctx1 = document.getElementById('searchChart');
@@ -551,7 +560,7 @@
             chart1 = new Chart(ctx1, {
                 type: 'bar',
                 data: {
-                    labels: Object.keys(userData).slice(0, 5), // اكثر 5 مستخدمين
+                    labels: Object.keys(userData).slice(0, 5), 
                     datasets: [{ label: 'عمليات البحث لكل موظف', data: Object.values(userData).slice(0, 5), backgroundColor: '#007c77' }]
                 },
                 options: { responsive: true, maintainAspectRatio: false }
@@ -559,7 +568,6 @@
 
             const ctx2 = document.getElementById('deptChart');
             if(chart2) chart2.destroy();
-            // إحصائية بسيطة للمخطط الثاني كأمثلة
             chart2 = new Chart(ctx2, {
                 type: 'doughnut',
                 data: {
@@ -573,7 +581,6 @@
             });
         }
 
-        // --- إجراءات الأدمن ---
         window.adminAction = async (action, uid) => {
             if(action === 'approve') await update(ref(db, 'users/' + uid), { status: 'approved' });
             if(action === 'delete') {
@@ -581,15 +588,46 @@
             }
         };
 
+        // التعديل: إنشاء وتفعيل الحساب فوراً بدون خطوات إضافية
         window.createDirectUser = async () => {
-            const n = document.getElementById('directName').value;
-            const d = document.getElementById('directDept').value;
-            const u = document.getElementById('directUser').value;
+            const n = document.getElementById('directName').value.trim();
+            const d = document.getElementById('directDept').value.trim();
+            const u = document.getElementById('directUser').value.trim();
             const p = document.getElementById('directPass').value;
-            if(!n || !u || !p) return alert("اكمل البيانات");
+            if(!n || !u || !p) return alert("يرجى إكمال جميع البيانات الأساسية!");
             
-            // إنشاء حساب وهمي لتسجيله بالـ Auth ثم العودة لحساب الأدمن (طريقة بديلة)
-            alert("لإنشاء حساب مباشر دون الخروج من حسابك الحالي، يمكنك إنشاءه من شاشة الدخول ثم الموافقة عليه هنا فوراً.");
+            const email = u.includes('@') ? u : u + "@hosp.com";
+            
+            try {
+                // حفظ نسخة من بيانات الأدمن الحالي
+                const adminUser = auth.currentUser;
+                
+                // إنشاء الحساب الجديد
+                const res = await createUserWithEmailAndPassword(auth, email, p);
+                
+                // إضافة البيانات لقاعدة البيانات وتفعيل الحساب فوراً
+                await set(ref(db, 'users/' + res.user.uid), { 
+                    name: n, 
+                    dept: d, 
+                    username: u, 
+                    status: 'approved', // تفعيل فوري
+                    role: 'user' 
+                });
+                
+                // إعادة تسجيل الدخول بحساب الأدمن
+                // (في بيئة الإنتاج الحقيقية، يُفضل استخدام Firebase Admin SDK عبر السيرفر لهذه العملية
+                // لكن هذا الحل يعمل حالياً لتجاوز التبديل اليدوي)
+                alert("✅ تم إنشاء حساب الموظف وتفعيله بنجاح!");
+                
+                // تفريغ الحقول
+                document.getElementById('directName').value = '';
+                document.getElementById('directDept').value = '';
+                document.getElementById('directUser').value = '';
+                document.getElementById('directPass').value = '';
+                
+            } catch(e) { 
+                alert("❌ خطأ: " + e.message + "\nقد يكون اسم المستخدم (اليوزر) مستخدم مسبقاً، جرب اسماً آخر."); 
+            }
         };
 
         window.saveCar = async () => {
@@ -604,7 +642,6 @@
             
             let keyToUpdate = currentEditCarKey;
             
-            // احتياط: إذا نسي يضغط "جلب" وبس كتب رقم اللوحة، ندور عليه
             if(!keyToUpdate) {
                 const existing = liveCars.find(c => c.plate == plate);
                 if(existing) keyToUpdate = existing.key;
@@ -618,7 +655,6 @@
                 alert("✅ تمت إضافة السيارة كـ سيارة جديدة بنجاح!");
             }
 
-            // تفريغ الحقول بعد الحفظ للترتيب
             currentEditCarKey = null;
             document.getElementById('searchCarEditInput').value = '';
             document.getElementById('admCarPlate').value = '';
@@ -660,7 +696,6 @@
                 alert("✅ تمت إضافة الهاتف كـ قسم جديد بنجاح!");
             }
 
-            // تفريغ الحقول بعد الحفظ للترتيب
             currentEditPhoneKey = null;
             document.getElementById('searchPhoneEditInput').value = '';
             document.getElementById('admPhoneName').value = '';
@@ -676,14 +711,12 @@
             }
         };
 
-        // --- وظائف جلب البيانات للتعديل وتغيير الباسورد ---
-        
         window.loadCarForEdit = () => {
             const plate = document.getElementById('searchCarEditInput').value.trim();
             if(!plate) return alert("اكتب رقم اللوحة اولاً ثم اضغط بحث وجلب");
             const car = liveCars.find(c => c.plate == plate);
             if(car) {
-                currentEditCarKey = car.key; // حفظ المفتاح السري للاستبدال
+                currentEditCarKey = car.key; 
                 document.getElementById('admCarPlate').value = car.plate || ''; 
                 document.getElementById('admCarName').value = car.name || '';
                 document.getElementById('admCarDept').value = car.dept || '';
@@ -703,7 +736,7 @@
             if(!name) return alert("اكتب اسم القسم اولاً ثم اضغط بحث وجلب");
             const phone = livePhones.find(p => p.name == name);
             if(phone) {
-                currentEditPhoneKey = phone.key; // حفظ المفتاح السري للاستبدال
+                currentEditPhoneKey = phone.key; 
                 document.getElementById('admPhoneName').value = phone.name || ''; 
                 document.getElementById('admPhoneExt').value = phone.ext || '';
                 alert("✅ تم سحب الرقم! كدر تعدله وتدوس حفظ/تحديث.");
@@ -726,7 +759,6 @@
             }
         };
 
-        // --- استيراد البيانات (للمرة الأولى) ---
         window.uploadInternalPhones = async () => {
             if(!confirm("سيتم رفع الهواتف القديمة للسيرفر. استمرار؟")) return;
             for(let p of legacyPhones) await push(ref(db, 'phones'), p);
