@@ -276,7 +276,7 @@
                     location.reload();
                 } catch(e) { alert("خطأ: يرجى التأكد من البيانات أو أن المستخدم موجود مسبقاً."); }
             } else {
-                try { await signInWithEmailAndPassword(auth, email, p); } catch(e) { alert("اسم المستخدم أو كلمة المرور غير صحيحة."); }
+                try { await signInWithEmailAndPassword(auth, email, p); } catch(e) { alert("الخطأ من السيرفر: " + e.message); }
             }
         };
 
