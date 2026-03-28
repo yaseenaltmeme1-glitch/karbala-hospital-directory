@@ -190,7 +190,8 @@
         <div class="admin-section">
             <h3><i class="fas fa-chart-bar"></i> الرقابة والتحليل (Charts)</h3>
             <div style="position: relative; height: 250px; width: 100%; margin-bottom: 20px;"><canvas id="searchChart"></canvas></div>
-            <div style="position: relative; height: 250px; width: 100%;"><canvas id="deptChart"></canvas></div>
+            <div style="position: relative; height: 250px; width: 100%; margin-bottom: 20px;"><canvas id="deptChart"></canvas></div>
+            <div style="position: relative; height: 250px; width: 100%;"><canvas id="phonesChart"></canvas></div>
         </div>
 
         <div class="admin-section" style="border: 2px dashed var(--gold); background: #fffcf0;">
@@ -341,7 +342,7 @@
             
             <h4 style="margin-top:25px; margin-bottom:10px; color:var(--secondary); font-size:1rem; border-top:1px dashed #ddd; padding-top:15px;"><i class="fas fa-history"></i> سجل عمليات البحث لهذا الموظف</h4>
             <div id="profLogs" class="profile-logs">
-                </div>
+            </div>
         </div>
     </div>
 
@@ -355,7 +356,6 @@
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getDatabase, ref, set, get, update, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // إعدادات Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyA1Uh51j1JLdXWtunD2tJ5i8ZljHuTMxeQ",
             authDomain: "karbala-hospital.firebaseapp.com",
@@ -371,7 +371,6 @@
         const auth = getAuth(app);
         const db = getDatabase(app);
 
-        // متغيرات عامة
         let currentUser = null;
         let myData = JSON.parse(localStorage.getItem('offline_my_data')) || null; 
         
@@ -381,10 +380,9 @@
         let liveLogs = [];
         let currentEditCarKey = null; 
         let currentEditPhoneKey = null; 
-        window.globalUsersData = {}; // لحفظ المستخدمين
-        window.currentEditingProfileId = null; // للأدمن عند تعديل موظف
+        window.globalUsersData = {};
+        window.currentEditingProfileId = null;
 
-        // إظهار نافذة التثبيت إذا كان متصفح عادي (وتظهر مرة واحدة فقط)
         window.onload = () => {
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
             const hasSeenPrompt = localStorage.getItem('pwa_prompt_seen');
@@ -412,7 +410,6 @@
             }
         }, 100);
 
-        // --- التعديل: إيقاظ المخططات بالموبايل ---
         window.showTab = (id, btn) => {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -424,6 +421,7 @@
                     window.dispatchEvent(new Event('resize'));
                     if(typeof chart1 !== 'undefined' && chart1) { chart1.resize(); chart1.update(); }
                     if(typeof chart2 !== 'undefined' && chart2) { chart2.resize(); chart2.update(); }
+                    if(typeof chart3 !== 'undefined' && chart3) { chart3.resize(); chart3.update(); }
                 }, 250);
             }
         };
@@ -520,8 +518,9 @@
             document.getElementById('countCars').innerText = liveCars.length;
         });
 
+        // التعديل: تسجيل البحث عن الهواتف للزوار والموظفين
         window.searchPhones = () => {
-            const q = document.getElementById('phoneSearch').value.toLowerCase();
+            const q = document.getElementById('phoneSearch').value.trim().toLowerCase();
             const res = livePhones.filter(p => p.name.includes(q) || p.ext.includes(q));
             document.getElementById('phoneResults').innerHTML = res.map(p => `
                 <div class="card">
@@ -529,6 +528,20 @@
                     <div class="number-box" onclick="copyNum('${p.ext}')">${p.ext}</div>
                 </div>
             `).join('') || '<p style="text-align:center;">لا توجد نتائج</p>';
+
+            // تسجيل المراقبة عند البحث (إذا كان هنالك نص مكتوب)
+            if(q.length > 2) {
+                const userName = (myData && myData.status === 'approved') ? myData.name : 'زائر عام';
+                try {
+                    push(ref(db, 'logs'), {
+                        user: userName,
+                        plate: `بحث هاتف: ${q}`,
+                        type: 'phone_search',
+                        time: new Date().toLocaleString('ar-IQ'),
+                        timestamp: Date.now()
+                    });
+                } catch(e) {}
+            }
         };
 
         window.copyNum = (num) => {
@@ -539,6 +552,7 @@
             });
         };
 
+        // التعديل: تسجيل الفحص للزوار
         window.checkCar = (mode) => {
             const inputId = mode === 'quick' ? 'quickInput' : 'secureInput';
             const resId = mode === 'quick' ? 'quickRes' : 'secureRes';
@@ -547,17 +561,17 @@
 
             const found = liveCars.find(c => c.plate == plate);
             
-            if(myData && myData.status === 'approved') {
-                try {
-                    push(ref(db, 'logs'), {
-                        user: myData.name,
-                        plate: plate,
-                        type: mode,
-                        time: new Date().toLocaleString('ar-IQ'),
-                        timestamp: Date.now()
-                    });
-                } catch(e) { console.log("تسجيل المراقبة متوقف في وضع الأوفلاين"); }
-            }
+            // تسجيل المراقبة للجميع (زائر أو موظف)
+            const userName = (myData && myData.status === 'approved') ? myData.name : 'زائر عام';
+            try {
+                push(ref(db, 'logs'), {
+                    user: userName,
+                    plate: plate,
+                    type: mode,
+                    time: new Date().toLocaleString('ar-IQ'),
+                    timestamp: Date.now()
+                });
+            } catch(e) {}
 
             const resDiv = document.getElementById(resId);
             if(found) {
@@ -601,7 +615,7 @@
                 const recentLogs = liveLogs.sort((a,b) => b.timestamp - a.timestamp).slice(0, 100);
                 document.getElementById('liveLogs').innerHTML = recentLogs.map(l => 
                     `<div class="log-item" style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #f0f0f0;">
-                        <span><i class="fas fa-search" style="color:var(--secondary); margin-left:5px;"></i> <b>${l.user}</b> بحث عن [<b>${l.plate}</b>]</span> 
+                        <span><i class="${l.type === 'phone_search' ? 'fas fa-phone' : 'fas fa-search'}" style="color:var(--secondary); margin-left:5px;"></i> <b>${l.user}</b> بحث عن [<b>${l.plate}</b>]</span> 
                         <span style="color:var(--muted); font-size:0.75rem;">${l.time}</span>
                     </div>`
                 ).join('');
@@ -611,13 +625,12 @@
 
             onValue(ref(db, 'users'), s => {
                 const users = s.val();
-                window.globalUsersData = users || {}; // تحديث المتغير العالمي
+                window.globalUsersData = users || {};
                 let count = 0;
                 let html = '';
                 for(let id in users) {
                     count++;
                     const u = users[id];
-                    // التعديل: جعل اسم المستخدم رابط لفتح البروفايل
                     html += `
                         <div class="card" style="flex-direction:column; align-items:flex-start; gap:10px;">
                             <div style="width:100%; display:flex; justify-content:space-between;">
@@ -638,19 +651,16 @@
             });
         }
         
-        // --- دوال بروفايل المستخدم الجديدة ---
         window.openUserProfile = (uid) => {
             const user = window.globalUsersData[uid];
             if(!user) return;
             window.currentEditingProfileId = uid;
             
-            // تعبئة البيانات في المودال
             document.getElementById('profName').value = user.name || '';
             document.getElementById('profDept').value = user.dept || '';
             document.getElementById('profRole').value = user.role || 'user';
             document.getElementById('profStatus').value = user.status || 'pending';
             
-            // فلترة السجل الخاص به فقط
             const userLogs = liveLogs.filter(l => l.user === user.name).sort((a,b) => b.timestamp - a.timestamp);
             document.getElementById('profLogs').innerHTML = userLogs.length > 0 
                 ? userLogs.map(l => `<div class="log-item" style="border-bottom:1px solid #ddd; padding:8px 0;">بحث عن [<b>${l.plate}</b>] <span style="color:var(--muted); float:left; font-size:0.75rem;">${l.time}</span></div>`).join('') 
@@ -677,7 +687,7 @@
             }
         };
 
-        let chart1, chart2;
+        let chart1, chart2, chart3;
         function updateCharts(userData) {
             const ctx1 = document.getElementById('searchChart');
             if(chart1) chart1.destroy();
@@ -685,7 +695,7 @@
                 type: 'bar',
                 data: {
                     labels: Object.keys(userData).slice(0, 5), 
-                    datasets: [{ label: 'عمليات البحث لكل موظف', data: Object.values(userData).slice(0, 5), backgroundColor: '#007c77' }]
+                    datasets: [{ label: 'عمليات البحث لكل مستخدم', data: Object.values(userData).slice(0, 5), backgroundColor: '#007c77' }]
                 },
                 options: { responsive: true, maintainAspectRatio: false }
             });
@@ -695,10 +705,25 @@
             chart2 = new Chart(ctx2, {
                 type: 'doughnut',
                 data: {
-                    labels: ['سريع', 'أمني'],
+                    labels: ['فحص سريع للسيارات', 'استعلام أمني مفصل'],
                     datasets: [{
                         data: [liveLogs.filter(l=>l.type==='quick').length, liveLogs.filter(l=>l.type==='secure').length],
                         backgroundColor: ['#d4af37', '#004b49']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            // التعديل: مخطط خاص بعمليات البحث عن الهواتف
+            const ctx3 = document.getElementById('phonesChart');
+            if(chart3) chart3.destroy();
+            chart3 = new Chart(ctx3, {
+                type: 'doughnut',
+                data: {
+                    labels: ['بحث هواتف', 'بحث عجلات'],
+                    datasets: [{
+                        data: [liveLogs.filter(l=>l.type==='phone_search').length, liveLogs.filter(l=>l.type !== 'phone_search').length],
+                        backgroundColor: ['#3498db', '#e74c3c']
                     }]
                 },
                 options: { responsive: true, maintainAspectRatio: false }
@@ -926,15 +951,10 @@
             "عمليات البحث": "Searches",
             "المستخدمين": "Users",
             "الرقابة والتحليل (Charts)": "Monitoring & Analysis (Charts)",
-            "استيراد البيانات الأولية": "Import Initial Data",
-            "استخدم هذه الأزرار مرة واحدة فقط لرفع البيانات من الكود وملف JS إلى السيرفر.": "Use these buttons once to upload data.",
-            "رفع دليل الهواتف": "Upload Phone Directory",
-            "رفع سجل العجلات (cars.js)": "Upload Vehicle Log (cars.js)",
             "إدارة العجلات": "Vehicle Management",
             "بحث عن عجلة لتعديلها": "Search for vehicle to edit",
             "أدخل رقم اللوحة للبحث...": "Enter plate number to search...",
             "بحث وجلب": "Search & Fetch",
-            "بيانات العجلة (للإضافة الجديدة أو بعد البحث)": "Vehicle Data (New or Edited)",
             "رقم اللوحة (أساسي)": "Plate Number (Primary)",
             "اسم المالك": "Owner Name",
             "القسم": "Department",
@@ -947,14 +967,10 @@
             "حذف نهائي": "Permanent Delete",
             "إدارة الهواتف": "Phone Management",
             "بحث عن هاتف قسم لتعديله": "Search department phone to edit",
-            "أدخل اسم القسم للبحث...": "Enter department name to search...",
-            "بيانات الهاتف (للإضافة الجديدة أو بعد البحث)": "Phone Data (New or Edited)",
-            "الاسم / القسم": "Name / Dept",
             "الرقم الداخلي (Ext)": "Internal Ext",
             "حفظ / تحديث الهاتف": "Save / Update Phone",
             "حذف": "Delete",
             "إدارة المستخدمين وحسابك": "User Management & Account",
-            "إعدادات حسابي (الأدمن)": "My Account Settings (Admin)",
             "تغيير كلمة المرور الخاصة بي": "Change My Password",
             "إنشاء حساب مباشر للموظف": "Create Direct Employee Account",
             "الاسم": "Name",
@@ -965,25 +981,7 @@
             "تم النسخ": "Copied",
             "غير مصرح (غير موجود بالسجلات) ❌": "Unauthorized (Not in records) ❌",
             "مسموح بالدخول ✅": "Access Granted ✅",
-            "لا توجد نتائج": "No Results Found",
-            "تفاصيل العجلة المكتشفة": "Detected Vehicle Details",
-            "النوع:": "Type:",
-            "اللون:": "Color:",
-            "رقم الهاتف:": "Phone:",
-            "رقم الباج:": "Badge:",
-            "القسم:": "Dept:",
-            "الاسم:": "Name:",
-            "العنوان:": "Title:",
-            "تفعيل": "Approve",
-            "بحث عن": "searched for",
-            "تفاصيل الموظف وسجله": "Employee Details & Logs",
-            "القسم / محل العمل": "Department / Workspace",
-            "الصلاحية": "Role",
-            "الحالة": "Status",
-            "حفظ التعديلات": "Save Changes",
-            "إغلاق": "Close",
-            "سجل عمليات البحث لهذا الموظف": "Search Logs for this Employee",
-            "لم يقم بأي عمليات بحث بعد.": "No search queries made yet."
+            "لا توجد نتائج": "No Results Found"
         };
         
         const reverseUiDict = Object.fromEntries(Object.entries(uiDict).map(([k, v]) => [v, k]));
@@ -995,15 +993,12 @@
                     if(dictionary[clean]) input.placeholder = input.placeholder.replace(clean, dictionary[clean]);
                 }
             });
-
             const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
             let node;
             while(node = walk.nextNode()) {
                 if(node.parentElement && (node.parentElement.tagName === 'SCRIPT' || node.parentElement.tagName === 'STYLE')) continue;
-                
                 let val = node.nodeValue;
                 let trimmed = val.trim();
-                
                 if(trimmed && dictionary[trimmed]) {
                     node.nodeValue = val.replace(trimmed, dictionary[trimmed]);
                 } else if(trimmed) {
@@ -1020,7 +1015,6 @@
             currentLang = currentLang === 'ar' ? 'en' : 'ar';
             document.getElementById('langToggleBtn').innerText = currentLang === 'ar' ? 'English' : 'عربي';
             document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-            
             const activeDict = currentLang === 'en' ? uiDict : reverseUiDict;
             doTranslate(activeDict);
         };
