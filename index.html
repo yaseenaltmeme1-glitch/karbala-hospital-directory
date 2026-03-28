@@ -152,12 +152,21 @@
         </div>
 
         <div class="admin-section" style="border-right: 4px solid var(--primary);">
-            <h3><i class="fas fa-car-side"></i> إدارة العجلات (بحث وتعديل)</h3>
+            <h3><i class="fas fa-car-side"></i> إدارة العجلات</h3>
             <div class="admin-form">
-                <div style="display:flex; gap:10px; margin-bottom: 10px;">
-                    <input type="text" id="admCarPlate" placeholder="رقم اللوحة (اكتب الرقم هنا للبحث)" style="flex:2; margin:0;">
-                    <button class="btn-main" style="flex:1; margin:0; background:var(--gold); color:black;" onclick="loadCarForEdit()">🔍 جلب البيانات</button>
+                
+                <div style="background:#f8f9fa; padding:10px; border-radius:8px; margin-bottom:15px; border:1px solid #ddd;">
+                    <h4 style="margin-top:0; font-size:0.9rem; color:var(--primary);">بحث عن عجلة لتعديلها</h4>
+                    <div style="display:flex; gap:10px; margin-bottom: 5px;">
+                        <input type="text" id="searchCarEditInput" placeholder="أدخل رقم اللوحة للبحث..." style="flex:2; margin:0;">
+                        <button class="btn-main" style="flex:1; margin:0; background:var(--gold); color:black;" onclick="loadCarForEdit()">🔍 بحث وجلب</button>
+                    </div>
                 </div>
+
+                <hr style="border:0; border-top:1px dashed #ccc; margin:15px 0;">
+                <h4 style="margin-top:0; font-size:0.9rem;">بيانات العجلة (للإضافة الجديدة أو بعد البحث)</h4>
+
+                <input type="text" id="admCarPlate" placeholder="رقم اللوحة (أساسي)">
                 <input type="text" id="admCarName" placeholder="اسم المالك">
                 <input type="text" id="admCarDept" placeholder="القسم">
                 <input type="text" id="admCarTitle" placeholder="العنوان الوظيفي">
@@ -177,13 +186,24 @@
         </div>
 
         <div class="admin-section" style="border-right: 4px solid var(--secondary);">
-            <h3><i class="fas fa-tty"></i> إدارة الهواتف (بحث وتعديل)</h3>
+            <h3><i class="fas fa-tty"></i> إدارة الهواتف</h3>
             <div class="admin-form">
-                <div style="display:flex; gap:10px; margin-bottom:10px;">
-                    <input type="text" id="admPhoneName" placeholder="اسم القسم (للبحث أو الإضافة)" style="flex:2; margin:0;">
-                    <button class="btn-main" style="flex:1; margin:0; background:var(--gold); color:black;" onclick="loadPhoneForEdit()">🔍 جلب الرقم</button>
+
+                <div style="background:#f8f9fa; padding:10px; border-radius:8px; margin-bottom:15px; border:1px solid #ddd;">
+                    <h4 style="margin-top:0; font-size:0.9rem; color:var(--secondary);">بحث عن هاتف قسم لتعديله</h4>
+                    <div style="display:flex; gap:10px; margin-bottom: 5px;">
+                        <input type="text" id="searchPhoneEditInput" placeholder="أدخل اسم القسم للبحث..." style="flex:2; margin:0;">
+                        <button class="btn-main" style="flex:1; margin:0; background:var(--gold); color:black;" onclick="loadPhoneForEdit()">🔍 بحث وجلب</button>
+                    </div>
                 </div>
-                <input type="text" id="admPhoneExt" placeholder="الرقم الداخلي (Ext)">
+
+                <hr style="border:0; border-top:1px dashed #ccc; margin:15px 0;">
+                <h4 style="margin-top:0; font-size:0.9rem;">بيانات الهاتف (للإضافة الجديدة أو بعد البحث)</h4>
+
+                <div style="display:flex; gap:10px; margin-bottom:10px;">
+                    <input type="text" id="admPhoneName" placeholder="الاسم / القسم" style="flex:2; margin:0;">
+                    <input type="text" id="admPhoneExt" placeholder="الرقم الداخلي (Ext)" style="flex:1; margin:0;">
+                </div>
                 <div style="display:flex; gap:10px;">
                     <button class="btn-main" style="background:var(--secondary);" onclick="savePhone()">💾 حفظ / تحديث الهاتف</button>
                     <button class="btn-main btn-danger" onclick="deletePhone()">🗑️ حذف</button>
@@ -555,10 +575,11 @@
         // --- وظائف جلب البيانات للتعديل وتغيير الباسورد ---
         
         window.loadCarForEdit = () => {
-            const plate = document.getElementById('admCarPlate').value.trim();
-            if(!plate) return alert("اكتب رقم اللوحة اولاً ثم اضغط جلب البيانات");
+            const plate = document.getElementById('searchCarEditInput').value.trim();
+            if(!plate) return alert("اكتب رقم اللوحة اولاً ثم اضغط بحث وجلب");
             const car = liveCars.find(c => c.plate == plate);
             if(car) {
+                document.getElementById('admCarPlate').value = car.plate || ''; // تعبئة الرقم الأساسي
                 document.getElementById('admCarName').value = car.name || '';
                 document.getElementById('admCarDept').value = car.dept || '';
                 document.getElementById('admCarTitle').value = car.title || '';
@@ -573,10 +594,11 @@
         };
 
         window.loadPhoneForEdit = () => {
-            const name = document.getElementById('admPhoneName').value.trim();
-            if(!name) return alert("اكتب اسم القسم اولاً ثم اضغط جلب الرقم");
+            const name = document.getElementById('searchPhoneEditInput').value.trim();
+            if(!name) return alert("اكتب اسم القسم اولاً ثم اضغط بحث وجلب");
             const phone = livePhones.find(p => p.name == name);
             if(phone) {
+                document.getElementById('admPhoneName').value = phone.name || ''; // تعبئة الاسم الأساسي
                 document.getElementById('admPhoneExt').value = phone.ext || '';
                 alert("✅ تم سحب الرقم! كدر تعدله وتدوس حفظ.");
             } else {
