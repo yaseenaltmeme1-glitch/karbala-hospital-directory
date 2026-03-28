@@ -271,11 +271,21 @@
         // متغيرات عامة
         let currentUser = null;
         let myData = null;
-        let liveCars = [];
-        let livePhones = [];
+        
+        // --- التعديل: جلب البيانات من الذاكرة المحلية (أوفلاين) مباشرة قبل النت ---
+        let liveCars = JSON.parse(localStorage.getItem('offlineCars')) || [];
+        let livePhones = JSON.parse(localStorage.getItem('offlinePhones')) || [];
+        
         let liveLogs = [];
         let currentEditCarKey = null; // مفتاح سري لتحديث السيارة
         let currentEditPhoneKey = null; // مفتاح سري لتحديث الهاتف
+        
+        // تحديث الواجهة فوراً من بيانات الأوفلاين (يشتغل مباشرة حتى بدون نت)
+        setTimeout(() => {
+            document.getElementById('countCars').innerText = liveCars.length;
+            document.getElementById('countPhones').innerText = livePhones.length;
+            searchPhones();
+        }, 100);
         
         // مصفوفة الهواتف القديمة لغرض الرفع لمرة واحدة
         const legacyPhones = [
@@ -323,8 +333,21 @@
         onAuthStateChanged(auth, async (user) => {
             if(user) {
                 currentUser = user;
-                const snap = await get(ref(db, 'users/' + user.uid));
-                myData = snap.val();
+                
+                // --- التعديل: جلب صلاحيات المستخدم أوفلاين (يشتغل حتى لو ماكو نت) ---
+                const savedData = localStorage.getItem('offlineUser_' + user.uid);
+                if(savedData) myData = JSON.parse(savedData);
+
+                try {
+                    const snap = await get(ref(db, 'users/' + user.uid));
+                    if(snap.exists()) {
+                        myData = snap.val();
+                        // تحديث بيانات المستخدم أوفلاين
+                        localStorage.setItem('offlineUser_' + user.uid, JSON.stringify(myData));
+                    }
+                } catch(e) {
+                    console.log("تعمل الآن بوضع الأوفلاين ⚡");
+                }
                 
                 if(myData && myData.status === 'approved') {
                     document.getElementById('authSection').style.display = 'none';
@@ -343,11 +366,16 @@
             }
         });
 
-        // --- المزامنة اللحظية (Sync) ---
+        // --- المزامنة اللحظية (Sync) وتخزين الأوفلاين ---
         onValue(ref(db, 'phones'), (s) => {
             livePhones = [];
             const data = s.val();
-            for(let k in data) livePhones.push({...data[k], key: k});
+            if(data) {
+                for(let k in data) livePhones.push({...data[k], key: k});
+                
+                // --- التعديل: حفظ الأرقام بالذاكرة للعمل أوفلاين ---
+                localStorage.setItem('offlinePhones', JSON.stringify(livePhones));
+            }
             
             // تحديث عدد الهواتف في المربع الفوك
             document.getElementById('countPhones').innerText = livePhones.length; 
@@ -358,7 +386,12 @@
         onValue(ref(db, 'cars'), (s) => {
             liveCars = [];
             const data = s.val();
-            for(let k in data) liveCars.push({...data[k], key: k});
+            if(data) {
+                for(let k in data) liveCars.push({...data[k], key: k});
+                
+                // --- التعديل: حفظ السيارات بالذاكرة للعمل أوفلاين ---
+                localStorage.setItem('offlineCars', JSON.stringify(liveCars));
+            }
             document.getElementById('countCars').innerText = liveCars.length;
         });
 
