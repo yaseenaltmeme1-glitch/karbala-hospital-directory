@@ -63,6 +63,10 @@
         .install-box h3 { margin-top: 0; color: var(--primary); }
         .install-box p { font-size: 0.9rem; color: var(--text); margin-bottom: 20px; line-height: 1.5; }
         .install-box .btn-close { background: #eee; color: var(--text); margin-top: 10px; }
+
+        /* أزرار التواصل في صفحة حول */
+        .social-btn { display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; border-radius: 50%; color: white; font-size: 1.4rem; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
+        .social-btn:active { transform: scale(0.9); }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .developer-footer { position: fixed; bottom: 0; width: 100%; background: white; text-align: center; padding: 10px 0; font-size: 0.8rem; border-top: 1px solid #eee; z-index: 900; }
@@ -91,7 +95,35 @@
             <button class="tab-btn active" onclick="showTab('phones', this)"><i class="fas fa-phone-alt"></i> الهواتف</button>
             <button class="tab-btn" onclick="showTab('quick', this)"><i class="fas fa-car"></i> فحص</button>
             <button class="tab-btn" onclick="showTab('secure', this)"><i class="fas fa-shield-alt"></i> أمني</button>
+            <button class="tab-btn" onclick="showTab('about', this)"><i class="fas fa-info-circle"></i> حول</button>
             <button id="adminTabBtn" class="tab-btn" onclick="showTab('admin', this)" style="display:none; color:var(--gold);"><i class="fas fa-user-cog"></i> الإدارة</button>
+        </div>
+    </div>
+
+    <div id="about" class="tab-content">
+        <div class="admin-section" style="text-align: center; border-top: 4px solid var(--gold); margin-top: 15px; padding: 30px 20px;">
+            <div style="background: var(--primary); width: 80px; height: 80px; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 15px; box-shadow: 0 5px 15px rgba(0,75,73,0.3);">
+                <i class="fas fa-hospital-alt" style="font-size: 2.5rem; color: white;"></i>
+            </div>
+            <h2 style="color: var(--primary); margin-top: 0; margin-bottom: 5px;">مستشفى الإمام الحسن المجتبى (ع)</h2>
+            <p style="color: var(--muted); font-size: 0.95rem; line-height: 1.7; margin-bottom: 20px;">
+                مرحباً بكم في النظام المركزي لإدارة العجلات والهواتف. تم تصميم هذا النظام لتقديم أسرع وأدق استعلام أمني وخدمي للمستشفى، ويعمل بكفاءة عالية.
+            </p>
+            
+            <hr style="border: 0; border-top: 1px dashed #ddd; margin: 25px 0;">
+            
+            <p style="color: var(--secondary); font-weight: bold; margin-bottom: 5px; font-size: 0.9rem;">تطوير وتصميم وبرمجة</p>
+            <h3 style="color: var(--text); font-weight: 900; margin-top: 0; font-size: 1.4rem;">Yaseen ALtmeme</h3>
+            
+            <p style="color: var(--muted); font-size: 0.85rem; margin-top: 15px; margin-bottom: 10px;">للتواصل والدعم الفني:</p>
+            
+            <div style="display: flex; justify-content: center; gap: 15px; margin-top: 10px; flex-wrap: wrap;">
+                <a href="https://wa.me/9647718568324" class="social-btn" style="background: #25D366; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://t.me/ya_se91" class="social-btn" style="background: #0088cc; box-shadow: 0 4px 10px rgba(0, 136, 204, 0.3);"><i class="fab fa-telegram-plane"></i></a>
+                <a href="https://instagram.com/y2019l" class="social-btn" style="background: #E1306C; box-shadow: 0 4px 10px rgba(225, 48, 108, 0.3);"><i class="fab fa-instagram"></i></a>
+                <a href="mailto:yaseenaltmeme2@gmail.com" class="social-btn" style="background: #EA4335; box-shadow: 0 4px 10px rgba(234, 67, 53, 0.3);"><i class="fas fa-envelope"></i></a>
+                <a href="tel:+9647718568324" class="social-btn" style="background: var(--primary); box-shadow: 0 4px 10px rgba(0, 75, 73, 0.3);"><i class="fas fa-phone-alt"></i></a>
+            </div>
         </div>
     </div>
 
@@ -311,9 +343,11 @@
         // إظهار نافذة التثبيت إذا كان متصفح عادي
         window.onload = () => {
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-            if (!isStandalone) {
+            const hasSeenPrompt = localStorage.getItem('pwa_prompt_seen');
+            if (!isStandalone && !hasSeenPrompt) {
                 setTimeout(() => {
                     document.getElementById('installModal').style.display = 'flex';
+                    localStorage.setItem('pwa_prompt_seen', 'true');
                 }, 2000);
             }
         };
@@ -333,10 +367,6 @@
                 }
             }
         }, 100);
-        
-        const legacyPhones = [
-            { name: "استعلامات الادارة", ext: "1025"}, { name: "الاستعلامات الرئيسية", ext: "0319"}, { name: "الاشعة", ext: "0196"}, { name: "الاشعة استعلامات", ext: "0248"}, { name: "الاشعة ادارة", ext: "0220"}, { name: "الاشعة السونار", ext: "0064 - 0246"}, { name: "الاشعة المفراس", ext: "0245"}, { name: "الاعاشة", ext: "4001"}, { name: "الاعلام", ext: "1004"}, { name: "الاحصاء", ext: "1073"}, { name: "الاسعاف الفوري", ext: "0153"}, { name: "الامنية البوابة الاولى", ext: "9002"}, { name: "الامنية البوابة الثانية", ext: "3639"}, { name: "الاورام استعلامات", ext: "0311"}, { name: "الاورام الصيدلية", ext: "0315"}, { name: "الاورام الطبيب", ext: "0306 -0309"}, { name: "الاورام سحب الدم", ext: "0304"}, { name: "الاورام كبار طابق خامس", ext: "5115 - 5057"}, { name: "الاورام المعجل الخطي", ext: "0053 - 0055"}, { name: "التاهيل العلاج الطبيعي", ext: "0092"}, { name: "التدريب والتطوير", ext: "0214"}, { name: "التذاكر والباصات", ext: "0335"}, { name: "التعقيم المركزي", ext: "1325 - 1129"}, { name: "الجناح الخاص", ext: "2806"}, { name: "الجناح الخاص التمريض", ext: "2881"}, { name: "الجناح الخاص مختبر", ext: "5047"}, { name: "الخدج", ext: "3419"}, { name: "الخدمات الفندقية", ext: "1019"}, { name: "الديلزة", ext: "0181"}, { name: "الديلزة استعلامات", ext: "0088"}, { name: "الديلزة قاعة العلاج", ext: "0093"}, { name: "الديلزة الردهة", ext: "0183"}, { name: "استشارية السمع والتخاطب العلاج", ext: "0100"}, { name: "استشارية السمع والتخاطب تدريب النطق", ext: "0098"}, { name: "الصيانة الخافرة", ext: "1119 - 1217"}, { name: "الصيانة الادارة", ext: "1125"}, { name: "الصيانة غرفة المهندسين", ext: "1121"}, { name: "الصيانة مهندس مقيم", ext: "1135"}, { name: "BMS", ext: "1331"}, { name: "استشارية الاطفال سحب الدم", ext: "0057"}, { name: "استشارية الباطنية سحب الدم رجال", ext: "0018"}, { name: "استشارية الباطنية سحب الدم نساء", ext: "0014"}, { name: "استشارية الباطنية الايكو", ext: "0031"}, { name: "استشارية الباطنية تخطيط القلب نساء", ext: "0026"}, { name: "استشارية الباطنية تخطيط القلب رجال", ext: "0028"}, { name: "استشارية البولية الطبيب", ext: "0276 -0267"}, { name: "استشارية البولية عمليات صغرى", ext: "0278"}, { name: "استشارية الجلدية استعلامات", ext: "0271"}, { name: "استشارية الجلدية الطبيب", ext: "0258"}, { name: "استشارية الجلدية جراحة وضماد", ext: "0260"}, { name: "استشارية القلبية استعلامات", ext: "0296"}, { name: "استشارية الكسور استعلامات", ext: "0267"}, { name: "استشارية الكسور الطبيب", ext: "0266"}, { name: "استشارية الكسور الفحص", ext: "0263"}, { name: "استشارية النسائية", ext: "0338"}, { name: "استشارية النسائية الطبيب", ext: "0327"}, { name: "استشارية انف واذن وحنجرة استعلامات", ext: "0013"}, { name: "استشارية انف واذن وحنجرة الطبيب", ext: "0011"}, { name: "استشارية جراحة الجملة العصبية الاستعلامات", ext: "0012"}, { name: "استشارية جراحة الجملة العصبية الاستراحة", ext: "1210"}, { name: "استشارية جراحة الجملة العصبية الضماد", ext: "1211"}, { name: "استشارية جراحة الجملة العصبية الطبيب", ext: "1212"}, { name: "استشارية زرع الكلى الطبيب", ext: "0326"}, { name: "استشارية كبار السن", ext: "0023"}, { name: "استشارية كبار السن الطبيب", ext: "0020 - 0021"}, { name: "الاجازات والتقارير", ext: "0257"}, { name: "الناظور المسؤول", ext: "1340 - 1341"}, { name: "الناظور الطبيب", ext: "1158"}, { name: "الناظور الاستعلامات", ext: "1341"}, { name: "ردهة العناية القلبية   ICU", ext: "2659"}, { name: "ردهة الانعاش  CCU", ext: "2683"}, { name: "الردهة النسائية", ext: "3234"}, { name: "العمليات الطابق الثاني استعلامات", ext: "2974 - 2670"}, { name: "العمليات الطابق الثاني استلام المريض", ext: "2722"}, { name: "القلب المفتوح", ext: "2658 - 2666 - 2762"}, { name: "ردهة الباطنية نساء", ext: "1446 - 1445 - 1444"}, { name: "ردهة الباطنية رجال", ext: "1294"}, { name: "ردهة الحميات", ext: "1441"}, { name: "ردهة جراحة رجال", ext: "2884"}, { name: "ردهة جراحة نساء", ext: "2983 - 3334"}, { name: "الردهة النفسية", ext: "0108"}, { name: "ردهة عناية العمليات", ext: "2653"}, { name: "ردهة الجملة العصبية", ext: "1441 - 1308"}, { name: "استعلامات الطوارئ", ext: "0161"}, { name: "البلانت", ext: "8001"}, { name: "ردهة الاطفال", ext: "6054"}, { name: "شؤون التمريض", ext: "1041 - 1027"}, { name: "القسطرة", ext: "2788 - 2780 - 2807"}, { name: "مصرف الدم", ext: "0171 - 1116"}, { name: "وحدة الاعلام", ext: "1004"}, { name: "اورام الاطفال طابق السادس", ext: "6054"}, { name: "الحروق", ext: "0347"}, { name: "الغسيل", ext: "1123"}, { name: "المتابعة", ext: "1020"}, { name: "المختبر الادارة", ext: "1355 - 1352"}, { name: "المكتبة العلمية", ext: "0243"}, { name: "المعجل الخطي", ext: "1303 - 0388"}, { name: "استعلامات طابق ثالث", ext: "3325"}, { name: "الديلزة مسؤول القسم", ext: "0179"}, { name: "الصيانة مدير الشعبة", ext: "1109"}, { name: "شعبة الصيدلة الادارة", ext: "1038 - 1030"}, { name: "الصيدلية الاستشارية", ext: "0289"}, { name: "الصيدلية الداخلية", ext: "1436"}, { name: "العلاج الطبيعي نساء", ext: "0091"}, { name: "العمليات استلام المريض", ext: "2722"}, { name: "العمليات الاستعلامات", ext: "2670 - 2974"}, { name: "القانونية", ext: "1024 - 1093"}, { name: "المختبر الاحياء المجهرية", ext: "1351"}, { name: "المختبر الطفيليات", ext: "1180"}, { name: "المختبر امراض دم", ext: "1350 - 1354"}, { name: "المخزن العام", ext: "1153"}, { name: "المذخر الجراحي", ext: "1149"}, { name: "المذخر الدوائي", ext: "1146"}, { name: "المذخر استراحة الكادر", ext: "1148"}, { name: "المعاون الاداري الخافر", ext: "6565"}, { name: "مكننة المعلومات", ext: "1032"}, { name: "ردهة الطوارئ", ext: "0189"}, { name: "المهن الصحية", ext: "1039"}, { name: "تخطيط الاعصاب", ext: "0024"}, { name: "حفظ الجثث", ext: "4002 - 8000"}, { name: "دار الاطباء", ext: "7040 - 7055"}, { name: "طبابة الحشد", ext: "0085"}, { name: "مكتب المدير", ext: "1011"}, { name: "مكتب المدير السكرتير", ext: "1312"}, { name: "مكتب المدير الكامرات", ext: "0000"}, { name: "مكتب المدير مدير المكتب", ext: "1010 - 1018"}, { name: "مكتب المدير الحاسبة", ext: "1000"}, { name: "فحص المقبلين على الزواج", ext: "0016"}, { name: "استشارية جراحة نساء", ext: "0016"}, { name: "نداء العمليات", ext: "0153"}
-        ];
 
         window.showTab = (id, btn) => {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -345,7 +375,11 @@
             btn.classList.add('active');
             
             if(id === 'admin') {
-                setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
+                setTimeout(() => {
+                    window.dispatchEvent(new Event('resize'));
+                    if(typeof chart1 !== 'undefined' && chart1) chart1.resize();
+                    if(typeof chart2 !== 'undefined' && chart2) chart2.resize();
+                }, 150);
             }
         };
 
@@ -517,8 +551,8 @@
                 
                 document.getElementById('countLogs').innerText = todayCount;
                 
-                // التعديل: إظهار أحدث 15 عملية فقط بشكل مرتب
-                const recentLogs = liveLogs.sort((a,b) => b.timestamp - a.timestamp).slice(0, 15);
+                // التعديل: إظهار أحدث 100 عملية فقط بشكل مرتب
+                const recentLogs = liveLogs.sort((a,b) => b.timestamp - a.timestamp).slice(0, 100);
                 document.getElementById('liveLogs').innerHTML = recentLogs.map(l => 
                     `<div class="log-item" style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #f0f0f0;">
                         <span><i class="fas fa-search" style="color:var(--secondary); margin-left:5px;"></i> <b>${l.user}</b> بحث عن [<b>${l.plate}</b>]</span> 
@@ -588,7 +622,6 @@
             }
         };
 
-        // التعديل: إنشاء وتفعيل الحساب فوراً بدون خطوات إضافية
         window.createDirectUser = async () => {
             const n = document.getElementById('directName').value.trim();
             const d = document.getElementById('directDept').value.trim();
@@ -599,34 +632,37 @@
             const email = u.includes('@') ? u : u + "@hosp.com";
             
             try {
-                // حفظ نسخة من بيانات الأدمن الحالي
+                // حفظ نسخة من بيانات الأدمن الحالي قبل العملية
                 const adminUser = auth.currentUser;
                 
-                // إنشاء الحساب الجديد
-                const res = await createUserWithEmailAndPassword(auth, email, p);
+                // إنشاء تطبيق فايربيس ثانوي (خدعة لتفعيل المستخدم دون طرد الأدمن)
+                const secondaryApp = initializeApp(firebaseConfig, "SecondaryApp");
+                const secondaryAuth = getAuth(secondaryApp);
+                
+                // إنشاء الحساب بالتطبيق الثانوي
+                const res = await createUserWithEmailAndPassword(secondaryAuth, email, p);
                 
                 // إضافة البيانات لقاعدة البيانات وتفعيل الحساب فوراً
                 await set(ref(db, 'users/' + res.user.uid), { 
                     name: n, 
                     dept: d, 
                     username: u, 
-                    status: 'approved', // تفعيل فوري
+                    status: 'approved', 
                     role: 'user' 
                 });
                 
-                // إعادة تسجيل الدخول بحساب الأدمن
-                // (في بيئة الإنتاج الحقيقية، يُفضل استخدام Firebase Admin SDK عبر السيرفر لهذه العملية
-                // لكن هذا الحل يعمل حالياً لتجاوز التبديل اليدوي)
+                // تسجيل خروج التطبيق الثانوي للحفاظ على جلسة الأدمن
+                await signOut(secondaryAuth);
+                
                 alert("✅ تم إنشاء حساب الموظف وتفعيله بنجاح!");
                 
-                // تفريغ الحقول
                 document.getElementById('directName').value = '';
                 document.getElementById('directDept').value = '';
                 document.getElementById('directUser').value = '';
                 document.getElementById('directPass').value = '';
                 
             } catch(e) { 
-                alert("❌ خطأ: " + e.message + "\nقد يكون اسم المستخدم (اليوزر) مستخدم مسبقاً، جرب اسماً آخر."); 
+                alert("❌ خطأ: قد يكون اسم المستخدم مستخدم مسبقاً، جرب اسماً آخر."); 
             }
         };
 
@@ -780,6 +816,10 @@
         const uiDict = {
             "مستشفى الإمام الحسن (ع)": "Imam Al-Hassan (AS) Hospital",
             "النظام المركزي - Yaseen ALtmeme": "Central System - Yaseen ALtmeme",
+            "حول": "About",
+            "مرحباً بكم في النظام المركزي لإدارة العجلات والهواتف. تم تصميم هذا النظام لتقديم أسرع وأدق استعلام أمني وخدمي للمستشفى، ويعمل بكفاءة عالية.": "Welcome to the Central System for Vehicle and Phone Management. Designed to provide the fastest and most accurate security and service queries for the hospital, operating with high efficiency.",
+            "تطوير وتصميم وبرمجة": "Developed, Designed & Programmed by",
+            "للتواصل والدعم الفني:": "For contact & technical support:",
             "الهواتف": "Phones",
             "فحص": "Check",
             "أمني": "Security",
