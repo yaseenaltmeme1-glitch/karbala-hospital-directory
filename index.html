@@ -92,15 +92,15 @@
         </div>
         
         <div class="tabs">
-            <button class="tab-btn active" onclick="showTab('phones', this)"><i class="fas fa-phone-alt"></i> الهواتف</button>
+            <button class="tab-btn" onclick="showTab('phones', this)"><i class="fas fa-phone-alt"></i> الهواتف</button>
+            <button class="tab-btn active" onclick="showTab('about', this)"><i class="fas fa-info-circle"></i> حول</button>
             <button class="tab-btn" onclick="showTab('quick', this)"><i class="fas fa-car"></i> فحص</button>
             <button class="tab-btn" onclick="showTab('secure', this)"><i class="fas fa-shield-alt"></i> أمني</button>
-            <button class="tab-btn" onclick="showTab('about', this)"><i class="fas fa-info-circle"></i> حول</button>
             <button id="adminTabBtn" class="tab-btn" onclick="showTab('admin', this)" style="display:none; color:var(--gold);"><i class="fas fa-user-cog"></i> الإدارة</button>
         </div>
     </div>
 
-    <div id="about" class="tab-content">
+    <div id="about" class="tab-content active">
         <div class="admin-section" style="text-align: center; border-top: 4px solid var(--gold); margin-top: 15px; padding: 30px 20px;">
             <div style="background: var(--primary); width: 80px; height: 80px; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 15px; box-shadow: 0 5px 15px rgba(0,75,73,0.3);">
                 <i class="fas fa-hospital-alt" style="font-size: 2.5rem; color: white;"></i>
@@ -128,7 +128,7 @@
         </div>
     </div>
 
-    <div id="phones" class="tab-content active">
+    <div id="phones" class="tab-content">
         <div class="search-wrapper">
             <input type="text" id="phoneSearch" placeholder="ابحث عن قسم أو رقم هاتف..." onkeyup="searchPhones()">
         </div>
@@ -370,7 +370,6 @@
             }
         }, 100);
 
-        // --- التعديل الثاني: إيقاظ المخططات بالموبايل ---
         window.showTab = (id, btn) => {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -546,10 +545,12 @@
                 let todayCount = 0;
                 let userActivity = {};
                 
-                for(let k in data) {
-                    liveLogs.push(data[k]);
-                    if(Date.now() - data[k].timestamp < 86400000) todayCount++;
-                    userActivity[data[k].user] = (userActivity[data[k].user] || 0) + 1;
+                if(data) {
+                    for(let k in data) {
+                        liveLogs.push(data[k]);
+                        if(Date.now() - data[k].timestamp < 86400000) todayCount++;
+                        userActivity[data[k].user] = (userActivity[data[k].user] || 0) + 1;
+                    }
                 }
                 
                 document.getElementById('countLogs').innerText = todayCount;
