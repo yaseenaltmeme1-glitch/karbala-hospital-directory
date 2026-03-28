@@ -57,12 +57,14 @@
         .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--text); color: white; padding: 10px 20px; border-radius: 30px; font-size: 0.9rem; opacity: 0; transition: 0.3s; z-index: 2000; pointer-events: none; }
         .toast.show { opacity: 1; bottom: 100px; }
         
-        /* رسالة التثبيت المنبثقة */
-        #installModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; justify-content: center; align-items: center; }
-        .install-box { background: white; padding: 25px; border-radius: 15px; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: fadeIn 0.3s; }
-        .install-box h3 { margin-top: 0; color: var(--primary); }
+        /* رسالة التثبيت المنبثقة ومودال بروفايل المستخدم */
+        #installModal, #userProfileModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; justify-content: center; align-items: center; }
+        .install-box, .profile-box { background: white; padding: 25px; border-radius: 15px; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: fadeIn 0.3s; }
+        .profile-box { max-width: 450px; max-height: 90vh; overflow-y: auto; text-align: right; }
+        .install-box h3, .profile-box h3 { margin-top: 0; color: var(--primary); }
         .install-box p { font-size: 0.9rem; color: var(--text); margin-bottom: 20px; line-height: 1.5; }
-        .install-box .btn-close { background: #eee; color: var(--text); margin-top: 10px; }
+        .btn-close { background: #eee; color: var(--text); margin-top: 10px; }
+        .profile-logs { max-height: 150px; overflow-y: auto; background: var(--bg); padding: 10px; border-radius: 8px; margin-top: 10px; border: 1px solid #eee; }
 
         /* أزرار التواصل في صفحة حول */
         .social-btn { display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; border-radius: 50%; color: white; font-size: 1.4rem; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
@@ -305,6 +307,44 @@
         </div>
     </div>
 
+    <div id="userProfileModal">
+        <div class="profile-box">
+            <h3><i class="fas fa-user-edit"></i> تفاصيل الموظف وسجله</h3>
+            <div class="admin-form" style="text-align: right;">
+                <label style="font-size:0.85rem; color:var(--muted); font-weight:bold;">الاسم الثلاثي</label>
+                <input type="text" id="profName">
+                <label style="font-size:0.85rem; color:var(--muted); font-weight:bold;">القسم / محل العمل</label>
+                <input type="text" id="profDept">
+                
+                <div style="display:flex; gap:10px;">
+                    <div style="flex:1;">
+                        <label style="font-size:0.85rem; color:var(--muted); font-weight:bold;">الصلاحية</label>
+                        <select id="profRole">
+                            <option value="user">موظف (user)</option>
+                            <option value="admin">مسؤول (admin)</option>
+                        </select>
+                    </div>
+                    <div style="flex:1;">
+                        <label style="font-size:0.85rem; color:var(--muted); font-weight:bold;">الحالة</label>
+                        <select id="profStatus">
+                            <option value="approved">مفعل (approved)</option>
+                            <option value="pending">قيد الانتظار (pending)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:10px; margin-top:10px;">
+                    <button class="btn-main" style="background:#27ae60;" onclick="saveUserProfile()">💾 حفظ التعديلات</button>
+                    <button class="btn-main btn-close" style="margin-top:0;" onclick="document.getElementById('userProfileModal').style.display='none'">إغلاق</button>
+                </div>
+            </div>
+            
+            <h4 style="margin-top:25px; margin-bottom:10px; color:var(--secondary); font-size:1rem; border-top:1px dashed #ddd; padding-top:15px;"><i class="fas fa-history"></i> سجل عمليات البحث لهذا الموظف</h4>
+            <div id="profLogs" class="profile-logs">
+                </div>
+        </div>
+    </div>
+
     <div class="developer-footer">System Developed & Designed by <b>Yaseen ALtmeme</b> &copy; 2026</div>
     <div id="toast" class="toast"><i class="fas fa-check-circle"></i> تم النسخ</div>
 
@@ -341,7 +381,9 @@
         let liveLogs = [];
         let currentEditCarKey = null; 
         let currentEditPhoneKey = null; 
-        
+        window.globalUsersData = {}; // لحفظ المستخدمين
+        window.currentEditingProfileId = null; // للأدمن عند تعديل موظف
+
         // إظهار نافذة التثبيت إذا كان متصفح عادي (وتظهر مرة واحدة فقط)
         window.onload = () => {
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
@@ -370,6 +412,7 @@
             }
         }, 100);
 
+        // --- التعديل: إيقاظ المخططات بالموبايل ---
         window.showTab = (id, btn) => {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -568,19 +611,24 @@
 
             onValue(ref(db, 'users'), s => {
                 const users = s.val();
+                window.globalUsersData = users || {}; // تحديث المتغير العالمي
                 let count = 0;
                 let html = '';
                 for(let id in users) {
                     count++;
                     const u = users[id];
+                    // التعديل: جعل اسم المستخدم رابط لفتح البروفايل
                     html += `
                         <div class="card" style="flex-direction:column; align-items:flex-start; gap:10px;">
                             <div style="width:100%; display:flex; justify-content:space-between;">
-                                <b>${u.name} <small style="color:${u.status==='approved'?'green':'red'}">(${u.status})</small></b>
-                                <span>${u.role}</span>
+                                <b onclick="openUserProfile('${id}')" style="cursor:pointer; color:var(--primary); text-decoration:underline;">
+                                    <i class="fas fa-user-circle"></i> ${u.name} 
+                                    <small style="color:${u.status==='approved'?'green':'red'}; text-decoration:none;">(${u.status})</small>
+                                </b>
+                                <span style="font-size:0.85rem; background:#eee; padding:2px 8px; border-radius:10px;">${u.role}</span>
                             </div>
                             <div style="display:flex; gap:5px; width:100%;">
-                                ${u.status === 'pending' ? `<button class="btn-main" style="margin:0; padding:5px; background:#27ae60;" onclick="adminAction('approve', '${id}')">tفعيl</button>` : ''}
+                                ${u.status === 'pending' ? `<button class="btn-main" style="margin:0; padding:5px; background:#27ae60;" onclick="adminAction('approve', '${id}')">تفعيل</button>` : ''}
                                 <button class="btn-main btn-danger" style="margin:0; padding:5px;" onclick="adminAction('delete', '${id}')">حذف نهائي</button>
                             </div>
                         </div>`;
@@ -589,6 +637,45 @@
                 document.getElementById('countUsers').innerText = count;
             });
         }
+        
+        // --- دوال بروفايل المستخدم الجديدة ---
+        window.openUserProfile = (uid) => {
+            const user = window.globalUsersData[uid];
+            if(!user) return;
+            window.currentEditingProfileId = uid;
+            
+            // تعبئة البيانات في المودال
+            document.getElementById('profName').value = user.name || '';
+            document.getElementById('profDept').value = user.dept || '';
+            document.getElementById('profRole').value = user.role || 'user';
+            document.getElementById('profStatus').value = user.status || 'pending';
+            
+            // فلترة السجل الخاص به فقط
+            const userLogs = liveLogs.filter(l => l.user === user.name).sort((a,b) => b.timestamp - a.timestamp);
+            document.getElementById('profLogs').innerHTML = userLogs.length > 0 
+                ? userLogs.map(l => `<div class="log-item" style="border-bottom:1px solid #ddd; padding:8px 0;">بحث عن [<b>${l.plate}</b>] <span style="color:var(--muted); float:left; font-size:0.75rem;">${l.time}</span></div>`).join('') 
+                : '<p style="text-align:center; color:var(--muted); margin:10px 0;">لم يقم بأي عمليات بحث بعد.</p>';
+            
+            document.getElementById('userProfileModal').style.display = 'flex';
+        };
+
+        window.saveUserProfile = async () => {
+            if(!window.currentEditingProfileId) return;
+            const n = document.getElementById('profName').value.trim();
+            const d = document.getElementById('profDept').value.trim();
+            const r = document.getElementById('profRole').value;
+            const s = document.getElementById('profStatus').value;
+            
+            if(!n) return alert("الاسم مطلوب!");
+            
+            try {
+                await update(ref(db, 'users/' + window.currentEditingProfileId), { name: n, dept: d, role: r, status: s });
+                alert("✅ تم حفظ التعديلات بنجاح!");
+                document.getElementById('userProfileModal').style.display = 'none';
+            } catch(e) {
+                alert("❌ حدث خطأ أثناء حفظ التعديلات.");
+            }
+        };
 
         let chart1, chart2;
         function updateCharts(userData) {
@@ -888,7 +975,15 @@
             "الاسم:": "Name:",
             "العنوان:": "Title:",
             "تفعيل": "Approve",
-            "بحث عن": "searched for"
+            "بحث عن": "searched for",
+            "تفاصيل الموظف وسجله": "Employee Details & Logs",
+            "القسم / محل العمل": "Department / Workspace",
+            "الصلاحية": "Role",
+            "الحالة": "Status",
+            "حفظ التعديلات": "Save Changes",
+            "إغلاق": "Close",
+            "سجل عمليات البحث لهذا الموظف": "Search Logs for this Employee",
+            "لم يقم بأي عمليات بحث بعد.": "No search queries made yet."
         };
         
         const reverseUiDict = Object.fromEntries(Object.entries(uiDict).map(([k, v]) => [v, k]));
