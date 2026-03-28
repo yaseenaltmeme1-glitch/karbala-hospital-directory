@@ -92,15 +92,15 @@
         </div>
         
         <div class="tabs">
-            <button class="tab-btn" onclick="showTab('phones', this)"><i class="fas fa-phone-alt"></i> الهواتف</button>
-            <button class="tab-btn active" onclick="showTab('about', this)"><i class="fas fa-info-circle"></i> حول</button>
+            <button class="tab-btn active" onclick="showTab('phones', this)"><i class="fas fa-phone-alt"></i> الهواتف</button>
             <button class="tab-btn" onclick="showTab('quick', this)"><i class="fas fa-car"></i> فحص</button>
             <button class="tab-btn" onclick="showTab('secure', this)"><i class="fas fa-shield-alt"></i> أمني</button>
+            <button class="tab-btn" onclick="showTab('about', this)"><i class="fas fa-info-circle"></i> حول</button>
             <button id="adminTabBtn" class="tab-btn" onclick="showTab('admin', this)" style="display:none; color:var(--gold);"><i class="fas fa-user-cog"></i> الإدارة</button>
         </div>
     </div>
 
-    <div id="about" class="tab-content active">
+    <div id="about" class="tab-content">
         <div class="admin-section" style="text-align: center; border-top: 4px solid var(--gold); margin-top: 15px; padding: 30px 20px;">
             <div style="background: var(--primary); width: 80px; height: 80px; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 15px; box-shadow: 0 5px 15px rgba(0,75,73,0.3);">
                 <i class="fas fa-hospital-alt" style="font-size: 2.5rem; color: white;"></i>
@@ -113,7 +113,8 @@
             <hr style="border: 0; border-top: 1px dashed #ddd; margin: 25px 0;">
             
             <p style="color: var(--secondary); font-weight: bold; margin-bottom: 5px; font-size: 0.9rem;">تطوير وتصميم وبرمجة</p>
-            <h3 style="color: var(--text); font-weight: 900; margin-top: 0; margin-bottom: 15px; font-size: 1.4rem; text-align: center;">Yaseen ALtmeme</h3>
+            
+            <h3 style="color: var(--text); font-weight: 900; margin-top: 0; margin-bottom: 15px; font-size: 1.4rem; text-align: center; display: block; width: 100%;">Yaseen ALtmeme</h3>
             
             <p style="color: var(--muted); font-size: 0.85rem; margin-top: 15px; margin-bottom: 10px;">للتواصل والدعم الفني:</p>
             
@@ -127,7 +128,7 @@
         </div>
     </div>
 
-    <div id="phones" class="tab-content">
+    <div id="phones" class="tab-content active">
         <div class="search-wrapper">
             <input type="text" id="phoneSearch" placeholder="ابحث عن قسم أو رقم هاتف..." onkeyup="searchPhones()">
         </div>
@@ -340,8 +341,7 @@
         let liveLogs = [];
         let currentEditCarKey = null; 
         let currentEditPhoneKey = null; 
-        let chartCreated = false;
-
+        
         // إظهار نافذة التثبيت إذا كان متصفح عادي (وتظهر مرة واحدة فقط)
         window.onload = () => {
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
@@ -370,7 +370,7 @@
             }
         }, 100);
 
-        // --- التعديل: الحل الجذري للمخططات بالموبايل ---
+        // --- التعديل الثاني: إيقاظ المخططات بالموبايل ---
         window.showTab = (id, btn) => {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -380,14 +380,9 @@
             if(id === 'admin') {
                 setTimeout(() => {
                     window.dispatchEvent(new Event('resize'));
-                    // الخلق والترجمة لأول مرة فقط عند الضغط
-                    if(!chartCreated) {
-                        initCharts();
-                        chartCreated = true;
-                    }
-                    if(window.chart1) { window.chart1.resize(); window.chart1.update(); }
-                    if(window.chart2) { window.chart2.resize(); window.chart2.update(); }
-                }, 300);
+                    if(typeof chart1 !== 'undefined' && chart1) { chart1.resize(); chart1.update(); }
+                    if(typeof chart2 !== 'undefined' && chart2) { chart2.resize(); chart2.update(); }
+                }, 250);
             }
         };
 
@@ -551,12 +546,10 @@
                 let todayCount = 0;
                 let userActivity = {};
                 
-                if(data) {
-                    for(let k in data) {
-                        liveLogs.push(data[k]);
-                        if(Date.now() - data[k].timestamp < 86400000) todayCount++;
-                        userActivity[data[k].user] = (userActivity[data[k].user] || 0) + 1;
-                    }
+                for(let k in data) {
+                    liveLogs.push(data[k]);
+                    if(Date.now() - data[k].timestamp < 86400000) todayCount++;
+                    userActivity[data[k].user] = (userActivity[data[k].user] || 0) + 1;
                 }
                 
                 document.getElementById('countLogs').innerText = todayCount;
@@ -569,8 +562,7 @@
                     </div>`
                 ).join('');
 
-                // حفظ الإحصائيات لاستخدامها عند رسم المخطط
-                window.lastUserActivity = userActivity;
+                updateCharts(userActivity);
             });
 
             onValue(ref(db, 'users'), s => {
@@ -597,11 +589,11 @@
             });
         }
 
-        // دالة إنشاء المخططات عند أول ضغطة
-        function initCharts() {
+        let chart1, chart2;
+        function updateCharts(userData) {
             const ctx1 = document.getElementById('searchChart');
-            const userData = window.lastUserActivity || {};
-            window.chart1 = new Chart(ctx1, {
+            if(chart1) chart1.destroy();
+            chart1 = new Chart(ctx1, {
                 type: 'bar',
                 data: {
                     labels: Object.keys(userData).slice(0, 5), 
@@ -611,7 +603,8 @@
             });
 
             const ctx2 = document.getElementById('deptChart');
-            window.chart2 = new Chart(ctx2, {
+            if(chart2) chart2.destroy();
+            chart2 = new Chart(ctx2, {
                 type: 'doughnut',
                 data: {
                     labels: ['سريع', 'أمني'],
@@ -637,19 +630,33 @@
             const u = document.getElementById('directUser').value.trim();
             const p = document.getElementById('directPass').value;
             if(!n || !u || !p) return alert("يرجى إكمال جميع البيانات الأساسية!");
+            
             const email = u.includes('@') ? u : u + "@hosp.com";
+            
             try {
+                const adminUser = auth.currentUser;
                 const secondaryApp = initializeApp(firebaseConfig, "SecondaryApp");
                 const secondaryAuth = getAuth(secondaryApp);
                 const res = await createUserWithEmailAndPassword(secondaryAuth, email, p);
-                await set(ref(db, 'users/' + res.user.uid), { name: n, dept: d, username: u, status: 'approved', role: 'user' });
+                
+                await set(ref(db, 'users/' + res.user.uid), { 
+                    name: n, 
+                    dept: d, 
+                    username: u, 
+                    status: 'approved', 
+                    role: 'user' 
+                });
+                
                 await signOut(secondaryAuth);
                 alert("✅ تم إنشاء حساب الموظف وتفعيله بنجاح!");
+                
                 document.getElementById('directName').value = '';
                 document.getElementById('directDept').value = '';
                 document.getElementById('directUser').value = '';
                 document.getElementById('directPass').value = '';
-            } catch(e) { alert("❌ خطأ: قد يكون اسم المستخدم مستخدم مسبقاً، جرب اسماً آخر."); }
+            } catch(e) { 
+                alert("❌ خطأ: قد يكون اسم المستخدم مستخدم مسبقاً، جرب اسماً آخر."); 
+            }
         };
 
         window.saveCar = async () => {
@@ -661,18 +668,22 @@
                 color: document.getElementById('admCarColor').value, badge: document.getElementById('admCarBadge').value,
                 phone: document.getElementById('admCarPhone').value
             };
+            
             let keyToUpdate = currentEditCarKey;
+            
             if(!keyToUpdate) {
                 const existing = liveCars.find(c => c.plate == plate);
                 if(existing) keyToUpdate = existing.key;
             }
+
             if(keyToUpdate) {
                 await update(ref(db, 'cars/' + keyToUpdate), data);
-                alert("✅ تم تحديث معلومات السيارة بنجاح!");
+                alert("✅ تم تحديث معلومات السيارة (استبدال القديمة) بنجاح!");
             } else {
                 await push(ref(db, 'cars'), data);
-                alert("✅ تمت إضافة السيارة بنجاح!");
+                alert("✅ تمت إضافة السيارة كـ سيارة جديدة بنجاح!");
             }
+
             currentEditCarKey = null;
             document.getElementById('searchCarEditInput').value = '';
             document.getElementById('admCarPlate').value = '';
@@ -698,18 +709,22 @@
             const name = document.getElementById('admPhoneName').value.trim();
             const ext = document.getElementById('admPhoneExt').value.trim();
             if(!name || !ext) return alert("اكمل الاسم والرقم");
+            
             let keyToUpdate = currentEditPhoneKey;
+
             if(!keyToUpdate) {
                 const existing = livePhones.find(p => p.name === name);
                 if(existing) keyToUpdate = existing.key;
             }
+
             if(keyToUpdate) {
                 await update(ref(db, 'phones/' + keyToUpdate), {name, ext});
-                alert("✅ تم تحديث الهاتف بنجاح!");
+                alert("✅ تم تحديث الهاتف (استبدال القديم) بنجاح!");
             } else {
                 await push(ref(db, 'phones'), {name, ext});
-                alert("✅ تمت إضافة الهاتف بنجاح!");
+                alert("✅ تمت إضافة الهاتف كـ قسم جديد بنجاح!");
             }
+
             currentEditPhoneKey = null;
             document.getElementById('searchPhoneEditInput').value = '';
             document.getElementById('admPhoneName').value = '';
@@ -773,10 +788,6 @@
             }
         };
 
-        const legacyPhones = [
-            { name: "استعلامات الادارة", ext: "1025"}, { name: "الاستعلامات الرئيسية", ext: "0319"}, { name: "الاشعة", ext: "0196"}, { name: "الاشعة استعلامات", ext: "0248"}, { name: "الاشعة ادارة", ext: "0220"}, { name: "الاشعة السونار", ext: "0064 - 0246"}, { name: "الاشعة المفراس", ext: "0245"}, { name: "الاعاشة", ext: "4001"}, { name: "الاعلام", ext: "1004"}, { name: "الاحصاء", ext: "1073"}, { name: "الاسعاف الفوري", ext: "0153"}, { name: "الامنية البوابة الاولى", ext: "9002"}, { name: "الامنية البوابة الثانية", ext: "3639"}, { name: "الاورام استعلامات", ext: "0311"}, { name: "الاورام الصيدلية", ext: "0315"}, { name: "الاورام الطبيب", ext: "0306 -0309"}, { name: "الاورام سحب الدم", ext: "0304"}, { name: "الاورام كبار طابق خامس", ext: "5115 - 5057"}, { name: "الاورام المعجل الخطي", ext: "0053 - 0055"}, { name: "التاهيل العلاج الطبيعي", ext: "0092"}, { name: "التدريب والتطوير", ext: "0214"}, { name: "التذاكر والباصات", ext: "0335"}, { name: "التعقيم المركزي", ext: "1325 - 1129"}, { name: "الجناح الخاص", ext: "2806"}, { name: "الجناح الخاص التمريض", ext: "2881"}, { name: "الجناح الخاص مختبر", ext: "5047"}, { name: "الخدج", ext: "3419"}, { name: "الخدمات الفندقية", ext: "1019"}, { name: "الديلزة", ext: "0181"}, { name: "الديلزة استعلامات", ext: "0088"}, { name: "الديلزة قاعة العلاج", ext: "0093"}, { name: "الديلزة الردهة", ext: "0183"}, { name: "استشارية السمع والتخاطب العلاج", ext: "0100"}, { name: "استشارية السمع والتخاطب تدريب النطق", ext: "0098"}, { name: "الصيانة الخافرة", ext: "1119 - 1217"}, { name: "الصيانة الادارة", ext: "1125"}, { name: "الصيانة غرفة المهندسين", ext: "1121"}, { name: "الصيانة مهندس مقيم", ext: "1135"}, { name: "BMS", ext: "1331"}, { name: "استشارية الاطفال سحب الدم", ext: "0057"}, { name: "استشارية الباطنية سحب الدم رجال", ext: "0018"}, { name: "استشارية الباطنية سحب الدم نساء", ext: "0014"}, { name: "استشارية الباطنية الايكو", ext: "0031"}, { name: "استشارية الباطنية تخطيط القلب نساء", ext: "0026"}, { name: "استشارية الباطنية تخطيط القلب رجال", ext: "0028"}, { name: "استشارية البولية الطبيب", ext: "0276 -0267"}, { name: "استشارية البولية عمليات صغرى", ext: "0278"}, { name: "استشارية الجلدية استعلامات", ext: "0271"}, { name: "استشارية الجلدية الطبيب", ext: "0258"}, { name: "استشارية الجلدية جراحة وضماد", ext: "0260"}, { name: "استشارية القلبية استعلامات", ext: "0296"}, { name: "استشارية الكسور استعلامات", ext: "0267"}, { name: "استشارية الكسور الطبيب", ext: "0266"}, { name: "استشارية الكسور الفحص", ext: "0263"}, { name: "استشارية النسائية", ext: "0338"}, { name: "استشارية النسائية الطبيب", ext: "0327"}, { name: "استشارية انف واذن وحنجرة استعلامات", ext: "0013"}, { name: "استشارية انف واذن وحنجرة الطبيب", ext: "0011"}, { name: "استشارية جراحة الجملة العصبية الاستعلامات", ext: "0012"}, { name: "استشارية جراحة الجملة العصبية الاستراحة", ext: "1210"}, { name: "استشارية جراحة الجملة العصبية الضماد", ext: "1211"}, { name: "استشارية جراحة الجملة العصبية الطبيب", ext: "1212"}, { name: "استشارية زرع الكلى الطبيب", ext: "0326"}, { name: "استشارية كبار السن", ext: "0023"}, { name: "استشارية كبار السن الطبيب", ext: "0020 - 0021"}, { name: "الاجازات والتقارير", ext: "0257"}, { name: "الناظور المسؤول", ext: "1340 - 1341"}, { name: "الناظور الطبيب", ext: "1158"}, { name: "الناظور الاستعلامات", ext: "1341"}, { name: "ردهة العناية القلبية   ICU", ext: "2659"}, { name: "ردهة الانعاش  CCU", ext: "2683"}, { name: "الردهة النسائية", ext: "3234"}, { name: "العمليات الطابق الثاني استعلامات", ext: "2974 - 2670"}, { name: "العمليات الطابق الثاني استلام المريض", ext: "2722"}, { name: "القلب المفتوح", ext: "2658 - 2666 - 2762"}, { name: "ردهة الباطنية نساء", ext: "1446 - 1445 - 1444"}, { name: "ردهة الباطنية رجال", ext: "1294"}, { name: "ردهة الحميات", ext: "1441"}, { name: "ردهة جراحة رجال", ext: "2884"}, { name: "ردهة جراحة نساء", ext: "2983 - 3334"}, { name: "الردهة النفسية", ext: "0108"}, { name: "ردهة عناية العمليات", ext: "2653"}, { name: "ردهة الجملة العصبية", ext: "1441 - 1308"}, { name: "استعلامات الطوارئ", ext: "0161"}, { name: "البلانت", ext: "8001"}, { name: "ردهة الاطفال", ext: "6054"}, { name: "شؤون التمريض", ext: "1041 - 1027"}, { name: "القسطرة", ext: "2788 - 2780 - 2807"}, { name: "مصرف الدم", ext: "0171 - 1116"}, { name: "وحدة الاعلام", ext: "1004"}, { name: "اورام الاطفال طابق السادس", ext: "6054"}, { name: "الحروق", ext: "0347"}, { name: "الغسيل", ext: "1123"}, { name: "المتابعة", ext: "1020"}, { name: "المختبر الادارة", ext: "1355 - 1352"}, { name: "المكتبة العلمية", ext: "0243"}, { name: "المعجل الخطي", ext: "1303 - 0388"}, { name: "استعلامات طابق ثالث", ext: "3325"}, { name: "الديلزة مسؤول القسم", ext: "0179"}, { name: "الصيانة مدير الشعبة", ext: "1109"}, { name: "شعبة الصيدلة الادارة", ext: "1038 - 1030"}, { name: "الصيدلية الاستشارية", ext: "0289"}, { name: "الصيدلية الداخلية", ext: "1436"}, { name: "العلاج الطبيعي نساء", ext: "0091"}, { name: "العمليات استلام المريض", ext: "2722"}, { name: "العمليات الاستعلامات", ext: "2670 - 2974"}, { name: "القانونية", ext: "1024 - 1093"}, { name: "المختبر الاحياء المجهرية", ext: "1351"}, { name: "المختبر الطفيليات", ext: "1180"}, { name: "المختبر امراض دم", ext: "1350 - 1354"}, { name: "المخزن العام", ext: "1153"}, { name: "المذخر الجراحي", ext: "1149"}, { name: "المذخر الدوائي", ext: "1146"}, { name: "المذخر استراحة الكادر", ext: "1148"}, { name: "المعاون الاداري الخافر", ext: "6565"}, { name: "مكننة المعلومات", ext: "1032"}, { name: "ردهة الطوارئ", ext: "0189"}, { name: "المهن الصحية", ext: "1039"}, { name: "تخطيط الاعصاب", ext: "0024"}, { name: "حفظ الجثث", ext: "4002 - 8000"}, { name: "دار الاطباء", ext: "7040 - 7055"}, { name: "طبابة الحشد", ext: "0085"}, { name: "مكتب المدير", ext: "1011"}, { name: "مكتب المدير السكرتير", ext: "1312"}, { name: "مكتب المدير الكامرات", ext: "0000"}, { name: "مكتب المدير مدير المكتب", ext: "1010 - 1018"}, { name: "مكتب المدير الحاسبة", ext: "1000"}, { name: "فحص المقبلين على الزواج", ext: "0016"}, { name: "استشارية جراحة نساء", ext: "0016"}, { name: "نداء العمليات", ext: "0153"}
-        ];
-
         window.uploadInternalPhones = async () => {
             if(!confirm("سيتم رفع الهواتف القديمة للسيرفر. استمرار؟")) return;
             for(let p of legacyPhones) await push(ref(db, 'phones'), p);
@@ -786,9 +797,11 @@
         window.uploadCarsFromJson = async () => {
             if(typeof carDb === 'undefined') return alert("ملف cars.js غير متصل أو غير موجود.");
             if(!confirm("سيتم رفع " + carDb.length + " سيارة لقاعدة البيانات. استمرار؟")) return;
+            
             for(let c of carDb) await push(ref(db, 'cars'), c);
             alert("تم رفع سجل العجلات بنجاح!");
         };
+
     </script>
     
     <script>
@@ -825,10 +838,15 @@
             "عمليات البحث": "Searches",
             "المستخدمين": "Users",
             "الرقابة والتحليل (Charts)": "Monitoring & Analysis (Charts)",
+            "استيراد البيانات الأولية": "Import Initial Data",
+            "استخدم هذه الأزرار مرة واحدة فقط لرفع البيانات من الكود وملف JS إلى السيرفر.": "Use these buttons once to upload data.",
+            "رفع دليل الهواتف": "Upload Phone Directory",
+            "رفع سجل العجلات (cars.js)": "Upload Vehicle Log (cars.js)",
             "إدارة العجلات": "Vehicle Management",
             "بحث عن عجلة لتعديلها": "Search for vehicle to edit",
             "أدخل رقم اللوحة للبحث...": "Enter plate number to search...",
             "بحث وجلب": "Search & Fetch",
+            "بيانات العجلة (للإضافة الجديدة أو بعد البحث)": "Vehicle Data (New or Edited)",
             "رقم اللوحة (أساسي)": "Plate Number (Primary)",
             "اسم المالك": "Owner Name",
             "القسم": "Department",
@@ -841,10 +859,14 @@
             "حذف نهائي": "Permanent Delete",
             "إدارة الهواتف": "Phone Management",
             "بحث عن هاتف قسم لتعديله": "Search department phone to edit",
+            "أدخل اسم القسم للبحث...": "Enter department name to search...",
+            "بيانات الهاتف (للإضافة الجديدة أو بعد البحث)": "Phone Data (New or Edited)",
+            "الاسم / القسم": "Name / Dept",
             "الرقم الداخلي (Ext)": "Internal Ext",
             "حفظ / تحديث الهاتف": "Save / Update Phone",
             "حذف": "Delete",
             "إدارة المستخدمين وحسابك": "User Management & Account",
+            "إعدادات حسابي (الأدمن)": "My Account Settings (Admin)",
             "تغيير كلمة المرور الخاصة بي": "Change My Password",
             "إنشاء حساب مباشر للموظف": "Create Direct Employee Account",
             "الاسم": "Name",
@@ -855,7 +877,17 @@
             "تم النسخ": "Copied",
             "غير مصرح (غير موجود بالسجلات) ❌": "Unauthorized (Not in records) ❌",
             "مسموح بالدخول ✅": "Access Granted ✅",
-            "لا توجد نتائج": "No Results Found"
+            "لا توجد نتائج": "No Results Found",
+            "تفاصيل العجلة المكتشفة": "Detected Vehicle Details",
+            "النوع:": "Type:",
+            "اللون:": "Color:",
+            "رقم الهاتف:": "Phone:",
+            "رقم الباج:": "Badge:",
+            "القسم:": "Dept:",
+            "الاسم:": "Name:",
+            "العنوان:": "Title:",
+            "تفعيل": "Approve",
+            "بحث عن": "searched for"
         };
         
         const reverseUiDict = Object.fromEntries(Object.entries(uiDict).map(([k, v]) => [v, k]));
@@ -867,12 +899,15 @@
                     if(dictionary[clean]) input.placeholder = input.placeholder.replace(clean, dictionary[clean]);
                 }
             });
+
             const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
             let node;
             while(node = walk.nextNode()) {
                 if(node.parentElement && (node.parentElement.tagName === 'SCRIPT' || node.parentElement.tagName === 'STYLE')) continue;
+                
                 let val = node.nodeValue;
                 let trimmed = val.trim();
+                
                 if(trimmed && dictionary[trimmed]) {
                     node.nodeValue = val.replace(trimmed, dictionary[trimmed]);
                 } else if(trimmed) {
@@ -889,6 +924,7 @@
             currentLang = currentLang === 'ar' ? 'en' : 'ar';
             document.getElementById('langToggleBtn').innerText = currentLang === 'ar' ? 'English' : 'عربي';
             document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            
             const activeDict = currentLang === 'en' ? uiDict : reverseUiDict;
             doTranslate(activeDict);
         };
