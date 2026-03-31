@@ -578,7 +578,16 @@
                         }
                         
                         const commentsCount = a.comments ? Object.keys(a.comments).length : 0;
-                        const commentsHtml = a.comments ? Object.values(a.comments).map(c => `<div style="margin-bottom:5px; border-bottom:1px solid #ddd; padding-bottom:5px; font-size:0.85rem;"><b>${c.user}</b>: ${c.text}</div>`).join('') : '<p style="color:var(--muted); text-align:center; font-size:0.8rem;">لا توجد تعليقات</p>';
+                        const isAdmin = (myData && myData.role === 'admin');
+                        
+                        // التعديل: إضافة زر حذف التعليق للأدمن فقط
+                        const commentsHtml = a.comments ? Object.entries(a.comments).map(([cKey, c]) => `
+                            <div style="margin-bottom:5px; border-bottom:1px solid #ddd; padding-bottom:5px; font-size:0.85rem; display:flex; justify-content:space-between; align-items:center;">
+                                <div><b>${c.user}</b>: ${c.text}</div>
+                                ${isAdmin ? `<button onclick="deleteComment('${a.key}', '${cKey}')" style="background:none; border:none; color:var(--danger); cursor:pointer; padding:0;" title="حذف التعليق"><i class="fas fa-trash"></i></button>` : ''}
+                            </div>
+                        `).join('') : '<p style="color:var(--muted); text-align:center; font-size:0.8rem;">لا توجد تعليقات</p>';
+                        
                         const isCommentsOpen = window.openComments.has(a.key);
 
                         return `
@@ -645,6 +654,15 @@
                     timestamp: Date.now()
                 });
             } catch(e) { alert("حدث خطأ أثناء إضافة التعليق"); }
+        };
+
+        // التعديل: إضافة دالة حذف التعليقات (للأدمن)
+        window.deleteComment = async (annKey, commentKey) => {
+            if(confirm("هل تريد حذف هذا التعليق؟")) {
+                try {
+                    await remove(ref(db, 'announcements/' + annKey + '/comments/' + commentKey));
+                } catch(e) { alert("حدث خطأ أثناء الحذف"); }
+            }
         };
 
         window.saveAnnouncement = async () => {
