@@ -49,6 +49,7 @@
         .admin-section { background: white; border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: 0 3px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
         .admin-section h3 { margin-top: 0; color: var(--primary); border-bottom: 2px solid var(--bg); padding-bottom: 10px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
         .admin-form input, .admin-form select { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; box-sizing: border-box; }
+        .admin-form textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; box-sizing: border-box; resize: vertical; min-height: 80px; }
         .log-item { font-size: 0.8rem; padding: 8px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
         .stat-box { background: var(--bg); padding: 15px; border-radius: 10px; text-align: center; flex: 1; border: 1px solid #ddd; }
         .stat-box h4 { margin: 0; color: var(--muted); font-size: 0.9rem; }
@@ -70,6 +71,12 @@
         .social-btn { display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; border-radius: 50%; color: white; font-size: 1.4rem; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
         .social-btn:active { transform: scale(0.9); }
         
+        /* الإعلانات - الوميض */
+        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); } 70% { box-shadow: 0 0 0 8px rgba(231, 76, 60, 0); } 100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); } }
+        .blink-dot { display: inline-block; width: 8px; height: 8px; background-color: var(--danger); border-radius: 50%; animation: pulse-red 1.5s infinite; margin-right: 3px; vertical-align: middle; }
+        .announcement-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; border-right: 4px solid var(--danger); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .announcement-date { font-size: 0.75rem; color: var(--muted); margin-bottom: 8px; display: block; border-bottom: 1px dashed #eee; padding-bottom: 5px; }
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .developer-footer { position: fixed; bottom: 0; width: 100%; background: white; text-align: center; padding: 10px 0; font-size: 0.8rem; border-top: 1px solid #eee; z-index: 900; }
     </style>
@@ -97,8 +104,19 @@
             <button class="tab-btn" onclick="showTab('phones', this)"><i class="fas fa-phone-alt"></i> الهواتف</button>
             <button class="tab-btn" onclick="showTab('quick', this)"><i class="fas fa-car"></i> فحص</button>
             <button class="tab-btn" onclick="showTab('secure', this)"><i class="fas fa-shield-alt"></i> أمني</button>
+            <button class="tab-btn" onclick="showTab('announcements', this)"><i class="fas fa-bullhorn"></i> إعلانات <span id="annBadge" class="blink-dot" style="display:none;"></span></button>
             <button class="tab-btn active" onclick="showTab('about', this)"><i class="fas fa-info-circle"></i> حول</button>
             <button id="adminTabBtn" class="tab-btn" onclick="showTab('admin', this)" style="display:none; color:var(--gold);"><i class="fas fa-user-cog"></i> الإدارة</button>
+        </div>
+    </div>
+
+    <div id="announcements" class="tab-content">
+        <div class="admin-section" style="border-top: 4px solid var(--danger);">
+            <h3 style="color:var(--danger);"><i class="fas fa-bullhorn"></i> لوحة الإعلانات</h3>
+            <p style="font-size:0.85rem; color:var(--muted); margin-bottom: 20px;">أحدث التبليغات والقرارات الرسمية</p>
+            <div id="publicAnnouncementsList">
+                <p style="text-align:center; color:var(--muted);"><i class="fas fa-spinner fa-spin"></i> جاري التحميل...</p>
+            </div>
         </div>
     </div>
 
@@ -194,6 +212,15 @@
             <div style="position: relative; height: 250px; width: 100%; margin-bottom: 20px;"><canvas id="searchChart"></canvas></div>
             <div style="position: relative; height: 250px; width: 100%; margin-bottom: 20px;"><canvas id="deptChart"></canvas></div>
             <div style="position: relative; height: 250px; width: 100%;"><canvas id="phonesChart"></canvas></div>
+        </div>
+
+        <div class="admin-section" style="border-right: 4px solid var(--danger);">
+            <h3 style="color:var(--danger);"><i class="fas fa-bullhorn"></i> إدارة الإعلانات</h3>
+            <div class="admin-form">
+                <textarea id="admAnnText" placeholder="اكتب الإعلان هنا (يمكنك استخدام الإيموجي 😊)..."></textarea>
+                <button class="btn-main" style="background:var(--danger);" onclick="saveAnnouncement()">📢 نشر الإعلان</button>
+            </div>
+            <div id="adminAnnouncementsList" style="margin-top: 20px;"></div>
         </div>
 
         <div class="admin-section" style="border: 2px dashed var(--gold); background: #fffcf0;">
@@ -378,6 +405,7 @@
         
         let liveCars = JSON.parse(localStorage.getItem('offlineCars')) || [];
         let livePhones = JSON.parse(localStorage.getItem('offlinePhones')) || [];
+        let liveAnnouncements = JSON.parse(localStorage.getItem('offlineAnnouncements')) || [];
         
         let liveLogs = [];
         let currentEditCarKey = null; 
@@ -410,6 +438,7 @@
                     localStorage.setItem('pwa_prompt_seen', 'true');
                 }, 2000);
             }
+            renderAnnouncements(); // عرض الإعلانات الأوفلاين
         };
 
         setTimeout(() => {
@@ -515,6 +544,71 @@
             }
         });
 
+        // --- جلب الإعلانات ---
+        onValue(ref(db, 'announcements'), (s) => {
+            liveAnnouncements = [];
+            const data = s.val();
+            if(data) {
+                for(let k in data) liveAnnouncements.push({...data[k], key: k});
+            }
+            liveAnnouncements.sort((a, b) => b.timestamp - a.timestamp);
+            localStorage.setItem('offlineAnnouncements', JSON.stringify(liveAnnouncements));
+            renderAnnouncements();
+        });
+
+        window.renderAnnouncements = () => {
+            const pubList = document.getElementById('publicAnnouncementsList');
+            const admList = document.getElementById('adminAnnouncementsList');
+            const badge = document.getElementById('annBadge');
+
+            if(liveAnnouncements.length > 0) {
+                if(badge) badge.style.display = 'inline-block';
+                if(pubList) {
+                    pubList.innerHTML = liveAnnouncements.map(a => `
+                        <div class="announcement-card">
+                            <span class="announcement-date"><i class="far fa-clock"></i> ${a.time}</span>
+                            <div style="font-size:0.95rem; line-height:1.6; white-space: pre-wrap; font-weight:bold;">${a.text}</div>
+                        </div>
+                    `).join('');
+                }
+                if(admList) {
+                    admList.innerHTML = liveAnnouncements.map(a => `
+                        <div style="background:#f8f9fa; padding:10px; border-radius:8px; margin-bottom:10px; border:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+                            <div style="flex:1; margin-left:10px; text-align:right;">
+                                <div style="font-size:0.75rem; color:var(--muted);">${a.time}</div>
+                                <div style="font-size:0.85rem; white-space:pre-wrap;">${a.text}</div>
+                            </div>
+                            <button class="btn-main btn-danger" style="width:auto; padding:8px 12px; margin:0;" onclick="deleteAnnouncement('${a.key}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `).join('');
+                }
+            } else {
+                if(badge) badge.style.display = 'none';
+                if(pubList) pubList.innerHTML = '<p style="text-align:center; color:var(--muted);">لا توجد إعلانات حالياً</p>';
+                if(admList) admList.innerHTML = '';
+            }
+        };
+
+        window.saveAnnouncement = async () => {
+            const text = document.getElementById('admAnnText').value.trim();
+            if(!text) return alert("الرجاء كتابة الإعلان أولاً!");
+            try {
+                await push(ref(db, 'announcements'), {
+                    text: text,
+                    time: new Date().toLocaleString('ar-IQ'),
+                    timestamp: Date.now()
+                });
+                document.getElementById('admAnnText').value = '';
+                alert("✅ تم نشر الإعلان بنجاح!");
+            } catch(e) { alert("❌ حدث خطأ."); }
+        };
+
+        window.deleteAnnouncement = async (key) => {
+            if(confirm("هل أنت متأكد من حذف هذا الإعلان؟")) {
+                await remove(ref(db, 'announcements/' + key));
+            }
+        };
+
         onValue(ref(db, 'phones'), (s) => {
             livePhones = [];
             const data = s.val();
@@ -610,7 +704,6 @@
         };
 
         function initAdminPanel() {
-            // مستمع الزيارات الجديد
             onValue(ref(db, 'visits'), s => {
                 const data = s.val();
                 let totalVisits = 0;
@@ -953,9 +1046,16 @@
             "الهواتف": "Phones",
             "فحص": "Check",
             "أمني": "Security",
+            "إعلانات": "Announcements",
+            "لوحة الإعلانات": "Announcements Board",
+            "أحدث التبليغات والقرارات الرسمية": "Latest Notifications & Official Decisions",
+            "إدارة الإعلانات": "Manage Announcements",
+            "اكتب الإعلان هنا (يمكنك استخدام الإيموجي 😊)...": "Write announcement here (emojis supported 😊)...",
+            "نشر الإعلان": "Publish Announcement",
+            "لا توجد إعلانات حالياً": "No announcements currently",
             "الإدارة": "Admin",
             "ابحث عن قسم أو رقم هاتف...": "Search dept or phone...",
-            "جاري تحميل الدليل...": "Loading Directory...",
+            "جاري التحميل...": "Loading...",
             "أدخل رقم اللوحة للفحص السريع...": "Enter plate for quick check...",
             "فحص العجلة": "Check Vehicle",
             "تسجيل الدخول للموظفين": "Staff Login",
@@ -975,15 +1075,10 @@
             "عمليات البحث": "Searches",
             "المستخدمين": "Users",
             "الرقابة والتحليل (Charts)": "Monitoring & Analysis (Charts)",
-            "استيراد البيانات الأولية": "Import Initial Data",
-            "استخدم هذه الأزرار مرة واحدة فقط لرفع البيانات من الكود وملف JS إلى السيرفر.": "Use these buttons once to upload data.",
-            "رفع دليل الهواتف": "Upload Phone Directory",
-            "رفع سجل العجلات (cars.js)": "Upload Vehicle Log (cars.js)",
             "إدارة العجلات": "Vehicle Management",
             "بحث عن عجلة لتعديلها": "Search for vehicle to edit",
             "أدخل رقم اللوحة للبحث...": "Enter plate number to search...",
             "بحث وجلب": "Search & Fetch",
-            "بيانات العجلة (للإضافة الجديدة أو بعد البحث)": "Vehicle Data (New or Edited)",
             "رقم اللوحة (أساسي)": "Plate Number (Primary)",
             "اسم المالك": "Owner Name",
             "القسم": "Department",
@@ -1018,7 +1113,7 @@
         const reverseUiDict = Object.fromEntries(Object.entries(uiDict).map(([k, v]) => [v, k]));
 
         function doTranslate(dictionary) {
-            document.querySelectorAll('input').forEach(input => {
+            document.querySelectorAll('input, textarea').forEach(input => {
                 if(input.placeholder) {
                     const clean = input.placeholder.trim();
                     if(dictionary[clean]) input.placeholder = input.placeholder.replace(clean, dictionary[clean]);
