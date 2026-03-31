@@ -22,9 +22,10 @@
         .hospital-logo { width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: white; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; }
         .title-text h1 { margin: 0; font-size: 1.1rem; font-weight: 900; color: var(--primary); }
         
-        /* Tabs */
-        .tabs { display: flex; justify-content: space-around; border-top: 1px solid #eee; padding-top: 5px; }
-        .tab-btn { background: none; border: none; font-family: inherit; font-size: 0.85rem; font-weight: bold; color: var(--muted); padding: 10px 5px; cursor: pointer; flex: 1; border-bottom: 3px solid transparent; transition: 0.3s; }
+        /* Tabs - التعديل: ترتيب التبويبات لتكون في سطر واحد */
+        .tabs { display: flex; justify-content: space-around; border-top: 1px solid #eee; padding-top: 5px; overflow-x: auto; }
+        .tabs::-webkit-scrollbar { display: none; }
+        .tab-btn { background: none; border: none; font-family: inherit; font-size: 0.85rem; font-weight: bold; color: var(--muted); padding: 10px 5px; cursor: pointer; flex: 1; border-bottom: 3px solid transparent; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 5px; white-space: nowrap; }
         .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
         .tab-content { display: none; padding: 15px; animation: fadeIn 0.4s; max-width: 600px; margin: auto; }
         .tab-content.active { display: block; }
@@ -412,6 +413,8 @@
         let currentEditPhoneKey = null; 
         window.globalUsersData = {};
         window.currentEditingProfileId = null;
+        window.openComments = new Set(); // لحفظ التعليقات المفتوحة حتى لا تغلق عند التحديث
+        let viewedAnns = new Set(); // لتسجيل المشاهدات محليا
 
         // --- تسجيل زيارات الأجهزة (الزوار) ---
         let deviceId = localStorage.getItem('device_id');
@@ -563,20 +566,52 @@
 
             if(liveAnnouncements.length > 0) {
                 if(badge) badge.style.display = 'inline-block';
+                
                 if(pubList) {
-                    pubList.innerHTML = liveAnnouncements.map(a => `
+                    pubList.innerHTML = liveAnnouncements.map(a => {
+                        // تسجيل المشاهدة بصمت
+                        if (!viewedAnns.has(a.key)) {
+                            viewedAnns.add(a.key);
+                            if (!a.views || !a.views[deviceId]) {
+                                update(ref(db, 'announcements/' + a.key + '/views'), { [deviceId]: true }).catch(e=>{});
+                            }
+                        }
+                        
+                        const commentsCount = a.comments ? Object.keys(a.comments).length : 0;
+                        const commentsHtml = a.comments ? Object.values(a.comments).map(c => `<div style="margin-bottom:5px; border-bottom:1px solid #ddd; padding-bottom:5px; font-size:0.85rem;"><b>${c.user}</b>: ${c.text}</div>`).join('') : '<p style="color:var(--muted); text-align:center; font-size:0.8rem;">لا توجد تعليقات</p>';
+                        const isCommentsOpen = window.openComments.has(a.key);
+
+                        return `
                         <div class="announcement-card">
                             <span class="announcement-date"><i class="far fa-clock"></i> ${a.time}</span>
                             <div style="font-size:0.95rem; line-height:1.6; white-space: pre-wrap; font-weight:bold;">${a.text}</div>
+                            
+                            <div style="margin-top: 10px; border-top: 1px dashed #eee; padding-top: 10px;">
+                                <button onclick="toggleComments('${a.key}')" style="background:none; border:none; color:var(--secondary); cursor:pointer; font-family:inherit; font-size:0.85rem; padding:0;"><i class="far fa-comment-dots"></i> التعليقات (${commentsCount})</button>
+                                
+                                <div id="comments-${a.key}" style="display:${isCommentsOpen ? 'block' : 'none'}; margin-top: 10px; background:#f8f9fa; padding:10px; border-radius:8px;">
+                                    <div style="max-height: 120px; overflow-y: auto; margin-bottom: 10px;">
+                                        ${commentsHtml}
+                                    </div>
+                                    <div style="display:flex; gap:5px;">
+                                        <input type="text" id="comment-input-${a.key}" placeholder="اكتب تعليقاً..." style="flex:1; padding:8px; border:1px solid #ccc; border-radius:5px; font-family:inherit; font-size:0.8rem; margin:0;">
+                                        <button onclick="addComment('${a.key}')" style="background:var(--primary); color:white; border:none; border-radius:5px; padding:0 15px; cursor:pointer;"><i class="fas fa-paper-plane"></i></button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    `).join('');
+                        `;
+                    }).join('');
                 }
+
                 if(admList) {
                     admList.innerHTML = liveAnnouncements.map(a => `
                         <div style="background:#f8f9fa; padding:10px; border-radius:8px; margin-bottom:10px; border:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
                             <div style="flex:1; margin-left:10px; text-align:right;">
                                 <div style="font-size:0.75rem; color:var(--muted);">${a.time}</div>
-                                <div style="font-size:0.85rem; white-space:pre-wrap;">${a.text}</div>
+                                <div style="font-size:0.85rem; white-space:pre-wrap; margin-bottom:5px;">${a.text}</div>
+                                <span style="color:var(--secondary); font-size:0.8rem; font-weight:bold; margin-left: 10px;"><i class="fas fa-eye"></i> المشاهدات: ${a.views ? Object.keys(a.views).length : 0}</span>
+                                <span style="color:var(--muted); font-size:0.8rem;"><i class="far fa-comment-dots"></i> التعليقات: ${a.comments ? Object.keys(a.comments).length : 0}</span>
                             </div>
                             <button class="btn-main btn-danger" style="width:auto; padding:8px 12px; margin:0;" onclick="deleteAnnouncement('${a.key}')"><i class="fas fa-trash"></i></button>
                         </div>
@@ -587,6 +622,29 @@
                 if(pubList) pubList.innerHTML = '<p style="text-align:center; color:var(--muted);">لا توجد إعلانات حالياً</p>';
                 if(admList) admList.innerHTML = '';
             }
+        };
+
+        window.toggleComments = (key) => {
+            if (window.openComments.has(key)) {
+                window.openComments.delete(key);
+            } else {
+                window.openComments.add(key);
+            }
+            renderAnnouncements();
+        };
+
+        window.addComment = async (key) => {
+            const input = document.getElementById('comment-input-' + key);
+            const text = input.value.trim();
+            if (!text) return;
+            const userName = (myData && myData.status === 'approved') ? myData.name : 'زائر عام';
+            try {
+                await push(ref(db, 'announcements/' + key + '/comments'), {
+                    user: userName,
+                    text: text,
+                    timestamp: Date.now()
+                });
+            } catch(e) { alert("حدث خطأ أثناء إضافة التعليق"); }
         };
 
         window.saveAnnouncement = async () => {
@@ -1053,6 +1111,10 @@
             "اكتب الإعلان هنا (يمكنك استخدام الإيموجي 😊)...": "Write announcement here (emojis supported 😊)...",
             "نشر الإعلان": "Publish Announcement",
             "لا توجد إعلانات حالياً": "No announcements currently",
+            "التعليقات": "Comments",
+            "اكتب تعليقاً...": "Write a comment...",
+            "لا توجد تعليقات": "No comments",
+            "المشاهدات:": "Views:",
             "الإدارة": "Admin",
             "ابحث عن قسم أو رقم هاتف...": "Search dept or phone...",
             "جاري التحميل...": "Loading...",
