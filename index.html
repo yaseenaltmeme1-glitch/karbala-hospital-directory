@@ -473,15 +473,15 @@
     </div>
 
     <div id="ai-chat-btn" onclick="toggleChat()">
-        <i class="fas fa-robot"></i>
+        <i class="fas fa-headset"></i>
     </div>
     <div id="ai-chat-window">
         <div class="chat-header">
-            <div><i class="fas fa-robot"></i> المساعد الذكي (AI)</div>
+            <div><i class="fas fa-headset"></i> المرشد الذكي للمستشفى</div>
             <button onclick="toggleChat()"><i class="fas fa-times"></i></button>
         </div>
         <div class="chat-body" id="chatBody">
-            <div class="chat-msg ai-msg">أهلاً بك أستاذ ياسين! أنا المساعد الذكي لمستشفى الإمام الحسن (ع). تفضل، اسألني عن أي رقم هاتف، سيارة، أو قسم، وسأجيبك فوراً. 😊</div>
+            <div class="chat-msg ai-msg">أهلاً بك أستاذ ياسين! أنا المرشد الذكي الخاص بمستشفى الإمام الحسن (ع). تفضل، اسألني عن أرقام الأقسام أو الاستشاريات وسأجيبك بكل سرور. 😊✨</div>
         </div>
         <div class="chat-footer">
             <input type="text" id="chatInput" placeholder="اسألني عن شيء في النظام..." onkeypress="if(event.key === 'Enter') sendMessageToAI()">
@@ -608,21 +608,28 @@
             chatBody.innerHTML += `<div id="${loadingId}" class="chat-msg ai-msg"><i class="fas fa-spinner fa-spin"></i> جاري البحث والتفكير...</div>`;
             chatBody.scrollTop = chatBody.scrollHeight;
 
-            // التغذية السياقية الديناميكية (Dynamic Context)
+            // التغذية السياقية الديناميكية (Dynamic Context) مع حماية بيانات السيارات
+            const isSecureUser = (myData && myData.status === 'approved');
+            const carsContext = isSecureUser 
+                ? `2. العجلات المصرحة أمنياً (هذا المستخدم لديه صلاحية لرؤيتها): ${JSON.stringify(liveCars.map(c => ({اللوحة: c.plate, المالك: c.name, القسم: c.dept})))}`
+                : `2. العجلات: (أنت الآن تتحدث مع مستخدم عادي. يمنع منعاً باتاً إعطاء أي معلومات عن أرقام السيارات أو أصحابها. إذا سألك عن سيارة، اعتذر بلباقة وأخبره أن هذه المعلومات سرية وتتطلب تسجيل الدخول).`;
+
             const contextText = `
-أنت مساعد ذكي ولطيف ومحترم جداً يعمل في "مستشفى الإمام الحسن المجتبى (ع)".
+أنت "المرشد الذكي" لمستشفى الإمام الحسن المجتبى (ع).
 اسم مطور النظام هو: "Yaseen ALtmeme".
-يجب أن تجيب على الأسئلة بناءً على البيانات الحية المتوفرة أدناه فقط. 
-إذا سألك المستخدم عن شيء غير موجود في هذه البيانات، اعتذر بلباقة وأخبره أن المعلومات غير متوفرة في النظام حالياً.
-استخدم الإيموجيات في إجاباتك لتكون ودوداً.
+أسلوبك: محترم جداً، رسمي، لطيف، وتستخدم الإيموجيات بشكل مناسب.
+
+تعليمات صارمة جداً للبحث:
+- هناك فرق كبير بين "دليل الهواتف" و"العجلات". عندما يسأل المستخدم عن قسم (مثل العيون أو الطوارئ)، فهو يبحث عن "رقم هاتف القسم" فقط! لا تقم أبداً بإعطائه أرقام السيارات التابعة لذلك القسم إلا إذا سأل هو صراحةً عن "سيارة" أو "عجلة".
+- أجب بدقة واختصار بناءً على البيانات الحية أدناه فقط. إذا لم تجد المعلومة، قل بوضوح أن المعلومة غير متوفرة حالياً.
 
 البيانات الحية المتاحة لك الآن:
-1. دليل الهواتف: ${JSON.stringify(livePhones.map(p => ({القسم: p.name, الرقم: p.ext})))}
-2. العجلات المصرحة أمنياً: ${JSON.stringify(liveCars.map(c => ({اللوحة: c.plate, المالك: c.name, القسم: c.dept})))}
-3. الاستشاريات والأطباء: ${JSON.stringify(liveClinics.map(c => ({الاستشارية: c.name, الأطباء: c.doctors ? Object.values(c.doctors) : []})))}
+1. دليل الهواتف (أرقام الأقسام والبدالة): ${JSON.stringify(livePhones.map(p => ({القسم: p.name, الرقم_الداخلي: p.ext})))}
+${carsContext}
+3. الاستشاريات والأطباء (تحديث مستمر): ${JSON.stringify(liveClinics.map(c => ({الاستشارية: c.name, الأطباء: c.doctors ? Object.values(c.doctors) : []})))}
 4. الإعلانات والقرارات: ${JSON.stringify(liveAnnouncements.map(a => ({النص: a.text, الوقت: a.time})))}
 
-سؤال الموظف: ${text}
+سؤال المستخدم: ${text}
             `;
 
             try {
