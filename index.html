@@ -17,18 +17,29 @@
         body { margin: 0; padding: 0; background-color: var(--bg); color: var(--text); font-family: 'Cairo', sans-serif; padding-bottom: 80px; }
         
         /* Layout & Header */
-        .header-container { position: sticky; top: 0; background: white; z-index: 1000; padding: 15px 20px 0; border-bottom: 3px solid var(--primary); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .hospital-title { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
+        .header-container { position: sticky; top: 0; background: white; z-index: 1000; padding: 15px 20px 15px; border-bottom: 3px solid var(--primary); box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+        .hospital-title { display: flex; align-items: center; gap: 15px; }
         .hospital-logo { width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: white; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; }
         .title-text h1 { margin: 0; font-size: 1.1rem; font-weight: 900; color: var(--primary); }
         
-        /* Tabs - التعديل: ترتيب التبويبات لتكون في سطر واحد */
-        .tabs { display: flex; justify-content: space-around; border-top: 1px solid #eee; padding-top: 5px; overflow-x: auto; }
-        .tabs::-webkit-scrollbar { display: none; }
-        .tab-btn { background: none; border: none; font-family: inherit; font-size: 0.85rem; font-weight: bold; color: var(--muted); padding: 10px 5px; cursor: pointer; flex: 1; border-bottom: 3px solid transparent; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 5px; white-space: nowrap; }
-        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+        /* Home Grid Dashboard */
+        .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
+        .home-card { background: white; border-radius: 15px; padding: 25px 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.04); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 1px solid #eee; position: relative; }
+        .home-card:active { transform: scale(0.95); }
+        .home-card i { font-size: 2.5rem; color: var(--primary); margin-bottom: 15px; }
+        .home-card h3 { margin: 0; font-size: 1rem; color: var(--text); font-weight: bold; }
+        
+        /* Tabs Handling */
         .tab-content { display: none; padding: 15px; animation: fadeIn 0.4s; max-width: 600px; margin: auto; }
         .tab-content.active { display: block; }
+
+        /* Admin Internal Navigation */
+        .admin-nav { display: flex; gap: 10px; overflow-x: auto; margin-bottom: 20px; padding-bottom: 5px; }
+        .admin-nav::-webkit-scrollbar { display: none; }
+        .admin-nav-btn { background: #e0e6ed; color: var(--text); border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; font-family: inherit; cursor: pointer; white-space: nowrap; transition: 0.3s; font-size: 0.85rem; }
+        .admin-nav-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(0,75,73,0.3); }
+        .admin-pane { display: none; animation: fadeIn 0.3s; }
+        .admin-pane.active { display: block; }
 
         /* General Components */
         .search-wrapper { position: relative; margin: 15px 0; }
@@ -42,24 +53,20 @@
         .btn-danger { background: var(--danger); }
         .btn-gold { background: var(--gold); }
         
-        /* Car Cards */
-        .car-card { background: white; border-radius: 12px; padding: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-top: 4px solid var(--primary); margin-top: 15px; }
-        .car-detail { display: flex; justify-content: space-between; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px dashed #eee; font-size: 0.95rem; }
-        
         /* Admin Panel Styles */
         .admin-section { background: white; border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: 0 3px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
         .admin-section h3 { margin-top: 0; color: var(--primary); border-bottom: 2px solid var(--bg); padding-bottom: 10px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
         .admin-form input, .admin-form select { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; box-sizing: border-box; }
         .admin-form textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; box-sizing: border-box; resize: vertical; min-height: 80px; }
         .log-item { font-size: 0.8rem; padding: 8px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
-        .stat-box { background: var(--bg); padding: 15px; border-radius: 10px; text-align: center; flex: 1; border: 1px solid #ddd; }
-        .stat-box h4 { margin: 0; color: var(--muted); font-size: 0.9rem; }
+        .stat-box { background: var(--bg); padding: 15px; border-radius: 10px; text-align: center; flex: 1; border: 1px solid #ddd; min-width: 100px; }
+        .stat-box h4 { margin: 0; color: var(--muted); font-size: 0.85rem; }
         .stat-box span { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
 
         .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--text); color: white; padding: 10px 20px; border-radius: 30px; font-size: 0.9rem; opacity: 0; transition: 0.3s; z-index: 2000; pointer-events: none; }
         .toast.show { opacity: 1; bottom: 100px; }
         
-        /* رسالة التثبيت المنبثقة ومودال بروفايل المستخدم */
+        /* Modals */
         #installModal, #userProfileModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; justify-content: center; align-items: center; }
         .install-box, .profile-box { background: white; padding: 25px; border-radius: 15px; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: fadeIn 0.3s; }
         .profile-box { max-width: 450px; max-height: 90vh; overflow-y: auto; text-align: right; }
@@ -68,13 +75,11 @@
         .btn-close { background: #eee; color: var(--text); margin-top: 10px; }
         .profile-logs { max-height: 150px; overflow-y: auto; background: var(--bg); padding: 10px; border-radius: 8px; margin-top: 10px; border: 1px solid #eee; }
 
-        /* أزرار التواصل في صفحة حول */
         .social-btn { display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; border-radius: 50%; color: white; font-size: 1.4rem; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
         .social-btn:active { transform: scale(0.9); }
         
-        /* الإعلانات - الوميض */
         @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); } 70% { box-shadow: 0 0 0 8px rgba(231, 76, 60, 0); } 100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); } }
-        .blink-dot { display: inline-block; width: 8px; height: 8px; background-color: var(--danger); border-radius: 50%; animation: pulse-red 1.5s infinite; margin-right: 3px; vertical-align: middle; }
+        .blink-dot { position: absolute; top: 15px; right: 15px; width: 12px; height: 12px; background-color: var(--danger); border-radius: 50%; animation: pulse-red 1.5s infinite; }
         .announcement-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; border-right: 4px solid var(--danger); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .announcement-date { font-size: 0.75rem; color: var(--muted); margin-bottom: 8px; display: block; border-bottom: 1px dashed #eee; padding-bottom: 5px; }
 
@@ -85,29 +90,63 @@
 <body>
 
     <div class="header-container">
-        <div style="display:flex; justify-content: space-between; align-items: center;">
-            <div class="hospital-title">
-                <div class="hospital-logo"><i class="fas fa-hospital"></i></div>
-                <div class="title-text">
-                    <h1>مستشفى الإمام الحسن (ع)</h1>
-                    <p style="margin:0; font-size:0.75rem; color:var(--muted);">النظام المركزي - Yaseen ALtmeme</p>
-                </div>
+        <div class="hospital-title">
+            <button id="backBtn" onclick="showTab('home')" style="display:none; background:none; border:none; font-size:1.5rem; color:var(--primary); cursor:pointer; padding:0; margin-left:10px;"><i class="fas fa-arrow-right"></i></button>
+            <div class="hospital-logo" id="hospitalLogo"><i class="fas fa-hospital"></i></div>
+            <div class="title-text">
+                <h1>مستشفى الإمام الحسن (ع)</h1>
+                <p style="margin:0; font-size:0.75rem; color:var(--muted);">النظام المركزي - Yaseen ALtmeme</p>
             </div>
-            
-            <div style="display:flex; align-items:center; gap:10px;">
-                <button id="langToggleBtn" onclick="toggleLanguage()" style="background:var(--gold); border:none; padding:4px 10px; border-radius:5px; cursor:pointer; font-weight:bold; font-family:inherit; color:#004b49;">English</button>
-                <button id="logoutBtn" onclick="logout()" style="display:none; background:none; border:none; color:var(--danger); font-size:1.2rem; cursor:pointer;"><i class="fas fa-sign-out-alt"></i></button>
-            </div>
-            
         </div>
         
-        <div class="tabs">
-            <button class="tab-btn" onclick="showTab('phones', this)"><i class="fas fa-phone-alt"></i> الهواتف</button>
-            <button class="tab-btn" onclick="showTab('quick', this)"><i class="fas fa-car"></i> فحص</button>
-            <button class="tab-btn" onclick="showTab('secure', this)"><i class="fas fa-shield-alt"></i> أمني</button>
-            <button class="tab-btn" onclick="showTab('announcements', this)"><i class="fas fa-bullhorn"></i> إعلانات <span id="annBadge" class="blink-dot" style="display:none;"></span></button>
-            <button class="tab-btn active" onclick="showTab('about', this)"><i class="fas fa-info-circle"></i> حول</button>
-            <button id="adminTabBtn" class="tab-btn" onclick="showTab('admin', this)" style="display:none; color:var(--gold);"><i class="fas fa-user-cog"></i> الإدارة</button>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <button id="langToggleBtn" onclick="toggleLanguage()" style="background:var(--gold); border:none; padding:4px 10px; border-radius:5px; cursor:pointer; font-weight:bold; font-family:inherit; color:#004b49;">English</button>
+            <button id="logoutBtn" onclick="logout()" style="display:none; background:none; border:none; color:var(--danger); font-size:1.2rem; cursor:pointer;"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+    </div>
+
+    <div id="home" class="tab-content active">
+        <div class="home-grid">
+            <div class="home-card" onclick="showTab('phones')">
+                <i class="fas fa-phone-alt"></i>
+                <h3>دليل الهواتف</h3>
+            </div>
+            <div class="home-card" onclick="showTab('quick')">
+                <i class="fas fa-car"></i>
+                <h3>فحص العجلات</h3>
+            </div>
+            <div class="home-card" onclick="showTab('clinics-tab')">
+                <i class="fas fa-hospital-user" style="color:var(--secondary);"></i>
+                <h3 style="color:var(--secondary);">الاستشاريات</h3>
+            </div>
+            <div class="home-card" onclick="showTab('announcements')">
+                <span id="annBadge" class="blink-dot" style="display:none;"></span>
+                <i class="fas fa-bullhorn" style="color:var(--danger);"></i>
+                <h3 style="color:var(--danger);">الإعلانات</h3>
+            </div>
+            <div class="home-card" onclick="showTab('secure')">
+                <i class="fas fa-shield-alt"></i>
+                <h3>الاستعلام الأمني</h3>
+            </div>
+            <div class="home-card" onclick="showTab('about')">
+                <i class="fas fa-info-circle"></i>
+                <h3>حول النظام</h3>
+            </div>
+            <div class="home-card" id="homeAdminCard" style="display:none; background:var(--primary); grid-column: span 2;" onclick="showTab('admin')">
+                <i class="fas fa-user-cog" style="color:var(--gold); margin-bottom: 5px;"></i>
+                <h3 style="color:white;">لوحة الإدارة</h3>
+            </div>
+        </div>
+    </div>
+
+    <div id="clinics-tab" class="tab-content">
+        <div class="admin-section" style="text-align: center; border-top: 4px solid var(--gold); padding: 40px 20px; margin-top: 20px;">
+            <i class="fas fa-hammer" style="font-size: 4rem; color: var(--gold); margin-bottom: 20px;"></i>
+            <h2 style="color: var(--primary); margin-top: 0;">قريباً جداً...</h2>
+            <p style="color: var(--muted); font-size: 1rem; line-height: 1.7;">
+                جاري العمل على تجهيز نظام <b>"جداول الاستشاريات ومواعيد الأطباء"</b> بتصميم بطاقات ذكية. سيكون متاحاً في التحديث القادم إن شاء الله.
+            </p>
+            <button class="btn-main" onclick="showTab('home')" style="width: auto; padding: 8px 30px; margin-top: 15px;"><i class="fas fa-home"></i> العودة للرئيسية</button>
         </div>
     </div>
 
@@ -121,7 +160,7 @@
         </div>
     </div>
 
-    <div id="about" class="tab-content active">
+    <div id="about" class="tab-content">
         <div class="admin-section" style="text-align: center; border-top: 4px solid var(--gold); margin-top: 15px; padding: 30px 20px;">
             <div style="background: var(--primary); width: 80px; height: 80px; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 15px; box-shadow: 0 5px 15px rgba(0,75,73,0.3);">
                 <i class="fas fa-hospital-alt" style="font-size: 2.5rem; color: white;"></i>
@@ -130,15 +169,10 @@
             <p style="color: var(--muted); font-size: 0.95rem; line-height: 1.7; margin-bottom: 20px;">
                 مرحباً بكم في النظام المركزي لإدارة العجلات والهواتف. تم تصميم هذا النظام لتقديم أسرع وأدق استعلام أمني وخدمي للمستشفى، ويعمل بكفاءة عالية.
             </p>
-            
             <hr style="border: 0; border-top: 1px dashed #ddd; margin: 25px 0;">
-            
             <p style="color: var(--secondary); font-weight: bold; margin-bottom: 5px; font-size: 0.9rem;">تطوير وتصميم وبرمجة</p>
-            
             <h3 style="color: var(--text); font-weight: 900; margin-top: 0; margin-bottom: 15px; font-size: 1.4rem; text-align: center; display: block; width: 100%;">Yaseen ALtmeme</h3>
-            
             <p style="color: var(--muted); font-size: 0.85rem; margin-top: 15px; margin-bottom: 10px;">للتواصل والدعم الفني:</p>
-            
             <div style="display: flex; justify-content: center; gap: 15px; margin-top: 10px; flex-wrap: wrap;">
                 <a href="https://wa.me/9647718568324" class="social-btn" style="background: #25D366; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);"><i class="fab fa-whatsapp"></i></a>
                 <a href="https://t.me/ya_se91" class="social-btn" style="background: #0088cc; box-shadow: 0 4px 10px rgba(0, 136, 204, 0.3);"><i class="fab fa-telegram-plane"></i></a>
@@ -167,7 +201,6 @@
     </div>
 
     <div id="secure" class="tab-content">
-        
         <div id="authSection" class="admin-section" style="max-width: 400px; margin: 40px auto; text-align:center;">
             <i class="fas fa-user-shield" style="font-size:3rem; color:var(--primary); margin-bottom:15px;"></i>
             <h3>تسجيل الدخول للموظفين</h3>
@@ -199,127 +232,172 @@
 
     <div id="admin" class="tab-content">
         
-        <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap: wrap;">
-            <div class="stat-box"><h4>السيارات</h4><span id="countCars">0</span></div>
-            <div class="stat-box"><h4>الهواتف</h4><span id="countPhones">0</span></div>
-            <div class="stat-box"><h4>إجمالي الزيارات</h4><span id="countVisits">0</span></div>
-            <div class="stat-box"><h4>زوار فريدين</h4><span id="countUniqueVisitors">0</span></div>
-            <div class="stat-box" style="display:none;"><h4>عمليات البحث</h4><span id="countLogs">0</span></div>
-            <div class="stat-box"><h4>المستخدمين</h4><span id="countUsers">0</span></div>
+        <div class="admin-nav">
+            <button class="admin-nav-btn active" onclick="showAdminTab('adm-stats', this)">📊 الإحصائيات</button>
+            <button class="admin-nav-btn" onclick="showAdminTab('adm-cars', this)">🚗 العجلات</button>
+            <button class="admin-nav-btn" onclick="showAdminTab('adm-phones', this)">☎️ الهواتف</button>
+            <button class="admin-nav-btn" onclick="showAdminTab('adm-clinics', this)">🏥 الاستشاريات</button>
+            <button class="admin-nav-btn" onclick="showAdminTab('adm-announcements', this)">📢 الإعلانات</button>
+            <button class="admin-nav-btn" onclick="showAdminTab('adm-users', this)">👥 المستخدمين</button>
         </div>
 
-        <div class="admin-section">
-            <h3><i class="fas fa-chart-bar"></i> الرقابة والتحليل (Charts)</h3>
-            <div style="position: relative; height: 250px; width: 100%; margin-bottom: 20px;"><canvas id="searchChart"></canvas></div>
-            <div style="position: relative; height: 250px; width: 100%; margin-bottom: 20px;"><canvas id="deptChart"></canvas></div>
-            <div style="position: relative; height: 250px; width: 100%;"><canvas id="phonesChart"></canvas></div>
-        </div>
-
-        <div class="admin-section" style="border-right: 4px solid var(--danger);">
-            <h3 style="color:var(--danger);"><i class="fas fa-bullhorn"></i> إدارة الإعلانات</h3>
-            <div class="admin-form">
-                <textarea id="admAnnText" placeholder="اكتب الإعلان هنا (يمكنك استخدام الإيموجي 😊)..."></textarea>
-                <button class="btn-main" style="background:var(--danger);" onclick="saveAnnouncement()">📢 نشر الإعلان</button>
+        <div id="adm-stats" class="admin-pane active">
+            <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap: wrap;">
+                <div class="stat-box"><h4>السيارات</h4><span id="countCars">0</span></div>
+                <div class="stat-box"><h4>الهواتف</h4><span id="countPhones">0</span></div>
+                <div class="stat-box"><h4>إجمالي الزيارات</h4><span id="countVisits">0</span></div>
+                <div class="stat-box"><h4>زوار فريدين</h4><span id="countUniqueVisitors">0</span></div>
+                <div class="stat-box"><h4>المستخدمين</h4><span id="countUsers">0</span></div>
             </div>
-            <div id="adminAnnouncementsList" style="margin-top: 20px;"></div>
-        </div>
 
-        <div class="admin-section" style="border: 2px dashed var(--gold); background: #fffcf0;">
-            <h3><i class="fas fa-cloud-upload-alt"></i> استيراد البيانات الأولية</h3>
-            <p style="font-size:0.8rem; color:var(--muted);">استخدم هذه الأزرار مرة واحدة فقط لرفع البيانات من الكود وملف JS إلى السيرفر.</p>
-            <div style="display:flex; gap:10px;">
-                <button class="btn-main btn-gold" onclick="uploadInternalPhones()">رفع دليل الهواتف</button>
-                <button class="btn-main btn-gold" onclick="uploadCarsFromJson()">رفع سجل العجلات (cars.js)</button>
+            <div class="admin-section">
+                <h3><i class="fas fa-chart-bar"></i> الرقابة والتحليل (Charts)</h3>
+                <div style="position: relative; height: 250px; width: 100%; margin-bottom: 20px;"><canvas id="searchChart"></canvas></div>
+                <div style="position: relative; height: 250px; width: 100%; margin-bottom: 20px;"><canvas id="deptChart"></canvas></div>
+                <div style="position: relative; height: 250px; width: 100%; margin-bottom: 20px;"><canvas id="phonesChart"></canvas></div>
             </div>
-        </div>
-
-        <div class="admin-section" style="border-right: 4px solid var(--primary);">
-            <h3><i class="fas fa-car-side"></i> إدارة العجلات</h3>
-            <div class="admin-form">
-                
-                <div style="background:#f8f9fa; padding:10px; border-radius:8px; margin-bottom:15px; border:1px solid #ddd;">
-                    <h4 style="margin-top:0; font-size:0.9rem; color:var(--primary);">بحث عن عجلة لتعديلها</h4>
-                    <div style="display:flex; gap:10px; margin-bottom: 5px;">
-                        <input type="text" id="searchCarEditInput" placeholder="أدخل رقم اللوحة للبحث..." style="flex:2; margin:0;">
-                        <button class="btn-main" style="flex:1; margin:0; background:var(--gold); color:black;" onclick="loadCarForEdit()">🔍 بحث وجلب</button>
-                    </div>
-                </div>
-
-                <hr style="border:0; border-top:1px dashed #ccc; margin:15px 0;">
-                <h4 style="margin-top:0; font-size:0.9rem;">بيانات العجلة (للإضافة الجديدة أو بعد البحث)</h4>
-
-                <input type="text" id="admCarPlate" placeholder="رقم اللوحة (أساسي)">
-                <input type="text" id="admCarName" placeholder="اسم المالك">
-                <input type="text" id="admCarDept" placeholder="القسم">
-                <input type="text" id="admCarTitle" placeholder="العنوان الوظيفي">
-                <div style="display:flex; gap:10px;">
-                    <input type="text" id="admCarType" placeholder="نوع السيارة (مثال: صالون)" style="flex:1;">
-                    <input type="text" id="admCarColor" placeholder="اللون" style="flex:1;">
-                </div>
-                <div style="display:flex; gap:10px;">
-                    <input type="text" id="admCarBadge" placeholder="رقم الباج" style="flex:1;">
-                    <input type="text" id="admCarPhone" placeholder="رقم الهاتف" style="flex:1;">
-                </div>
-                <div style="display:flex; gap:10px;">
-                    <button class="btn-main" style="background:#27ae60;" onclick="saveCar()">💾 إضافة / تحديث السيارة</button>
-                    <button class="btn-main btn-danger" onclick="deleteCar()">🗑️ حذف نهائي</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="admin-section" style="border-right: 4px solid var(--secondary);">
-            <h3><i class="fas fa-tty"></i> إدارة الهواتف</h3>
-            <div class="admin-form">
-
-                <div style="background:#f8f9fa; padding:10px; border-radius:8px; margin-bottom:15px; border:1px solid #ddd;">
-                    <h4 style="margin-top:0; font-size:0.9rem; color:var(--secondary);">بحث عن هاتف قسم لتعديله</h4>
-                    <div style="display:flex; gap:10px; margin-bottom: 5px;">
-                        <input type="text" id="searchPhoneEditInput" placeholder="أدخل اسم القسم للبحث..." style="flex:2; margin:0;">
-                        <button class="btn-main" style="flex:1; margin:0; background:var(--gold); color:black;" onclick="loadPhoneForEdit()">🔍 بحث وجلب</button>
-                    </div>
-                </div>
-
-                <hr style="border:0; border-top:1px dashed #ccc; margin:15px 0;">
-                <h4 style="margin-top:0; font-size:0.9rem;">بيانات الهاتف (للإضافة الجديدة أو بعد البحث)</h4>
-
-                <div style="display:flex; gap:10px; margin-bottom:10px;">
-                    <input type="text" id="admPhoneName" placeholder="الاسم / القسم" style="flex:2; margin:0;">
-                    <input type="text" id="admPhoneExt" placeholder="الرقم الداخلي (Ext)" style="flex:1; margin:0;">
-                </div>
-                <div style="display:flex; gap:10px;">
-                    <button class="btn-main" style="background:var(--secondary);" onclick="savePhone()">💾 حفظ / تحديث الهاتف</button>
-                    <button class="btn-main btn-danger" onclick="deletePhone()">🗑️ حذف</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="admin-section" style="border-right: 4px solid var(--text);">
-            <h3><i class="fas fa-users-cog"></i> إدارة المستخدمين وحسابك</h3>
             
-            <div style="background:#f8f9fa; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid #ddd; text-align:center;">
-                <h4 style="margin-top:0;">إعدادات حسابي (الأدمن)</h4>
-                <button class="btn-main" style="background:var(--text); width:auto; padding:8px 20px;" onclick="changeMyPassword()">🔑 تغيير كلمة المرور الخاصة بي</button>
+            <div class="admin-section">
+                <h3><i class="fas fa-history"></i> سجل المراقبة الحي (Live Logs)</h3>
+                <div id="liveLogs" style="max-height: 350px; overflow-y: auto; padding-right: 5px;"></div>
             </div>
 
-            <div class="admin-form" style="background:#f8f9fa; padding:10px; border-radius:8px; margin-bottom:15px; border:1px solid #eee;">
-                <h4 style="margin-top:0; font-size:0.9rem;">إنشاء حساب مباشر للموظف</h4>
-                <div style="display:flex; gap:5px; margin-bottom:5px;">
-                    <input type="text" id="directName" placeholder="الاسم" style="margin:0;">
-                    <input type="text" id="directDept" placeholder="القسم" style="margin:0;">
+            <div class="admin-section" style="border: 2px dashed var(--gold); background: #fffcf0;">
+                <h3><i class="fas fa-cloud-upload-alt"></i> استيراد البيانات الأولية</h3>
+                <p style="font-size:0.8rem; color:var(--muted);">استخدم هذه الأزرار مرة واحدة فقط لرفع البيانات من الكود وملف JS إلى السيرفر.</p>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn-main btn-gold" onclick="uploadInternalPhones()">رفع دليل الهواتف</button>
+                    <button class="btn-main btn-gold" onclick="uploadCarsFromJson()">رفع سجل العجلات (cars.js)</button>
                 </div>
-                <div style="display:flex; gap:5px; margin-bottom:5px;">
-                    <input type="text" id="directUser" placeholder="اليوزر" style="margin:0;">
-                    <input type="password" id="directPass" placeholder="الباسوورد" style="margin:0;">
-                </div>
-                <button class="btn-main" style="padding:8px;" onclick="createDirectUser()">➕ إنشاء وتفعيل فوراً</button>
             </div>
-
-            <div id="usersList"></div>
         </div>
 
-        <div class="admin-section">
-            <h3><i class="fas fa-history"></i> سجل المراقبة الحي (Live Logs)</h3>
-            <div id="liveLogs" style="max-height: 350px; overflow-y: auto; padding-right: 5px;"></div>
+        <div id="adm-cars" class="admin-pane">
+            <div class="admin-section" style="border-right: 4px solid var(--primary);">
+                <h3><i class="fas fa-car-side"></i> إدارة العجلات</h3>
+                <div class="admin-form">
+                    <div style="background:#f8f9fa; padding:10px; border-radius:8px; margin-bottom:15px; border:1px solid #ddd;">
+                        <h4 style="margin-top:0; font-size:0.9rem; color:var(--primary);">بحث عن عجلة لتعديلها</h4>
+                        <div style="display:flex; gap:10px; margin-bottom: 5px;">
+                            <input type="text" id="searchCarEditInput" placeholder="أدخل رقم اللوحة للبحث..." style="flex:2; margin:0;">
+                            <button class="btn-main" style="flex:1; margin:0; background:var(--gold); color:black;" onclick="loadCarForEdit()">🔍 بحث وجلب</button>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px dashed #ccc; margin:15px 0;">
+                    <h4 style="margin-top:0; font-size:0.9rem;">بيانات العجلة</h4>
+                    <input type="text" id="admCarPlate" placeholder="رقم اللوحة (أساسي)">
+                    <input type="text" id="admCarName" placeholder="اسم المالك">
+                    <input type="text" id="admCarDept" placeholder="القسم">
+                    <input type="text" id="admCarTitle" placeholder="العنوان الوظيفي">
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" id="admCarType" placeholder="نوع السيارة" style="flex:1;">
+                        <input type="text" id="admCarColor" placeholder="اللون" style="flex:1;">
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" id="admCarBadge" placeholder="رقم الباج" style="flex:1;">
+                        <input type="text" id="admCarPhone" placeholder="رقم الهاتف" style="flex:1;">
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-main" style="background:#27ae60;" onclick="saveCar()">💾 إضافة / تحديث السيارة</button>
+                        <button class="btn-main btn-danger" onclick="deleteCar()">🗑️ حذف نهائي</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="adm-phones" class="admin-pane">
+            <div class="admin-section" style="border-right: 4px solid var(--secondary);">
+                <h3><i class="fas fa-tty"></i> إدارة الهواتف</h3>
+                <div class="admin-form">
+                    <div style="background:#f8f9fa; padding:10px; border-radius:8px; margin-bottom:15px; border:1px solid #ddd;">
+                        <h4 style="margin-top:0; font-size:0.9rem; color:var(--secondary);">بحث عن هاتف لتعديله</h4>
+                        <div style="display:flex; gap:10px; margin-bottom: 5px;">
+                            <input type="text" id="searchPhoneEditInput" placeholder="أدخل اسم القسم للبحث..." style="flex:2; margin:0;">
+                            <button class="btn-main" style="flex:1; margin:0; background:var(--gold); color:black;" onclick="loadPhoneForEdit()">🔍 بحث وجلب</button>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px dashed #ccc; margin:15px 0;">
+                    <h4 style="margin-top:0; font-size:0.9rem;">بيانات الهاتف</h4>
+                    <div style="display:flex; gap:10px; margin-bottom:10px;">
+                        <input type="text" id="admPhoneName" placeholder="الاسم / القسم" style="flex:2; margin:0;">
+                        <input type="text" id="admPhoneExt" placeholder="الرقم الداخلي (Ext)" style="flex:1; margin:0;">
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-main" style="background:var(--secondary);" onclick="savePhone()">💾 حفظ / تحديث الهاتف</button>
+                        <button class="btn-main btn-danger" onclick="deletePhone()">🗑️ حذف</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="adm-clinics" class="admin-pane">
+            <div class="admin-section" style="border-right: 4px solid var(--gold);">
+                <h3><i class="fas fa-clinic-medical"></i> إضافة استشارية جديدة</h3>
+                <div class="admin-form" style="display:flex; gap:10px;">
+                    <input type="text" id="newClinicName" placeholder="اسم الاستشارية (مثال: الباطنية)" style="flex:2; margin:0;">
+                    <button class="btn-main btn-gold" style="flex:1; margin:0; color:black;" onclick="addClinic()">إضافة الاستشارية</button>
+                </div>
+            </div>
+
+            <div class="admin-section" style="border-right: 4px solid var(--secondary);">
+                <h3><i class="fas fa-user-md"></i> إضافة أطباء ومواعيد للاستشارية</h3>
+                <div class="admin-form">
+                    <select id="selectClinicForDoc" style="width:100%; padding:10px; margin-bottom:10px; border-radius:8px; border:1px solid #ddd; font-family:inherit;">
+                        <option value="">-- اختر الاستشارية أولاً --</option>
+                    </select>
+                    <input type="text" id="docName" placeholder="اسم الطبيب (مثال: د. علي محمد)">
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" id="docDays" placeholder="الأيام (مثال: الأحد والثلاثاء)" style="flex:1;">
+                        <input type="text" id="docTime" placeholder="الوقت (مثال: 8 ص - 1 ظ)" style="flex:1;">
+                    </div>
+                    <button class="btn-main" style="background:var(--secondary);" onclick="addDoctor()">إضافة الطبيب للجدول</button>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <h3><i class="fas fa-list"></i> إدارة وتعديل الاستشاريات</h3>
+                <div id="adminClinicsList">
+                    <p style="text-align:center; color:var(--muted);"><i class="fas fa-spinner fa-spin"></i> جاري التحميل...</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="adm-announcements" class="admin-pane">
+            <div class="admin-section" style="border-right: 4px solid var(--danger);">
+                <h3 style="color:var(--danger);"><i class="fas fa-bullhorn"></i> نشر إعلان جديد</h3>
+                <div class="admin-form">
+                    <textarea id="admAnnText" placeholder="اكتب الإعلان هنا (يمكنك استخدام الإيموجي 😊)..."></textarea>
+                    <button class="btn-main" style="background:var(--danger);" onclick="saveAnnouncement()">📢 نشر الإعلان للجميع</button>
+                </div>
+                <div id="adminAnnouncementsList" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+
+        <div id="adm-users" class="admin-pane">
+            <div class="admin-section" style="border-right: 4px solid var(--text);">
+                <h3><i class="fas fa-users-cog"></i> إعدادات الحساب والمستخدمين</h3>
+                
+                <div style="background:#f8f9fa; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid #ddd; text-align:center;">
+                    <h4 style="margin-top:0;">إعدادات حسابي (الأدمن)</h4>
+                    <button class="btn-main" style="background:var(--text); width:auto; padding:8px 20px;" onclick="changeMyPassword()">🔑 تغيير كلمة المرور الخاصة بي</button>
+                </div>
+
+                <div class="admin-form" style="background:#f8f9fa; padding:10px; border-radius:8px; margin-bottom:15px; border:1px solid #eee;">
+                    <h4 style="margin-top:0; font-size:0.9rem;">إنشاء حساب مباشر للموظف</h4>
+                    <div style="display:flex; gap:5px; margin-bottom:5px;">
+                        <input type="text" id="directName" placeholder="الاسم" style="margin:0;">
+                        <input type="text" id="directDept" placeholder="القسم" style="margin:0;">
+                    </div>
+                    <div style="display:flex; gap:5px; margin-bottom:5px;">
+                        <input type="text" id="directUser" placeholder="اليوزر" style="margin:0;">
+                        <input type="password" id="directPass" placeholder="الباسوورد" style="margin:0;">
+                    </div>
+                    <button class="btn-main" style="padding:8px;" onclick="createDirectUser()">➕ إنشاء وتفعيل فوراً</button>
+                </div>
+
+                <h4 style="margin-bottom: 10px;">قائمة الموظفين</h4>
+                <div id="usersList"></div>
+            </div>
         </div>
 
     </div>
@@ -407,16 +485,16 @@
         let liveCars = JSON.parse(localStorage.getItem('offlineCars')) || [];
         let livePhones = JSON.parse(localStorage.getItem('offlinePhones')) || [];
         let liveAnnouncements = JSON.parse(localStorage.getItem('offlineAnnouncements')) || [];
+        let liveClinics = []; // قاعدة بيانات الاستشاريات الجديدة
         
         let liveLogs = [];
         let currentEditCarKey = null; 
         let currentEditPhoneKey = null; 
         window.globalUsersData = {};
         window.currentEditingProfileId = null;
-        window.openComments = new Set(); // لحفظ التعليقات المفتوحة حتى لا تغلق عند التحديث
-        let viewedAnns = new Set(); // لتسجيل المشاهدات محليا
+        window.openComments = new Set(); 
+        let viewedAnns = new Set(); 
 
-        // --- تسجيل زيارات الأجهزة (الزوار) ---
         let deviceId = localStorage.getItem('device_id');
         if (!deviceId) {
             deviceId = 'device_' + Math.random().toString(36).substr(2, 9) + Date.now();
@@ -441,7 +519,7 @@
                     localStorage.setItem('pwa_prompt_seen', 'true');
                 }, 2000);
             }
-            renderAnnouncements(); // عرض الإعلانات الأوفلاين
+            renderAnnouncements(); 
         };
 
         setTimeout(() => {
@@ -454,17 +532,26 @@
                 document.getElementById('secureSearchSection').style.display = 'block';
                 document.getElementById('logoutBtn').style.display = 'block';
                 if(myData.role === 'admin') {
-                    document.getElementById('adminTabBtn').style.display = 'block';
+                    document.getElementById('homeAdminCard').style.display = 'block';
                     initAdminPanel();
                 }
             }
         }, 100);
 
-        window.showTab = (id, btn) => {
+        window.showTab = (id) => {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            btn.classList.add('active');
+            
+            const backBtn = document.getElementById('backBtn');
+            const hospitalLogo = document.getElementById('hospitalLogo');
+            
+            if(id === 'home') {
+                backBtn.style.display = 'none';
+                hospitalLogo.style.display = 'flex';
+            } else {
+                backBtn.style.display = 'block';
+                hospitalLogo.style.display = 'none';
+            }
             
             if(id === 'admin') {
                 setTimeout(() => {
@@ -473,6 +560,21 @@
                     if(typeof chart2 !== 'undefined' && chart2) { chart2.resize(); chart2.update(); }
                     if(typeof chart3 !== 'undefined' && chart3) { chart3.resize(); chart3.update(); }
                 }, 250);
+            }
+        };
+
+        window.showAdminTab = (paneId, btn) => {
+            document.querySelectorAll('.admin-pane').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(paneId).classList.add('active');
+            btn.classList.add('active');
+            
+            if(paneId === 'adm-stats') {
+                setTimeout(() => {
+                    if(typeof chart1 !== 'undefined' && chart1) { chart1.resize(); chart1.update(); }
+                    if(typeof chart2 !== 'undefined' && chart2) { chart2.resize(); chart2.update(); }
+                    if(typeof chart3 !== 'undefined' && chart3) { chart3.resize(); chart3.update(); }
+                }, 100);
             }
         };
 
@@ -536,7 +638,7 @@
                     document.getElementById('logoutBtn').style.display = 'block';
                     
                     if(myData.role === 'admin') {
-                        document.getElementById('adminTabBtn').style.display = 'block';
+                        document.getElementById('homeAdminCard').style.display = 'block';
                         initAdminPanel();
                     }
                 } else {
@@ -547,7 +649,7 @@
             }
         });
 
-        // --- جلب الإعلانات ---
+        // --- جلب وعرض الإعلانات ---
         onValue(ref(db, 'announcements'), (s) => {
             liveAnnouncements = [];
             const data = s.val();
@@ -569,7 +671,6 @@
                 
                 if(pubList) {
                     pubList.innerHTML = liveAnnouncements.map(a => {
-                        // تسجيل المشاهدة بصمت
                         if (!viewedAnns.has(a.key)) {
                             viewedAnns.add(a.key);
                             if (!a.views || !a.views[deviceId]) {
@@ -580,7 +681,6 @@
                         const commentsCount = a.comments ? Object.keys(a.comments).length : 0;
                         const isAdmin = (myData && myData.role === 'admin');
                         
-                        // التعديل: إضافة زر حذف التعليق للأدمن فقط
                         const commentsHtml = a.comments ? Object.entries(a.comments).map(([cKey, c]) => `
                             <div style="margin-bottom:5px; border-bottom:1px solid #ddd; padding-bottom:5px; font-size:0.85rem; display:flex; justify-content:space-between; align-items:center;">
                                 <div><b>${c.user}</b>: ${c.text}</div>
@@ -656,7 +756,6 @@
             } catch(e) { alert("حدث خطأ أثناء إضافة التعليق"); }
         };
 
-        // التعديل: إضافة دالة حذف التعليقات (للأدمن)
         window.deleteComment = async (annKey, commentKey) => {
             if(confirm("هل تريد حذف هذا التعليق؟")) {
                 try {
@@ -682,6 +781,90 @@
         window.deleteAnnouncement = async (key) => {
             if(confirm("هل أنت متأكد من حذف هذا الإعلان؟")) {
                 await remove(ref(db, 'announcements/' + key));
+            }
+        };
+
+        // --- جلب وإدارة الاستشاريات (الجديد) ---
+        onValue(ref(db, 'clinics'), (s) => {
+            liveClinics = [];
+            const data = s.val();
+            if(data) {
+                for(let k in data) liveClinics.push({...data[k], key: k});
+            }
+            renderAdminClinics();
+        });
+
+        window.renderAdminClinics = () => {
+            const select = document.getElementById('selectClinicForDoc');
+            const list = document.getElementById('adminClinicsList');
+            
+            if(select) {
+                select.innerHTML = '<option value="">-- اختر الاستشارية أولاً --</option>' + 
+                    liveClinics.map(c => `<option value="${c.key}">${c.name}</option>`).join('');
+            }
+            
+            if(list) {
+                list.innerHTML = liveClinics.map(c => {
+                    const docs = c.doctors ? Object.entries(c.doctors).map(([dKey, d]) => `
+                        <div style="background:white; padding:10px; border-radius:5px; margin-top:8px; border:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <b style="color:var(--text);"><i class="fas fa-user-md" style="color:var(--secondary);"></i> ${d.name}</b><br>
+                                <span style="font-size:0.8rem; color:var(--muted);"><i class="far fa-calendar-alt"></i> ${d.days} | <i class="far fa-clock"></i> ${d.time}</span>
+                            </div>
+                            <button class="btn-main btn-danger" style="width:auto; padding:5px 12px; margin:0;" onclick="deleteDoctor('${c.key}', '${dKey}')" title="حذف الطبيب"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `).join('') : '<p style="font-size:0.85rem; color:var(--muted); text-align:center; padding:10px 0;">لا يوجد أطباء مضافين في هذه الاستشارية.</p>';
+
+                    return `
+                    <div style="background:#f8f9fa; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid #ddd; border-right: 4px solid var(--gold);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px dashed #ccc; padding-bottom:8px; margin-bottom:10px;">
+                            <h4 style="margin:0; color:var(--primary); font-size:1.1rem;">${c.name}</h4>
+                            <button class="btn-main btn-danger" style="width:auto; padding:5px 12px; margin:0; background: #c0392b;" onclick="deleteClinic('${c.key}')"><i class="fas fa-trash-alt"></i> حذف القسم</button>
+                        </div>
+                        ${docs}
+                    </div>
+                    `;
+                }).join('') || '<p style="text-align:center; color:var(--muted);">لا توجد استشاريات مضافة حالياً.</p>';
+            }
+        };
+
+        window.addClinic = async () => {
+            const name = document.getElementById('newClinicName').value.trim();
+            if(!name) return alert('الرجاء إدخال اسم الاستشارية أولاً.');
+            try {
+                await push(ref(db, 'clinics'), { name: name });
+                document.getElementById('newClinicName').value = '';
+                alert('✅ تم إضافة الاستشارية بنجاح!');
+            } catch(e) { alert('❌ حدث خطأ أثناء الإضافة.'); }
+        };
+
+        window.addDoctor = async () => {
+            const clinicId = document.getElementById('selectClinicForDoc').value;
+            const name = document.getElementById('docName').value.trim();
+            const days = document.getElementById('docDays').value.trim();
+            const time = document.getElementById('docTime').value.trim();
+            
+            if(!clinicId) return alert('الرجاء اختيار الاستشارية من القائمة أولاً.');
+            if(!name || !days || !time) return alert('الرجاء إكمال بيانات الطبيب والمواعيد.');
+            
+            try {
+                await push(ref(db, `clinics/${clinicId}/doctors`), { name, days, time });
+                document.getElementById('docName').value = '';
+                document.getElementById('docDays').value = '';
+                document.getElementById('docTime').value = '';
+                alert('✅ تم إضافة الطبيب للجدول بنجاح!');
+            } catch(e) { alert('❌ حدث خطأ أثناء الإضافة.'); }
+        };
+
+        window.deleteClinic = async (key) => {
+            if(confirm('⚠️ تحذير: هل أنت متأكد من حذف هذه الاستشارية بالكامل مع جميع الأطباء الموجودين فيها؟')) {
+                await remove(ref(db, `clinics/${key}`));
+            }
+        };
+
+        window.deleteDoctor = async (clinicKey, docKey) => {
+            if(confirm('هل تريد حذف هذا الطبيب من الجدول؟')) {
+                await remove(ref(db, `clinics/${clinicKey}/doctors/${docKey}`));
             }
         };
 
@@ -1119,15 +1302,25 @@
             "مرحباً بكم في النظام المركزي لإدارة العجلات والهواتف. تم تصميم هذا النظام لتقديم أسرع وأدق استعلام أمني وخدمي للمستشفى، ويعمل بكفاءة عالية.": "Welcome to the Central System for Vehicle and Phone Management. Designed to provide the fastest and most accurate security and service queries for the hospital, operating with high efficiency.",
             "تطوير وتصميم وبرمجة": "Developed, Designed & Programmed by",
             "للتواصل والدعم الفني:": "For contact & technical support:",
-            "الهواتف": "Phones",
-            "فحص": "Check",
-            "أمني": "Security",
-            "إعلانات": "Announcements",
+            "دليل الهواتف": "Phones Directory",
+            "فحص العجلات": "Check Vehicles",
+            "الاستشاريات": "Clinics",
+            "الإعلانات": "Announcements",
+            "الاستعلام الأمني": "Security Query",
+            "حول النظام": "About System",
+            "لوحة الإدارة": "Admin Dashboard",
+            "قريباً جداً...": "Coming Soon...",
+            "جاري العمل على تجهيز نظام ": "Working on preparing the system ",
+            "جداول الاستشاريات ومواعيد الأطباء": "Clinics Schedules & Doctor Appointments",
+            " بتصميم بطاقات ذكية. سيكون متاحاً في التحديث القادم إن شاء الله.": " with a smart card design. It will be available in the next update, God willing.",
+            "العودة للرئيسية": "Back to Home",
             "لوحة الإعلانات": "Announcements Board",
             "أحدث التبليغات والقرارات الرسمية": "Latest Notifications & Official Decisions",
             "إدارة الإعلانات": "Manage Announcements",
             "اكتب الإعلان هنا (يمكنك استخدام الإيموجي 😊)...": "Write announcement here (emojis supported 😊)...",
             "نشر الإعلان": "Publish Announcement",
+            "نشر إعلان جديد": "Publish New Announcement",
+            "نشر الإعلان للجميع": "Publish Announcement to All",
             "لا توجد إعلانات حالياً": "No announcements currently",
             "التعليقات": "Comments",
             "اكتب تعليقاً...": "Write a comment...",
@@ -1163,31 +1356,46 @@
             "اسم المالك": "Owner Name",
             "القسم": "Department",
             "العنوان الوظيفي": "Job Title",
-            "نوع السيارة (مثال: صالون)": "Car Type (e.g. Sedan)",
+            "نوع السيارة": "Car Type",
             "اللون": "Color",
             "رقم الباج": "Badge Number",
             "رقم الهاتف": "Phone Number",
             "إضافة / تحديث السيارة": "Add / Update Vehicle",
             "حذف نهائي": "Permanent Delete",
             "إدارة الهواتف": "Phone Management",
-            "بحث عن هاتف قسم لتعديله": "Search department phone to edit",
+            "بحث عن هاتف لتعديله": "Search phone to edit",
             "الرقم الداخلي (Ext)": "Internal Ext",
             "حفظ / تحديث الهاتف": "Save / Update Phone",
             "حذف": "Delete",
             "إدارة المستخدمين وحسابك": "User Management & Account",
+            "إعدادات الحساب والمستخدمين": "Account & User Settings",
             "تغيير كلمة المرور الخاصة بي": "Change My Password",
             "إنشاء حساب مباشر للموظف": "Create Direct Employee Account",
             "الاسم": "Name",
             "اليوزر": "User",
             "الباسوورد": "Password",
             "إنشاء وتفعيل فوراً": "Create & Activate Now",
+            "قائمة الموظفين": "Employees List",
             "سجل المراقبة الحي (Live Logs)": "Live Monitoring Logs",
+            "إضافة استشارية جديدة": "Add New Clinic",
+            "اسم الاستشارية (مثال: الباطنية)": "Clinic Name (e.g. Internal Med)",
+            "إضافة الاستشارية": "Add Clinic",
+            "إضافة أطباء ومواعيد للاستشارية": "Add Doctors & Schedules to Clinic",
+            "-- اختر الاستشارية أولاً --": "-- Choose Clinic First --",
+            "اسم الطبيب (مثال: د. علي محمد)": "Doctor Name (e.g. Dr. Ali)",
+            "الأيام (مثال: الأحد والثلاثاء)": "Days (e.g. Sun, Tue)",
+            "الوقت (مثال: 8 ص - 1 ظ)": "Time (e.g. 8am - 1pm)",
+            "إضافة الطبيب للجدول": "Add Doctor to Schedule",
+            "إدارة وتعديل الاستشاريات": "Manage & Edit Clinics",
+            "حذف القسم": "Delete Section",
+            "لا توجد استشاريات مضافة حالياً.": "No clinics added currently.",
             "تم النسخ": "Copied",
             "غير مصرح (غير موجود بالسجلات) ❌": "Unauthorized (Not in records) ❌",
             "مسموح بالدخول ✅": "Access Granted ✅",
             "لا توجد نتائج": "No Results Found",
             "إجمالي الزيارات": "Total Visits",
-            "زوار فريدين": "Unique Visitors"
+            "زوار فريدين": "Unique Visitors",
+            "الإحصائيات": "Stats"
         };
         
         const reverseUiDict = Object.fromEntries(Object.entries(uiDict).map(([k, v]) => [v, k]));
