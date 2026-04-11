@@ -148,6 +148,22 @@
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .developer-footer { position: fixed; bottom: 0; width: 100%; background: white; text-align: center; padding: 10px 0; font-size: 0.8rem; border-top: 1px solid #eee; z-index: 900; }
+
+        /* 🌟 المساعد الذكي (AI Chat) 🌟 */
+        #ai-chat-btn { position: fixed; bottom: 35px; left: 20px; width: 55px; height: 55px; background: linear-gradient(135deg, var(--secondary), var(--primary)); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; box-shadow: 0 5px 20px rgba(0,75,73,0.4); cursor: pointer; z-index: 4000; transition: 0.3s; animation: float 4s infinite ease-in-out; border: 2px solid white; }
+        #ai-chat-btn:hover { transform: scale(1.1); box-shadow: 0 8px 25px rgba(0,75,73,0.6); }
+        #ai-chat-window { position: fixed; bottom: 100px; left: 20px; width: 320px; max-width: calc(100vw - 40px); background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); z-index: 4000; display: none; flex-direction: column; overflow: hidden; border: 1px solid #eee; animation: popIn 0.3s ease-out; }
+        .chat-header { background: var(--primary); color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .chat-header button { background: none; border: none; color: white; cursor: pointer; font-size: 1.2rem; }
+        .chat-body { padding: 15px; height: 320px; overflow-y: auto; background: #f4f6f8; display: flex; flex-direction: column; gap: 10px; scroll-behavior: smooth; }
+        .chat-msg { max-width: 85%; padding: 10px 15px; border-radius: 15px; font-size: 0.9rem; line-height: 1.5; word-wrap: break-word; }
+        .ai-msg { background: white; border: 1px solid #eee; align-self: flex-start; border-bottom-right-radius: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); color: var(--text); }
+        .user-msg { background: var(--secondary); color: white; align-self: flex-end; border-bottom-left-radius: 15px; box-shadow: 0 2px 5px rgba(0,75,73,0.2); }
+        .chat-footer { padding: 10px; background: white; border-top: 1px solid #eee; display: flex; gap: 8px; align-items: center; }
+        .chat-footer input { flex: 1; padding: 10px 15px; border: 1px solid #ddd; border-radius: 20px; font-family: inherit; outline: none; font-size: 0.9rem; transition: 0.3s; }
+        .chat-footer input:focus { border-color: var(--secondary); }
+        .chat-footer button { background: var(--secondary); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.3s; }
+        .chat-footer button:active { transform: scale(0.9); }
     </style>
 </head>
 <body>
@@ -294,7 +310,6 @@
     </div>
 
     <div id="admin" class="tab-content">
-        
         <div class="admin-nav">
             <button class="admin-nav-btn active" onclick="showAdminTab('adm-stats', this)">📊 الإحصائيات</button>
             <button class="admin-nav-btn" onclick="showAdminTab('adm-cars', this)">🚗 العجلات</button>
@@ -312,19 +327,16 @@
                 <div class="stat-box"><h4>زوار فريدين</h4><span id="countUniqueVisitors">0</span></div>
                 <div class="stat-box"><h4>المستخدمين</h4><span id="countUsers">0</span></div>
             </div>
-
             <div class="admin-section">
                 <h3><i class="fas fa-chart-bar"></i> الرقابة والتحليل (Charts)</h3>
                 <div style="position: relative; height: 250px; width: 100%; margin-bottom: 20px;"><canvas id="searchChart"></canvas></div>
                 <div style="position: relative; height: 250px; width: 100%; margin-bottom: 20px;"><canvas id="deptChart"></canvas></div>
                 <div style="position: relative; height: 250px; width: 100%; margin-bottom: 20px;"><canvas id="phonesChart"></canvas></div>
             </div>
-            
             <div class="admin-section">
                 <h3><i class="fas fa-history"></i> سجل المراقبة الحي (Live Logs)</h3>
                 <div id="liveLogs" style="max-height: 350px; overflow-y: auto; padding-right: 5px;"></div>
             </div>
-
             <div class="admin-section" style="border: 2px dashed var(--gold); background: #fffcf0;">
                 <h3><i class="fas fa-cloud-upload-alt"></i> استيراد البيانات الأولية</h3>
                 <p style="font-size:0.8rem; color:var(--muted);">استخدم هذه الأزرار مرة واحدة فقط لرفع البيانات من الكود وملف JS إلى السيرفر.</p>
@@ -401,7 +413,6 @@
                     <button class="btn-main btn-gold" style="flex:1; margin:0; color:black;" onclick="addClinic()">إضافة الاستشارية</button>
                 </div>
             </div>
-
             <div class="admin-section" style="border-right: 4px solid var(--secondary);">
                 <h3><i class="fas fa-user-md"></i> إضافة أطباء ومواعيد للاستشارية</h3>
                 <div class="admin-form">
@@ -416,7 +427,6 @@
                     <button class="btn-main" style="background:var(--secondary);" onclick="addDoctor()">إضافة الطبيب للجدول</button>
                 </div>
             </div>
-
             <div class="admin-section">
                 <h3><i class="fas fa-list"></i> إدارة وتعديل الاستشاريات</h3>
                 <div id="adminClinicsList">
@@ -439,12 +449,10 @@
         <div id="adm-users" class="admin-pane">
             <div class="admin-section" style="border-right: 4px solid var(--text);">
                 <h3><i class="fas fa-users-cog"></i> إعدادات الحساب والمستخدمين</h3>
-                
                 <div style="background:#f8f9fa; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid #ddd; text-align:center;">
                     <h4 style="margin-top:0;">إعدادات حسابي (الأدمن)</h4>
                     <button class="btn-main" style="background:var(--text); width:auto; padding:8px 20px;" onclick="changeMyPassword()">🔑 تغيير كلمة المرور الخاصة بي</button>
                 </div>
-
                 <div class="admin-form" style="background:#f8f9fa; padding:10px; border-radius:8px; margin-bottom:15px; border:1px solid #eee;">
                     <h4 style="margin-top:0; font-size:0.9rem;">إنشاء حساب مباشر للموظف</h4>
                     <div style="display:flex; gap:5px; margin-bottom:5px;">
@@ -457,12 +465,28 @@
                     </div>
                     <button class="btn-main" style="padding:8px;" onclick="createDirectUser()">➕ إنشاء وتفعيل فوراً</button>
                 </div>
-
                 <h4 style="margin-bottom: 10px;">قائمة الموظفين</h4>
                 <div id="usersList"></div>
             </div>
         </div>
 
+    </div>
+
+    <div id="ai-chat-btn" onclick="toggleChat()">
+        <i class="fas fa-robot"></i>
+    </div>
+    <div id="ai-chat-window">
+        <div class="chat-header">
+            <div><i class="fas fa-robot"></i> المساعد الذكي (AI)</div>
+            <button onclick="toggleChat()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="chat-msg ai-msg">أهلاً بك أستاذ ياسين! أنا المساعد الذكي لمستشفى الإمام الحسن (ع). تفضل، اسألني عن أي رقم هاتف، سيارة، أو قسم، وسأجيبك فوراً. 😊</div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="chatInput" placeholder="اسألني عن شيء في النظام..." onkeypress="if(event.key === 'Enter') sendMessageToAI()">
+            <button onclick="sendMessageToAI()"><i class="fas fa-paper-plane"></i></button>
+        </div>
     </div>
 
     <div id="installModal">
@@ -527,6 +551,9 @@
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getDatabase, ref, set, get, update, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
+        // 🔥 ضع مفتاح Gemini الخاص بك هنا بين علامتي التنصيص 🔥
+        const GEMINI_API_KEY = "ضع_مفتاح_جيميني_هنا";
+
         const firebaseConfig = {
             apiKey: "AIzaSyA1Uh51j1JLdXWtunD2tJ5i8ZljHuTMxeQ",
             authDomain: "karbala-hospital.firebaseapp.com",
@@ -548,7 +575,7 @@
         let liveCars = JSON.parse(localStorage.getItem('offlineCars')) || [];
         let livePhones = JSON.parse(localStorage.getItem('offlinePhones')) || [];
         let liveAnnouncements = JSON.parse(localStorage.getItem('offlineAnnouncements')) || [];
-        let liveClinics = []; // قاعدة بيانات الاستشاريات الجديدة
+        let liveClinics = []; 
         
         let liveLogs = [];
         let currentEditCarKey = null; 
@@ -557,6 +584,81 @@
         window.currentEditingProfileId = null;
         window.openComments = new Set(); 
         let viewedAnns = new Set(); 
+
+        // 🌟 وظائف المساعد الذكي (AI) 🌟
+        window.toggleChat = () => {
+            const chatWindow = document.getElementById('ai-chat-window');
+            chatWindow.style.display = chatWindow.style.display === 'flex' ? 'none' : 'flex';
+        };
+
+        window.sendMessageToAI = async () => {
+            const inputField = document.getElementById('chatInput');
+            const text = inputField.value.trim();
+            if (!text) return;
+
+            const chatBody = document.getElementById('chatBody');
+            
+            // رسالة المستخدم
+            chatBody.innerHTML += `<div class="chat-msg user-msg">${text}</div>`;
+            inputField.value = '';
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            // علامة التحميل
+            const loadingId = 'loading-' + Date.now();
+            chatBody.innerHTML += `<div id="${loadingId}" class="chat-msg ai-msg"><i class="fas fa-spinner fa-spin"></i> جاري البحث والتفكير...</div>`;
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            // التغذية السياقية الديناميكية (Dynamic Context)
+            const contextText = `
+أنت مساعد ذكي ولطيف ومحترم جداً يعمل في "مستشفى الإمام الحسن المجتبى (ع)".
+اسم مطور النظام هو: "Yaseen ALtmeme".
+يجب أن تجيب على الأسئلة بناءً على البيانات الحية المتوفرة أدناه فقط. 
+إذا سألك المستخدم عن شيء غير موجود في هذه البيانات، اعتذر بلباقة وأخبره أن المعلومات غير متوفرة في النظام حالياً.
+استخدم الإيموجيات في إجاباتك لتكون ودوداً.
+
+البيانات الحية المتاحة لك الآن:
+1. دليل الهواتف: ${JSON.stringify(livePhones.map(p => ({القسم: p.name, الرقم: p.ext})))}
+2. العجلات المصرحة أمنياً: ${JSON.stringify(liveCars.map(c => ({اللوحة: c.plate, المالك: c.name, القسم: c.dept})))}
+3. الاستشاريات والأطباء: ${JSON.stringify(liveClinics.map(c => ({الاستشارية: c.name, الأطباء: c.doctors ? Object.values(c.doctors) : []})))}
+4. الإعلانات والقرارات: ${JSON.stringify(liveAnnouncements.map(a => ({النص: a.text, الوقت: a.time})))}
+
+سؤال الموظف: ${text}
+            `;
+
+            try {
+                if(GEMINI_API_KEY === "ضع_مفتاح_جيميني_هنا" || !GEMINI_API_KEY) {
+                    document.getElementById(loadingId).remove();
+                    chatBody.innerHTML += `<div class="chat-msg ai-msg">عذراً أستاذ ياسين، لم يتم وضع مفتاح (API Key) الخاص بـ Gemini في الكود بعد. يرجى إضافته لكي أتمكن من إجابتك. 🤖🛠️</div>`;
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                    return;
+                }
+
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: contextText }] }],
+                        generationConfig: { temperature: 0.2 } 
+                    })
+                });
+
+                const data = await response.json();
+                document.getElementById(loadingId).remove();
+                
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    let aiResponse = data.candidates[0].content.parts[0].text;
+                    aiResponse = aiResponse.replace(/\n/g, '<br>'); // ترتيب الأسطر
+                    chatBody.innerHTML += `<div class="chat-msg ai-msg">${aiResponse}</div>`;
+                } else {
+                    chatBody.innerHTML += `<div class="chat-msg ai-msg">عذراً، حدث خطأ غير متوقع. حاول مرة أخرى 😔</div>`;
+                }
+            } catch (error) {
+                document.getElementById(loadingId).remove();
+                chatBody.innerHTML += `<div class="chat-msg ai-msg">عذراً، يبدو أن هناك مشكلة في الاتصال بالإنترنت أو بالسيرفر. 🔌</div>`;
+            }
+            chatBody.scrollTop = chatBody.scrollHeight;
+        };
+        // 🌟 نهاية وظائف المساعد الذكي 🌟
 
         let deviceId = localStorage.getItem('device_id');
         if (!deviceId) {
@@ -712,7 +814,6 @@
             }
         });
 
-        // --- جلب وعرض الإعلانات ---
         onValue(ref(db, 'announcements'), (s) => {
             liveAnnouncements = [];
             const data = s.val();
@@ -847,7 +948,6 @@
             }
         };
 
-        // --- جلب وإدارة الاستشاريات (الجديد) ---
         onValue(ref(db, 'clinics'), (s) => {
             liveClinics = [];
             const data = s.val();
