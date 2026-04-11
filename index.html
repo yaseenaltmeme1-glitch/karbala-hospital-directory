@@ -14,7 +14,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
         :root { --primary: #004b49; --secondary: #007c77; --bg: #f8f9fa; --card: #ffffff; --text: #2c3e50; --muted: #7f8c8d; --gold: #d4af37; --danger: #e74c3c; }
-        body { margin: 0; padding: 0; background-color: var(--bg); color: var(--text); font-family: 'Cairo', sans-serif; padding-bottom: 80px; }
+        body { margin: 0; padding: 0; background-color: var(--bg); color: var(--text); font-family: 'Cairo', sans-serif; padding-bottom: 80px; overflow-x: hidden; }
         
         /* Layout & Header */
         .header-container { position: sticky; top: 0; background: white; z-index: 1000; padding: 15px 20px 15px; border-bottom: 3px solid var(--primary); box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
@@ -22,13 +22,76 @@
         .hospital-logo { width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: white; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; }
         .title-text h1 { margin: 0; font-size: 1.1rem; font-weight: 900; color: var(--primary); }
         
-        /* Home Grid Dashboard */
-        .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
-        .home-card { background: white; border-radius: 15px; padding: 25px 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.04); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 1px solid #eee; position: relative; }
-        .home-card:active { transform: scale(0.95); }
-        .home-card i { font-size: 2.5rem; color: var(--primary); margin-bottom: 15px; }
-        .home-card h3 { margin: 0; font-size: 1rem; color: var(--text); font-weight: bold; }
+        /* 🌟 ثورة الشاشة الرئيسية (البطاقات الذكية والنيون) 🌟 */
+        .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 15px; padding: 10px; perspective: 1000px; }
         
+        /* حركة الطفو المستمر (التنفس) */
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0px); } }
+        /* حركة الدخول التدريجي للشاشة */
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.8) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+        /* نبض الأيقونات */
+        @keyframes pulseIcon { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+        .home-card { 
+            background: linear-gradient(145deg, #ffffff, #fdfdfd); 
+            border-radius: 18px; 
+            padding: 25px 15px; 
+            text-align: center; 
+            cursor: pointer; 
+            position: relative; 
+            overflow: hidden;
+            border: 1px solid rgba(0, 75, 73, 0.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.04), inset 0 0 0 1px rgba(255,255,255,0.5);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            animation: popIn 0.6s ease-out forwards, float 6s ease-in-out infinite;
+            opacity: 0; /* يبدأ مخفي حتى يدخل بالأنيميشن */
+        }
+
+        /* تأخير دخول كل بطاقة حتى تسوي تأثير شلال */
+        .home-card:nth-child(1) { animation-delay: 0.1s, 0s; }
+        .home-card:nth-child(2) { animation-delay: 0.2s, 1s; }
+        .home-card:nth-child(3) { animation-delay: 0.3s, 2s; }
+        .home-card:nth-child(4) { animation-delay: 0.4s, 3s; }
+        .home-card:nth-child(5) { animation-delay: 0.5s, 4s; }
+        .home-card:nth-child(6) { animation-delay: 0.6s, 5s; }
+        #homeAdminCard { animation-delay: 0.7s, 0s; } /* كارت الأدمن */
+
+        /* تأثير اللمس (Hover/Active) والنيون */
+        .home-card:hover, .home-card:active { 
+            transform: translateY(-8px) scale(1.02); 
+            box-shadow: 0 15px 30px rgba(0, 75, 73, 0.15), 0 0 20px rgba(0, 75, 73, 0.1); 
+            border-color: var(--primary);
+        }
+
+        /* توهج الألوان لكل بطاقة عند اللمس */
+        .home-card:nth-child(1):active i { color: var(--primary); text-shadow: 0 0 15px var(--primary); animation: pulseIcon 0.5s ease; }
+        .home-card:nth-child(2):active i { color: var(--primary); text-shadow: 0 0 15px var(--primary); animation: pulseIcon 0.5s ease; }
+        .home-card:nth-child(3):active i { color: var(--secondary); text-shadow: 0 0 15px var(--secondary); animation: pulseIcon 0.5s ease; }
+        .home-card:nth-child(4):active i { color: var(--danger); text-shadow: 0 0 15px var(--danger); animation: pulseIcon 0.5s ease; }
+        .home-card:nth-child(5):active i { color: var(--primary); text-shadow: 0 0 15px var(--primary); animation: pulseIcon 0.5s ease; }
+        .home-card:nth-child(6):active i { color: var(--gold); text-shadow: 0 0 15px var(--gold); animation: pulseIcon 0.5s ease; }
+
+        /* لمعة زجاجية تتحرك على البطاقة */
+        .home-card::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-25deg); transition: 0.5s; z-index: 1; opacity: 0;
+        }
+        .home-card:active::before { left: 125%; transition: 0.5s ease-in-out; opacity: 1; }
+
+        .home-card i { font-size: 2.8rem; color: var(--primary); margin-bottom: 12px; transition: 0.3s; z-index: 2; position: relative; }
+        .home-card h3 { margin: 0; font-size: 1.05rem; color: var(--text); font-weight: 900; z-index: 2; position: relative; letter-spacing: -0.5px; }
+        
+        /* ستايل خاص لبطاقة الإدارة (نيون ذهبي) */
+        #homeAdminCard { 
+            background: linear-gradient(135deg, var(--primary), #002b2a); 
+            border: 1px solid var(--gold); 
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2); 
+        }
+        #homeAdminCard:active { box-shadow: 0 15px 35px rgba(212, 175, 55, 0.4), 0 0 20px rgba(212, 175, 55, 0.3); transform: translateY(-5px) scale(1.02); }
+        #homeAdminCard:active i { text-shadow: 0 0 20px var(--gold); animation: pulseIcon 0.5s ease; }
+        /* 🌟 نهاية الشاشة الرئيسية 🌟 */
+
         /* Tabs Handling */
         .tab-content { display: none; padding: 15px; animation: fadeIn 0.4s; max-width: 600px; margin: auto; }
         .tab-content.active { display: block; }
@@ -78,8 +141,8 @@
         .social-btn { display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; border-radius: 50%; color: white; font-size: 1.4rem; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
         .social-btn:active { transform: scale(0.9); }
         
-        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); } 70% { box-shadow: 0 0 0 8px rgba(231, 76, 60, 0); } 100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); } }
-        .blink-dot { position: absolute; top: 15px; right: 15px; width: 12px; height: 12px; background-color: var(--danger); border-radius: 50%; animation: pulse-red 1.5s infinite; }
+        @keyframes pulse-red-dot { 0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); } 70% { box-shadow: 0 0 0 8px rgba(231, 76, 60, 0); } 100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); } }
+        .blink-dot { position: absolute; top: 15px; right: 15px; width: 12px; height: 12px; background-color: var(--danger); border-radius: 50%; animation: pulse-red-dot 1.5s infinite; z-index: 3; }
         .announcement-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; border-right: 4px solid var(--danger); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .announcement-date { font-size: 0.75rem; color: var(--muted); margin-bottom: 8px; display: block; border-bottom: 1px dashed #eee; padding-bottom: 5px; }
 
@@ -91,7 +154,7 @@
 
     <div class="header-container">
         <div class="hospital-title">
-            <button id="backBtn" onclick="showTab('home')" style="display:none; background:none; border:none; font-size:1.5rem; color:var(--primary); cursor:pointer; padding:0; margin-left:10px;"><i class="fas fa-arrow-right"></i></button>
+            <button id="backBtn" onclick="showTab('home')" style="display:none; background:none; border:none; font-size:1.5rem; color:var(--primary); cursor:pointer; padding:0; margin-left:10px; transition: transform 0.2s;"><i class="fas fa-arrow-right"></i></button>
             <div class="hospital-logo" id="hospitalLogo"><i class="fas fa-hospital"></i></div>
             <div class="title-text">
                 <h1>مستشفى الإمام الحسن (ع)</h1>
@@ -129,10 +192,10 @@
                 <h3>الاستعلام الأمني</h3>
             </div>
             <div class="home-card" onclick="showTab('about')">
-                <i class="fas fa-info-circle"></i>
-                <h3>حول النظام</h3>
+                <i class="fas fa-info-circle" style="color:var(--gold);"></i>
+                <h3 style="color:var(--text);">حول النظام</h3>
             </div>
-            <div class="home-card" id="homeAdminCard" style="display:none; background:var(--primary); grid-column: span 2;" onclick="showTab('admin')">
+            <div class="home-card" id="homeAdminCard" style="display:none; grid-column: span 2;" onclick="showTab('admin')">
                 <i class="fas fa-user-cog" style="color:var(--gold); margin-bottom: 5px;"></i>
                 <h3 style="color:white;">لوحة الإدارة</h3>
             </div>
@@ -667,7 +730,7 @@
             const badge = document.getElementById('annBadge');
 
             if(liveAnnouncements.length > 0) {
-                if(badge) badge.style.display = 'inline-block';
+                if(badge) badge.style.display = 'block';
                 
                 if(pubList) {
                     pubList.innerHTML = liveAnnouncements.map(a => {
