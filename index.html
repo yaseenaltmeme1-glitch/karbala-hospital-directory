@@ -164,6 +164,22 @@
         .chat-footer input:focus { border-color: var(--secondary); }
         .chat-footer button { background: var(--secondary); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.3s; }
         .chat-footer button:active { transform: scale(0.9); }
+
+        /* 🔦 ستايل الكشاف الأمني 🔦 */
+        #secure { position: relative; overflow: hidden; background: #0a0f12; border-radius: 12px; min-height: 550px; transition: background 0.6s ease; }
+        #secure.light-on { background: #1a252c; }
+        .pull-chain-container { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); z-index: 100; cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
+        .pull-chain-container:active { transform: translateX(-50%) translateY(20px); }
+        .chain-link { width: 4px; height: 12px; background: #7f8c8d; margin-bottom: 1px; border-radius: 2px; box-shadow: inset 1px 1px 1px rgba(0,0,0,0.5); }
+        .chain-handle { width: 24px; height: 36px; background: linear-gradient(145deg, #e74c3c, #c0392b); border-radius: 5px 5px 12px 12px; border: 2px solid #900; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 4px; color: white; font-size: 0.65rem; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.6); }
+        .spotlight-cone { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 140%; height: 120%; background: radial-gradient(circle at 50% -10%, rgba(255, 245, 200, 0.45) 0%, rgba(255, 245, 200, 0.05) 50%, transparent 75%); clip-path: polygon(45% 0, 55% 0, 100% 100%, 0% 100%); opacity: 0; transition: opacity 0.5s ease; pointer-events: none; z-index: 1; }
+        .light-on .spotlight-cone { opacity: 1; animation: security-flicker 0.4s ease-in; }
+        @keyframes security-flicker { 0% { opacity: 0; } 20% { opacity: 0.8; } 40% { opacity: 0.2; } 60% { opacity: 0.9; } 80% { opacity: 0.4; } 100% { opacity: 1; } }
+        .secure-auth-wrapper { position: relative; z-index: 5; margin-top: 130px; opacity: 0; transform: translateY(30px) scale(0.95); transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; }
+        .light-on .secure-auth-wrapper { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+        .pull-hint { color: #555; font-size: 0.9rem; text-align: center; margin-top: 100px; animation: pulseHint 2s infinite; }
+        .light-on .pull-hint { display: none; }
+        @keyframes pulseHint { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
     </style>
 </head>
 <body>
@@ -280,32 +296,43 @@
     </div>
 
     <div id="secure" class="tab-content">
-        <div id="authSection" class="admin-section" style="max-width: 400px; margin: 40px auto; text-align:center;">
-            <i class="fas fa-user-shield" style="font-size:3rem; color:var(--primary); margin-bottom:15px;"></i>
-            <h3>تسجيل الدخول للموظفين</h3>
-            <div id="regFields" style="display:none; text-align:right;">
-                <input type="text" id="regName" placeholder="الاسم الثلاثي" class="btn-main" style="background:white; color:black; border:1px solid #ddd; text-align:right;">
-                <input type="text" id="regDept" placeholder="محل العمل / القسم" class="btn-main" style="background:white; color:black; border:1px solid #ddd; text-align:right;">
-            </div>
-            <input type="text" id="loginUser" placeholder="اسم المستخدم" class="btn-main" style="background:white; color:black; border:1px solid #ddd; text-align:right;">
-            <input type="password" id="loginPass" placeholder="كلمة المرور" class="btn-main" style="background:white; color:black; border:1px solid #ddd; text-align:right;">
-            <button class="btn-main" onclick="handleAuth()">دخول</button>
-            <p id="toggleTxt" style="font-size:0.85rem; color:var(--muted); cursor:pointer; margin-top:15px;" onclick="toggleReg()">ليس لديك حساب؟ طلب انضمام</p>
+        <div class="pull-chain-container" onclick="this.parentElement.classList.toggle('light-on')">
+            <div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div>
+            <div class="chain-link"></div><div class="chain-link"></div><div class="chain-link"></div>
+            <div class="chain-handle">PULL</div>
         </div>
+        
+        <div class="spotlight-cone"></div>
+        <p class="pull-hint"><i class="fas fa-arrow-up"></i> اسحب المقبض لتشغيل الكشاف الأمني <i class="fas fa-arrow-up"></i></p>
 
-        <div id="pendingSection" class="admin-section" style="display:none; text-align:center; margin-top:40px;">
-            <i class="fas fa-user-clock" style="font-size:3rem; color:var(--gold); margin-bottom:15px;"></i>
-            <h3>حسابك قيد المراجعة</h3>
-            <p>يرجى الانتظار لحين موافقة الإدارة على تفعيل حسابك.</p>
-            <button class="btn-main" onclick="location.reload()">تحديث</button>
-        </div>
-
-        <div id="secureSearchSection" style="display:none;">
-            <div class="search-wrapper">
-                <input type="text" id="secureInput" placeholder="أدخل رقم اللوحة لعرض التفاصيل الكاملة..." onkeyup="if(event.key==='Enter') checkCar('secure')">
+        <div class="secure-auth-wrapper">
+            <div id="authSection" class="admin-section" style="max-width: 400px; margin: 40px auto; text-align:center;">
+                <i class="fas fa-user-shield" style="font-size:3rem; color:var(--primary); margin-bottom:15px;"></i>
+                <h3>تسجيل الدخول للموظفين</h3>
+                <div id="regFields" style="display:none; text-align:right;">
+                    <input type="text" id="regName" placeholder="الاسم الثلاثي" class="btn-main" style="background:white; color:black; border:1px solid #ddd; text-align:right;">
+                    <input type="text" id="regDept" placeholder="محل العمل / القسم" class="btn-main" style="background:white; color:black; border:1px solid #ddd; text-align:right;">
+                </div>
+                <input type="text" id="loginUser" placeholder="اسم المستخدم" class="btn-main" style="background:white; color:black; border:1px solid #ddd; text-align:right;">
+                <input type="password" id="loginPass" placeholder="كلمة المرور" class="btn-main" style="background:white; color:black; border:1px solid #ddd; text-align:right;">
+                <button class="btn-main" onclick="handleAuth()">دخول</button>
+                <p id="toggleTxt" style="font-size:0.85rem; color:var(--muted); cursor:pointer; margin-top:15px;" onclick="toggleReg()">ليس لديك حساب؟ طلب انضمام</p>
             </div>
-            <button class="btn-main" onclick="checkCar('secure')">استعلام مفصل</button>
-            <div id="secureRes" style="margin-top: 20px;"></div>
+
+            <div id="pendingSection" class="admin-section" style="display:none; text-align:center; margin-top:40px;">
+                <i class="fas fa-user-clock" style="font-size:3rem; color:var(--gold); margin-bottom:15px;"></i>
+                <h3>حسابك قيد المراجعة</h3>
+                <p>يرجى الانتظار لحين موافقة الإدارة على تفعيل حسابك.</p>
+                <button class="btn-main" onclick="location.reload()">تحديث</button>
+            </div>
+
+            <div id="secureSearchSection" style="display:none;">
+                <div class="search-wrapper">
+                    <input type="text" id="secureInput" placeholder="أدخل رقم اللوحة لعرض التفاصيل الكاملة..." onkeyup="if(event.key==='Enter') checkCar('secure')">
+                </div>
+                <button class="btn-main" onclick="checkCar('secure')">استعلام مفصل</button>
+                <div id="secureRes" style="margin-top: 20px;"></div>
+            </div>
         </div>
     </div>
 
