@@ -99,23 +99,18 @@
         .unified-auth-close { position: absolute; top: 15px; left: 15px; background: rgba(231, 76, 60, 0.1); color: var(--danger); border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; transition: 0.3s; display: flex; justify-content: center; align-items: center; z-index: 10;}
         .unified-auth-close:hover { background: var(--danger); color: white; transform: scale(1.1) rotate(90deg); }
 
-        /* 🚀 الاستعلام الأمني (Medical Glowing Theme) 🚀 */
+        /* 🚀 نظام الإشعارات الذكي (Custom Alerts) 🚀 */
+        #customAlertOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center; backdrop-filter:blur(5px); }
+        #customAlertBox { background:#fff; border-radius:20px; padding:30px; text-align:center; max-width:350px; width:90%; box-shadow:0 20px 50px rgba(0,0,0,0.3); animation:popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border:2px solid transparent; position: relative; overflow: hidden; }
+        #customAlertIcon { font-size:4rem; margin-bottom:15px; animation: pulseIcon 1s infinite alternate; }
+        #customAlertTitle { margin:0 0 10px 0; font-weight:900; font-size:1.4rem; }
+        #customAlertText { color:var(--text); font-size:1.05rem; margin-bottom:20px; line-height:1.5; font-weight: 700; }
+
+        /* 🚀 الاستعلام الأمني 🚀 */
         #secure { position: relative; background: #ffffff; border-radius: 15px; min-height: 600px; overflow: hidden; transition: 0.5s ease; box-shadow: 0 10px 40px rgba(0, 75, 73, 0.08); border: 1px solid #f0f2f5; }
         
-        .cyber-grid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(0, 124, 119, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 124, 119, 0.04) 1px, transparent 1px); background-size: 30px 30px; opacity: 0; transition: opacity 1.5s ease; pointer-events: none; }
-        #secure.unlocked .cyber-grid { opacity: 1; animation: breatheGrid 4s infinite alternate; }
-        @keyframes breatheGrid { 0% { opacity: 0.5; } 100% { opacity: 1; } }
-
-        .stealth-pull-area { position: absolute; top: 0; left: 0; width: 100%; height: 80px; z-index: 20; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 100%); }
-        .stealth-handle { width: 50px; height: 6px; background: #dcdde1; border-radius: 10px; transition: 0.3s; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 8px; }
-        .stealth-pull-area:hover .stealth-handle { background: var(--secondary); box-shadow: 0 0 15px rgba(0, 124, 119, 0.4); width: 70px; }
-        .stealth-pull-text { font-size: 0.85rem; color: var(--primary); letter-spacing: 1px; transition: 0.3s; animation: securePulse 2s infinite; font-weight: bold; opacity: 0.7; }
-        #secure.unlocked .stealth-pull-area { opacity: 0; pointer-events: none; transition: 0.3s; }
-
-        .laser-scanner { position: absolute; top: -20px; left: 0; width: 100%; height: 4px; background: var(--secondary); box-shadow: 0 0 30px 10px rgba(0, 124, 119, 0.2), 0 0 10px 2px rgba(0, 124, 119, 0.5); opacity: 0; z-index: 15; pointer-events: none; border-radius: 50%; }
-        #secure.unlocked .laser-scanner { animation: scanReveal 2s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-        @keyframes scanReveal { 0% { top: 0; opacity: 1; transform: scaleX(0.8); } 50% { transform: scaleX(1); } 70% { top: 100%; opacity: 1; } 100% { top: 100%; opacity: 0; transform: scaleX(0.8); } }
-
+        .cyber-grid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(0, 124, 119, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 124, 119, 0.04) 1px, transparent 1px); background-size: 30px 30px; opacity: 0.5; pointer-events: none; }
+        
         .stealth-form { text-align: center; }
         .stealth-form .stealth-icon { font-size: 4rem; color: var(--secondary); margin-bottom: 20px; text-shadow: 0 10px 25px rgba(0, 124, 119, 0.3); animation: float 4s infinite ease-in-out; }
         .stealth-form h3 { color: var(--primary); letter-spacing: 0.5px; margin-bottom: 30px; font-weight: 900; font-size: 1.3rem; }
@@ -133,7 +128,8 @@
         .stealth-form .car-card { background: #ffffff !important; border: 1px solid #f0f2f5 !important; border-right: 5px solid var(--secondary) !important; border-radius: 15px; padding: 25px; color: var(--text); box-shadow: 0 15px 35px rgba(0, 75, 73, 0.08); text-align: right; animation: popIn 0.4s ease-out; position: relative; overflow: hidden; }
         .stealth-form .car-card::before { content: '\f1ba'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; left: -20px; bottom: -20px; font-size: 8rem; color: rgba(0, 124, 119, 0.03); z-index: 0; pointer-events: none; transform: rotate(-15deg); }
         .stealth-form .car-card h3 { color: var(--primary) !important; border-bottom: 2px dashed #e0e6ed !important; text-shadow: none; font-size: 1.2rem; position: relative; z-index: 1; padding-bottom: 12px; }
-        .stealth-form .car-detail { border-bottom: 1px solid #f8f9fa !important; padding: 12px 0; color: var(--muted); font-size: 0.95rem; position: relative; z-index: 1; display: flex; justify-content: space-between; }
+        .stealth-form .car-detail { border-bottom: 1px solid #f8f9fa !important; padding: 12px 0; color: var(--muted); font-size: 0.95rem; position: relative; z-index: 1; display: flex; justify-content: flex-start; align-items: center; gap: 15px; }
+        .stealth-form .car-detail span { width: 80px; text-align: right; font-weight: 600; }
         .stealth-form .car-detail b { color: var(--text); font-size: 1.05rem; }
 
         /* 🏥 ستايل بطاقات وجداول الاستشاريات (Ultra Modern Health Theme) 🏥 */
@@ -173,7 +169,7 @@
         .admin-pane { display: none; animation: fadeIn 0.3s; }
         .admin-pane.active { display: block; }
 
-        /* User Cards Modern Design */
+        /* User Cards Modern Design & Checkboxes */
         .user-card-modern { background: linear-gradient(145deg, #ffffff, #f0f4f8); border-radius: 15px; padding: 20px; margin-bottom: 15px; border-right: 5px solid var(--primary); box-shadow: 0 8px 20px rgba(0,0,0,0.06); transition: all 0.3s ease; position: relative; overflow: hidden; display: flex; justify-content: space-between; align-items: center; }
         .user-card-modern:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,75,73,0.15); }
         .user-card-modern::before { content:''; position:absolute; top:0; left:-100%; width:50%; height:100%; background:linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent); transform:skewX(-25deg); transition:0.5s; pointer-events:none; }
@@ -184,8 +180,9 @@
         .role-clinic { background: #f1c40f; color: black; box-shadow: 0 0 8px #f1c40f; }
         .role-phone { background: #9b59b6; box-shadow: 0 0 8px #9b59b6; }
         
-        .custom-checkbox { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-weight: bold; cursor: pointer; color: var(--text); }
-        .custom-checkbox input { width: 20px; height: 20px; accent-color: var(--secondary); cursor: pointer; }
+        .custom-checkbox { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-weight: bold; cursor: pointer; color: var(--text); flex-direction: row; justify-content: flex-start; background: #fff; padding: 10px; border-radius: 10px; border: 1px solid #eee; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .custom-checkbox:hover { border-color: var(--secondary); box-shadow: 0 5px 15px rgba(0,124,119,0.1); transform: translateX(-3px); }
+        .custom-checkbox input { width: 22px; height: 22px; margin: 0; accent-color: var(--secondary); cursor: pointer; flex-shrink: 0; }
 
         /* General Components */
         .search-wrapper { position: relative; margin: 15px 0; }
@@ -241,11 +238,16 @@
         .log-type-ai { border-right-color: #9b59b6; } .log-type-ai i { color: #9b59b6; }
         .log-type-clinic { border-right-color: var(--gold); } .log-type-clinic i { color: var(--gold); }
 
-        /* Admin Panel Styles (Rest) */
-        .admin-section { background: white; border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: 0 3px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
-        .admin-section h3 { margin-top: 0; color: var(--primary); border-bottom: 2px solid var(--bg); padding-bottom: 10px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
-        .admin-form input, .admin-form select { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; box-sizing: border-box; }
-        .admin-form textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; box-sizing: border-box; resize: vertical; min-height: 80px; }
+        /* Admin Panel Neon Forms Styles */
+        .admin-section { background: #ffffff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); border: 1px solid #eee; transition: 0.4s; position: relative; overflow: hidden; }
+        .admin-section:hover { box-shadow: 0 15px 35px rgba(0,0,0,0.08); border-color: #dcdde1; transform: translateY(-2px); }
+        .admin-section::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(0, 124, 119, 0.03) 0%, transparent 70%); opacity: 0; transition: 0.5s; pointer-events: none; }
+        .admin-section:hover::before { opacity: 1; animation: rotateBg 15s linear infinite; }
+        
+        .admin-section h3 { margin-top: 0; color: var(--primary); border-bottom: 2px solid var(--bg); padding-bottom: 10px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; position: relative; z-index: 1; }
+        .admin-form input, .admin-form select, .admin-form textarea { width: 100%; padding: 12px 15px; margin-bottom: 12px; border: 2px solid #e0e6ed; border-radius: 10px; font-family: inherit; box-sizing: border-box; background: #ffffff; color: var(--text); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: inset 0 2px 5px rgba(0,0,0,0.02); font-weight: 600; position: relative; z-index: 1;}
+        .admin-form input:focus, .admin-form select:focus, .admin-form textarea:focus { border-color: var(--secondary); background: #f4fdfc; box-shadow: 0 0 20px rgba(0, 124, 119, 0.3), inset 0 0 5px rgba(0, 124, 119, 0.1); transform: translateY(-3px); outline: none; }
+        .admin-form textarea { resize: vertical; min-height: 80px; }
 
         .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--text); color: white; padding: 10px 20px; border-radius: 30px; font-size: 0.9rem; opacity: 0; transition: 0.3s; z-index: 2000; pointer-events: none; }
         .toast.show { opacity: 1; bottom: 100px; }
@@ -302,6 +304,15 @@
         <div style="display:flex; align-items:center; gap:10px;">
             <button id="langToggleBtn" onclick="toggleLanguage()" style="background:var(--gold); border:none; padding:4px 10px; border-radius:5px; cursor:pointer; font-weight:bold; font-family:inherit; color:#004b49;">English</button>
             <button id="logoutBtn" onclick="logout()" style="display:none; background:none; border:none; color:var(--danger); font-size:1.2rem; cursor:pointer;"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+    </div>
+
+    <div id="customAlertOverlay">
+        <div id="customAlertBox">
+            <i id="customAlertIcon" class="fas"></i>
+            <h3 id="customAlertTitle"></h3>
+            <p id="customAlertText"></p>
+            <button class="btn-main" onclick="document.getElementById('customAlertOverlay').style.display='none'" style="margin:0; box-shadow:0 5px 15px rgba(0,0,0,0.2);">حسناً</button>
         </div>
     </div>
 
@@ -438,25 +449,14 @@
     </div>
 
     <div id="secure" class="tab-content">
-        <div id="secureSearchSection" class="stealth-form" style="display:none;">
-            <div class="cyber-grid"></div>
-            <div class="laser-scanner"></div>
-            <div class="stealth-pull-area" 
-                 onclick="this.parentElement.classList.add('unlocked')"
-                 ontouchstart="this.dataset.y = event.touches[0].clientY" 
-                 ontouchmove="if(event.touches[0].clientY > parseInt(this.dataset.y) + 40) this.parentElement.classList.add('unlocked')">
-                <div class="stealth-handle"></div>
-                <div class="stealth-pull-text">اسحب للأسفل للوصول الأمني</div>
+        <div id="secureSearchSection" class="stealth-form" style="display:none; padding-top:20px;">
+            <i class="fas fa-shield-alt stealth-icon" style="margin-bottom:10px;"></i>
+            <h3 style="margin-bottom: 25px;">الاستعلام الأمني المفصل</h3>
+            <div class="search-wrapper" style="margin-bottom:20px;">
+                <input type="text" id="secureInput" class="stealth-input" style="text-align:center; font-size:1.2rem; font-weight:bold; letter-spacing:2px;" placeholder="أدخل رقم اللوحة للفحص..." onkeyup="if(event.key==='Enter') checkCar('secure')">
             </div>
-            <div class="stealth-auth-wrapper">
-                <i class="fas fa-shield-alt stealth-icon" style="margin-bottom:10px;"></i>
-                <h3 style="margin-bottom: 25px;">الاستعلام الأمني المفصل</h3>
-                <div class="search-wrapper" style="margin-bottom:20px;">
-                    <input type="text" id="secureInput" class="stealth-input" style="text-align:center; font-size:1.2rem; font-weight:bold; letter-spacing:2px;" placeholder="أدخل رقم اللوحة للفحص..." onkeyup="if(event.key==='Enter') checkCar('secure')">
-                </div>
-                <button class="stealth-btn" onclick="checkCar('secure')"><i class="fas fa-search"></i> بدء الفحص</button>
-                <div id="secureRes" style="margin-top: 25px; text-align:right;"></div>
-            </div>
+            <button class="stealth-btn" onclick="checkCar('secure')"><i class="fas fa-search"></i> بدء الفحص</button>
+            <div id="secureRes" style="margin-top: 25px; text-align:right;"></div>
         </div>
 
         <div id="secureLockedSection" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; min-height:400px; padding: 20px;">
@@ -647,6 +647,17 @@
                         <input type="text" id="directUser" placeholder="اليوزر" style="margin:0;">
                         <input type="password" id="directPass" placeholder="الباسوورد" style="margin:0;">
                     </div>
+                    
+                    <div style="margin-bottom:10px; padding:10px; background:#fff; border-radius:8px; border:1px solid #ddd; text-align:right;">
+                        <label style="font-size:0.85rem; font-weight:bold; display:block; margin-bottom:8px; color:var(--primary);">صلاحيات الحساب الجديد:</label>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                            <label class="custom-checkbox"><input type="checkbox" id="new_role_secure" checked> أمني (عجلات)</label>
+                            <label class="custom-checkbox"><input type="checkbox" id="new_role_clinic"> استشاريات</label>
+                            <label class="custom-checkbox"><input type="checkbox" id="new_role_phone"> هواتف</label>
+                            <label class="custom-checkbox"><input type="checkbox" id="new_role_admin"> أدمن شامل</label>
+                        </div>
+                    </div>
+                    
                     <button class="btn-main" style="padding:8px;" onclick="createDirectUser()">➕ إنشاء وتفعيل فوراً</button>
                 </div>
                 <h4 style="margin-bottom: 10px;">قائمة الموظفين</h4>
@@ -698,10 +709,12 @@
                 
                 <div style="text-align:right; margin:15px 0; padding:10px; background:#f4f6f8; border-radius:8px; border:1px solid #ddd;">
                     <label style="font-size:0.9rem; color:var(--primary); font-weight:900; display:block; margin-bottom:10px; border-bottom:1px dashed #ccc; padding-bottom:5px;">الصلاحيات (يمكنك تحديد أكثر من خيار):</label>
-                    <label class="custom-checkbox"><input type="checkbox" id="role_secure"> مخول أمني (عجلات)</label>
-                    <label class="custom-checkbox"><input type="checkbox" id="role_clinic"> محرر استشاريات</label>
-                    <label class="custom-checkbox"><input type="checkbox" id="role_phone"> محرر هواتف</label>
-                    <label class="custom-checkbox"><input type="checkbox" id="role_admin"> أدمن شامل</label>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <label class="custom-checkbox"><input type="checkbox" id="role_secure"> مخول أمني</label>
+                        <label class="custom-checkbox"><input type="checkbox" id="role_clinic"> محرر استشاريات</label>
+                        <label class="custom-checkbox"><input type="checkbox" id="role_phone"> محرر هواتف</label>
+                        <label class="custom-checkbox"><input type="checkbox" id="role_admin"> أدمن شامل</label>
+                    </div>
                 </div>
 
                 <div style="display:flex; gap:10px;">
@@ -727,7 +740,6 @@
     </div>
 
     <div class="developer-footer">System Developed & Designed by <b>Yaseen ALtmeme</b> &copy; 2026</div>
-    <div id="toast" class="toast"><i class="fas fa-check-circle"></i> تم النسخ</div>
 
     <script src="cars.js"></script>
 
@@ -771,6 +783,44 @@
         window.currentEditingProfileId = null;
         window.openComments = new Set(); 
         let viewedAnns = new Set(); 
+
+        // 🚀 نظام التنبيهات المخصص (بديل alert) 🚀
+        window.showAlert = (msg, type = 'info') => {
+            const overlay = document.getElementById('customAlertOverlay');
+            const box = document.getElementById('customAlertBox');
+            const icon = document.getElementById('customAlertIcon');
+            const title = document.getElementById('customAlertTitle');
+            const text = document.getElementById('customAlertText');
+            
+            overlay.style.display = 'flex';
+            text.innerText = msg.replace(/✅|❌|⚠️/g, '').trim();
+            
+            if(msg.includes('❌') || type === 'error') {
+                box.style.borderColor = 'var(--danger)';
+                box.style.boxShadow = '0 10px 30px rgba(231, 76, 60, 0.3)';
+                icon.className = 'fas fa-times-circle';
+                icon.style.color = 'var(--danger)';
+                icon.style.textShadow = '0 0 15px rgba(231, 76, 60, 0.5)';
+                title.innerText = 'خطأ';
+                title.style.color = 'var(--danger)';
+            } else if(msg.includes('✅') || type === 'success') {
+                box.style.borderColor = '#27ae60';
+                box.style.boxShadow = '0 10px 30px rgba(39, 174, 96, 0.3)';
+                icon.className = 'fas fa-check-circle';
+                icon.style.color = '#27ae60';
+                icon.style.textShadow = '0 0 15px rgba(39, 174, 96, 0.5)';
+                title.innerText = 'نجاح';
+                title.style.color = '#27ae60';
+            } else {
+                box.style.borderColor = 'var(--secondary)';
+                box.style.boxShadow = '0 10px 30px rgba(0, 124, 119, 0.3)';
+                icon.className = 'fas fa-info-circle';
+                icon.style.color = 'var(--secondary)';
+                icon.style.textShadow = '0 0 15px rgba(0, 124, 119, 0.5)';
+                title.innerText = 'تنبيه';
+                title.style.color = 'var(--secondary)';
+            }
+        };
 
         window.toggleChat = () => {
             const chatWindow = document.getElementById('ai-chat-window');
@@ -891,10 +941,6 @@ ${carsContext}
             document.getElementById('countCars').innerText = liveCars.length;
             document.getElementById('countPhones').innerText = livePhones.length;
             searchPhones();
-            
-            if(myData && myData.status === 'approved') {
-                // If logged in initially (offline or cached)
-            }
         }, 100);
 
         window.showTab = (id) => {
@@ -1042,19 +1088,21 @@ ${carsContext}
         window.handleUnifiedAuth = async () => {
             const u = document.getElementById('unifiedLoginUser').value.trim();
             const p = document.getElementById('unifiedLoginPass').value;
-            if(!u || !p) return alert("⚠️ الرجاء إكمال البيانات");
+            if(!u || !p) return showAlert("⚠️ الرجاء إكمال البيانات", "error");
             const email = u.includes('@') ? u : u + "@hosp.com";
 
             if(isUnifiedRegMode) {
                 const name = document.getElementById('unifiedRegName').value;
                 const dept = document.getElementById('unifiedRegDept').value || "غير محدد";
+                if(!name) return showAlert("⚠️ الاسم الثلاثي مطلوب للتسجيل", "error");
+                
                 try {
                     const res = await createUserWithEmailAndPassword(auth, email, p);
-                    // Account created pending with secure search by default (can be changed by admin)
+                    // Account created pending with secure search by default
                     await set(ref(db, 'users/' + res.user.uid), { name, dept, username: u, status: 'pending', roles: {secure: true} });
-                    alert("✅ تم إرسال طلب الانضمام للإدارة. يرجى انتظار الموافقة.");
-                    location.reload();
-                } catch(e) { alert("❌ خطأ: يرجى التأكد من البيانات أو أن المستخدم موجود مسبقاً."); }
+                    showAlert("✅ تم إرسال طلب الانضمام للإدارة. يرجى انتظار الموافقة.", "success");
+                    setTimeout(() => location.reload(), 2000);
+                } catch(e) { showAlert("❌ خطأ: يرجى التأكد من البيانات أو أن المستخدم موجود مسبقاً.", "error"); }
             } else {
                 try { 
                     const res = await signInWithEmailAndPassword(auth, email, p); 
@@ -1062,18 +1110,18 @@ ${carsContext}
                     if(snap.exists()) {
                         const data = snap.val();
                         if(data.status !== 'approved') {
-                            alert("❌ عذراً، حسابك قيد المراجعة ولم يتم تفعيله بعد من قبل الإدارة.");
+                            showAlert("❌ عذراً، حسابك قيد المراجعة ولم يتم تفعيله بعد من قبل الإدارة.", "error");
                             await signOut(auth);
                             return;
                         }
-                        alert("✅ تم تسجيل الدخول بنجاح!");
-                        location.reload();
+                        showAlert("✅ تم تسجيل الدخول بنجاح!", "success");
+                        setTimeout(() => location.reload(), 1500);
                     } else {
-                        alert("❌ الحساب غير موجود في قاعدة البيانات!");
+                        showAlert("❌ الحساب غير موجود في قاعدة البيانات!", "error");
                         await signOut(auth);
                     }
                 } catch(e) { 
-                    alert("❌ اسم المستخدم أو كلمة المرور غير صحيحة!"); 
+                    showAlert("❌ اسم المستخدم أو كلمة المرور غير صحيحة!", "error"); 
                 }
             }
         };
@@ -1101,7 +1149,7 @@ ${carsContext}
                 if(myData && myData.status === 'approved') {
                     document.getElementById('logoutBtn').style.display = 'block';
                     document.getElementById('unifiedLoginModal').style.display = 'none';
-                    document.getElementById('mainLoginBtn').style.display = 'none'; // Hide Home Login
+                    document.getElementById('mainLoginBtn').style.display = 'none'; 
                     
                     let roles = myData.roles || {};
                     // Migration from old string role
@@ -1250,20 +1298,20 @@ ${carsContext}
                     text: text,
                     timestamp: Date.now()
                 });
-            } catch(e) { alert("حدث خطأ أثناء إضافة التعليق"); }
+            } catch(e) { showAlert("حدث خطأ أثناء إضافة التعليق", "error"); }
         };
 
         window.deleteComment = async (annKey, commentKey) => {
             if(confirm("هل تريد حذف هذا التعليق؟")) {
                 try {
                     await remove(ref(db, 'announcements/' + annKey + '/comments/' + commentKey));
-                } catch(e) { alert("حدث خطأ أثناء الحذف"); }
+                } catch(e) { showAlert("حدث خطأ أثناء الحذف", "error"); }
             }
         };
 
         window.saveAnnouncement = async () => {
             const text = document.getElementById('admAnnText').value.trim();
-            if(!text) return alert("الرجاء كتابة الإعلان أولاً!");
+            if(!text) return showAlert("الرجاء كتابة الإعلان أولاً!", "error");
             try {
                 await push(ref(db, 'announcements'), {
                     text: text,
@@ -1271,8 +1319,8 @@ ${carsContext}
                     timestamp: Date.now()
                 });
                 document.getElementById('admAnnText').value = '';
-                alert("✅ تم نشر الإعلان بنجاح!");
-            } catch(e) { alert("❌ حدث خطأ."); }
+                showAlert("✅ تم نشر الإعلان بنجاح!", "success");
+            } catch(e) { showAlert("❌ حدث خطأ.", "error"); }
         };
 
         window.deleteAnnouncement = async (key) => {
@@ -1291,7 +1339,7 @@ ${carsContext}
         window.saveClinicMonth = async () => {
             const val = document.getElementById('clinicMonthInput').value.trim();
             await set(ref(db, 'settings/clinicMonth'), val);
-            alert('تم حفظ عنوان الشهر بنجاح!');
+            showAlert('✅ تم حفظ عنوان الشهر بنجاح!', "success");
         };
 
         onValue(ref(db, 'clinics'), (s) => {
@@ -1358,12 +1406,12 @@ ${carsContext}
 
         window.addClinic = async () => {
             const name = document.getElementById('newClinicName').value.trim();
-            if(!name) return alert('الرجاء إدخال اسم الاستشارية أولاً.');
+            if(!name) return showAlert('⚠️ الرجاء إدخال اسم الاستشارية أولاً.', "error");
             try {
                 await push(ref(db, 'clinics'), { name: name });
                 document.getElementById('newClinicName').value = '';
-                alert('✅ تم إضافة الاستشارية بنجاح!');
-            } catch(e) { alert('❌ حدث خطأ أثناء الإضافة.'); }
+                showAlert('✅ تم إضافة الاستشارية بنجاح!', "success");
+            } catch(e) { showAlert('❌ حدث خطأ أثناء الإضافة.', "error"); }
         };
 
         window.currentEditClinicId = null;
@@ -1391,16 +1439,16 @@ ${carsContext}
             const days = document.getElementById('docDays').value.trim();
             const time = document.getElementById('docTime').value.trim();
             
-            if(!clinicId) return alert('الرجاء اختيار الاستشارية من القائمة أولاً.');
-            if(!name || !days || !time) return alert('الرجاء إكمال بيانات الطبيب والمواعيد.');
+            if(!clinicId) return showAlert('⚠️ الرجاء اختيار الاستشارية من القائمة أولاً.', "error");
+            if(!name || !days || !time) return showAlert('⚠️ الرجاء إكمال بيانات الطبيب والمواعيد.', "error");
             
             try {
                 if (window.currentEditDocId) {
                     await update(ref(db, `clinics/${window.currentEditClinicId}/doctors/${window.currentEditDocId}`), { name, days, time });
-                    alert('✅ تم حفظ تعديلات الطبيب بنجاح!');
+                    showAlert('✅ تم حفظ تعديلات الطبيب بنجاح!', "success");
                 } else {
                     await push(ref(db, `clinics/${clinicId}/doctors`), { name, days, time });
-                    alert('✅ تم إضافة الطبيب للجدول بنجاح!');
+                    showAlert('✅ تم إضافة الطبيب للجدول بنجاح!', "success");
                 }
                 
                 document.getElementById('docName').value = '';
@@ -1413,7 +1461,7 @@ ${carsContext}
                 btn.innerHTML = 'إضافة الطبيب للجدول';
                 btn.style.background = 'var(--secondary)';
 
-            } catch(e) { alert('❌ حدث خطأ أثناء الإضافة أو التعديل.'); }
+            } catch(e) { showAlert('❌ حدث خطأ أثناء الإضافة أو التعديل.', "error"); }
         };
 
         window.deleteClinic = async (key) => {
@@ -1652,14 +1700,14 @@ ${carsContext}
                 admin: document.getElementById('role_admin').checked
             };
             
-            if(!n) return alert("الاسم مطلوب!");
+            if(!n) return showAlert("⚠️ الاسم مطلوب!", "error");
             
             try {
                 await update(ref(db, 'users/' + window.currentEditingProfileId), { name: n, dept: d, roles: roles, status: s });
-                alert("✅ تم حفظ التعديلات بنجاح!");
+                showAlert("✅ تم حفظ التعديلات بنجاح!", "success");
                 document.getElementById('userProfileModal').style.display = 'none';
             } catch(e) {
-                alert("❌ حدث خطأ أثناء حفظ التعديلات.");
+                showAlert("❌ حدث خطأ أثناء حفظ التعديلات.", "error");
             }
         };
 
@@ -1765,7 +1813,15 @@ ${carsContext}
             const d = document.getElementById('directDept').value.trim();
             const u = document.getElementById('directUser').value.trim();
             const p = document.getElementById('directPass').value;
-            if(!n || !u || !p) return alert("يرجى إكمال جميع البيانات الأساسية!");
+            
+            const roles = {
+                secure: document.getElementById('new_role_secure').checked,
+                clinic: document.getElementById('new_role_clinic').checked,
+                phone: document.getElementById('new_role_phone').checked,
+                admin: document.getElementById('new_role_admin').checked
+            };
+
+            if(!n || !u || !p) return showAlert("⚠️ يرجى إكمال جميع البيانات الأساسية!", "error");
             
             const email = u.includes('@') ? u : u + "@hosp.com";
             
@@ -1780,24 +1836,24 @@ ${carsContext}
                     dept: d, 
                     username: u, 
                     status: 'approved', 
-                    roles: {secure: true} // الصلاحية الافتراضية
+                    roles: roles 
                 });
                 
                 await signOut(secondaryAuth);
-                alert("✅ تم إنشاء حساب الموظف وتفعيله بنجاح!");
+                showAlert("✅ تم إنشاء حساب الموظف وتفعيله بنجاح!", "success");
                 
                 document.getElementById('directName').value = '';
                 document.getElementById('directDept').value = '';
                 document.getElementById('directUser').value = '';
                 document.getElementById('directPass').value = '';
             } catch(e) { 
-                alert("❌ خطأ: قد يكون اسم المستخدم مستخدم مسبقاً، جرب اسماً آخر."); 
+                showAlert("❌ خطأ: قد يكون اسم المستخدم مستخدم مسبقاً، جرب اسماً آخر.", "error"); 
             }
         };
 
         window.saveCar = async () => {
             const plate = document.getElementById('admCarPlate').value.trim();
-            if(!plate) return alert("رقم اللوحة مطلوب");
+            if(!plate) return showAlert("⚠️ رقم اللوحة مطلوب", "error");
             const data = {
                 plate: plate, name: document.getElementById('admCarName').value, dept: document.getElementById('admCarDept').value,
                 title: document.getElementById('admCarTitle').value, type: document.getElementById('admCarType').value,
@@ -1814,10 +1870,10 @@ ${carsContext}
 
             if(keyToUpdate) {
                 await update(ref(db, 'cars/' + keyToUpdate), data);
-                alert("✅ تم تحديث معلومات السيارة (استبدال القديمة) بنجاح!");
+                showAlert("✅ تم تحديث معلومات السيارة بنجاح!", "success");
             } else {
                 await push(ref(db, 'cars'), data);
-                alert("✅ تمت إضافة السيارة كـ سيارة جديدة بنجاح!");
+                showAlert("✅ تمت إضافة السيارة كجديدة بنجاح!", "success");
             }
 
             currentEditCarKey = null;
@@ -1837,14 +1893,14 @@ ${carsContext}
             const existing = liveCars.find(c => c.plate == plate);
             if(existing && confirm("هل تريد حذف هذه السيارة؟")) {
                 await remove(ref(db, 'cars/' + existing.key));
-                alert("تم الحذف");
-            } else { alert("الرقم غير موجود"); }
+                showAlert("✅ تم الحذف بنجاح", "success");
+            } else { showAlert("❌ الرقم غير موجود", "error"); }
         };
 
         window.savePhone = async () => {
             const name = document.getElementById('admPhoneName').value.trim();
             const ext = document.getElementById('admPhoneExt').value.trim();
-            if(!name || !ext) return alert("اكمل الاسم والرقم");
+            if(!name || !ext) return showAlert("⚠️ اكمل الاسم والرقم", "error");
             
             let keyToUpdate = currentEditPhoneKey;
 
@@ -1855,10 +1911,10 @@ ${carsContext}
 
             if(keyToUpdate) {
                 await update(ref(db, 'phones/' + keyToUpdate), {name, ext});
-                alert("✅ تم تحديث الهاتف (استبدال القديم) بنجاح!");
+                showAlert("✅ تم تحديث الهاتف بنجاح!", "success");
             } else {
                 await push(ref(db, 'phones'), {name, ext});
-                alert("✅ تمت إضافة الهاتف كـ قسم جديد بنجاح!");
+                showAlert("✅ تمت إضافة الهاتف كقسم جديد بنجاح!", "success");
             }
 
             currentEditPhoneKey = null;
@@ -1872,13 +1928,13 @@ ${carsContext}
             const existing = livePhones.find(p => p.name === name);
             if(existing && confirm("حذف الهاتف؟")) {
                 await remove(ref(db, 'phones/' + existing.key));
-                alert("تم الحذف");
+                showAlert("✅ تم الحذف بنجاح", "success");
             }
         };
 
         window.loadCarForEdit = () => {
             const plate = document.getElementById('searchCarEditInput').value.trim();
-            if(!plate) return alert("اكتب رقم اللوحة اولاً ثم اضغط بحث وجلب");
+            if(!plate) return showAlert("⚠️ اكتب رقم اللوحة اولاً ثم اضغط بحث وجلب", "error");
             const car = liveCars.find(c => c.plate == plate);
             if(car) {
                 currentEditCarKey = car.key; 
@@ -1890,23 +1946,23 @@ ${carsContext}
                 document.getElementById('admCarColor').value = car.color || '';
                 document.getElementById('admCarBadge').value = car.badge || '';
                 document.getElementById('admCarPhone').value = car.phone || '';
-                alert("✅ تم سحب البيانات! كدر تعدل عليها هسه وتدوس إضافة/تحديث.");
+                showAlert("✅ تم سحب البيانات! كدر تعدل عليها هسه.", "success");
             } else {
-                alert("❌ هذه السيارة غير موجودة في السجلات!");
+                showAlert("❌ هذه السيارة غير موجودة في السجلات!", "error");
             }
         };
 
         window.loadPhoneForEdit = () => {
             const name = document.getElementById('searchPhoneEditInput').value.trim();
-            if(!name) return alert("اكتب اسم القسم اولاً ثم اضغط بحث وجلب");
+            if(!name) return showAlert("⚠️ اكتب اسم القسم اولاً ثم اضغط بحث وجلب", "error");
             const phone = livePhones.find(p => p.name == name);
             if(phone) {
                 currentEditPhoneKey = phone.key; 
                 document.getElementById('admPhoneName').value = phone.name || ''; 
                 document.getElementById('admPhoneExt').value = phone.ext || '';
-                alert("✅ تم سحب الرقم! كدر تعدله وتدوس حفظ/تحديث.");
+                showAlert("✅ تم سحب الرقم! كدر تعدله هسه.", "success");
             } else {
-                alert("❌ هذا القسم غير موجود!");
+                showAlert("❌ هذا القسم غير موجود!", "error");
             }
         };
 
@@ -1915,12 +1971,12 @@ ${carsContext}
             if(newPass && newPass.length >= 6) {
                 try {
                     await updatePassword(auth.currentUser, newPass);
-                    alert("✅ تم تغيير كلمة المرور بنجاح! سيتم استخدامها في الدخول القادم.");
+                    showAlert("✅ تم تغيير كلمة المرور بنجاح! سيتم استخدامها في الدخول القادم.", "success");
                 } catch(e) {
-                    alert("⚠️ خطأ: لدواعي أمنية، الفايربيس يطلب منك تسجيل الخروج والدخول مرة أخرى قبل تغيير الرمز.");
+                    showAlert("⚠️ خطأ: لدواعي أمنية، الفايربيس يطلب منك تسجيل الخروج والدخول مرة أخرى قبل تغيير الرمز.", "error");
                 }
             } else if(newPass) {
-                alert("❌ كلمة المرور قصيرة جداً!");
+                showAlert("❌ كلمة المرور قصيرة جداً!", "error");
             }
         };
 
@@ -1935,8 +1991,8 @@ ${carsContext}
                 a.download = `Hospital_Backup_${new Date().toISOString().slice(0,10)}.json`;
                 a.click();
                 URL.revokeObjectURL(url);
-                alert("✅ تم تصدير النسخة الاحتياطية بنجاح! (شلع قلع)");
-            } catch(e) { alert("❌ حدث خطأ اثناء التصدير."); }
+                showAlert("✅ تم تصدير النسخة الاحتياطية بنجاح!", "success");
+            } catch(e) { showAlert("❌ حدث خطأ اثناء التصدير.", "error"); }
         };
 
         window.importFullBackup = async (event) => {
@@ -1948,17 +2004,16 @@ ${carsContext}
                     try {
                         const data = JSON.parse(e.target.result);
                         await set(ref(db, '/'), data);
-                        alert("✅ تمت استعادة النسخة الاحتياطية بنجاح! سيتم تحديث الصفحة لإظهار البيانات.");
-                        location.reload();
+                        showAlert("✅ تمت استعادة النسخة الاحتياطية بنجاح! سيتم تحديث الصفحة.", "success");
+                        setTimeout(() => location.reload(), 2000);
                     } catch(err) {
-                        alert("❌ الملف غير صالح أو تالف.");
+                        showAlert("❌ الملف غير صالح أو تالف.", "error");
                     }
                 };
                 reader.readAsText(file);
             }
             event.target.value = '';
         };
-
     </script>
     
     <script>
