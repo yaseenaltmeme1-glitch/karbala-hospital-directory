@@ -30,6 +30,7 @@
         @keyframes pulseIcon { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
         @keyframes neonGlowLogin { 0% { box-shadow: 0 0 10px rgba(39, 174, 96, 0.4), 0 0 20px rgba(39, 174, 96, 0.2); } 50% { box-shadow: 0 0 20px rgba(39, 174, 96, 0.7), 0 0 30px rgba(39, 174, 96, 0.4); } 100% { box-shadow: 0 0 10px rgba(39, 174, 96, 0.4), 0 0 20px rgba(39, 174, 96, 0.2); } }
         @keyframes neonPulseRed { from { text-shadow: 0 0 10px #e74c3c, 0 0 20px #e74c3c, 0 0 30px #e74c3c; transform: scale(1); } to { text-shadow: 0 0 5px #e74c3c, 0 0 10px #c0392b, 0 0 15px #c0392b; transform: scale(1.05); } }
+        @keyframes borderGlow { 0% { border-color: rgba(0, 124, 119, 0.2); box-shadow: 0 0 10px rgba(0, 124, 119, 0.1); } 100% { border-color: rgba(0, 124, 119, 0.6); box-shadow: 0 0 20px rgba(0, 124, 119, 0.3); } }
 
         .home-card { 
             background: linear-gradient(145deg, #ffffff, #fdfdfd); 
@@ -91,7 +92,7 @@
         .tab-content.active { display: block; }
 
         /* 🚀 النافذة الموحدة لتسجيل الدخول 🚀 */
-        #unifiedLoginModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 75, 73, 0.85); z-index: 5000; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
+        #unifiedLoginModal, #createUserModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 75, 73, 0.85); z-index: 5000; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
         .unified-auth-box { background: #ffffff; padding: 40px 25px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.4); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; border: 2px solid var(--secondary); overflow: hidden; }
         .unified-auth-box::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(0, 124, 119, 0.08) 0%, transparent 70%); animation: rotateBg 15s linear infinite; pointer-events: none; }
         .unified-auth-icon { font-size: 4.5rem; color: var(--secondary); margin-bottom: 15px; text-shadow: 0 10px 25px rgba(0, 124, 119, 0.4); animation: float 3s infinite ease-in-out; }
@@ -125,12 +126,13 @@
         .stealth-btn:hover::after { left: 125%; }
         .stealth-btn:active { transform: scale(0.98); }
 
+        /* تعديل عرض معلومات العجلات (مرتب لليمين) */
         .stealth-form .car-card { background: #ffffff !important; border: 1px solid #f0f2f5 !important; border-right: 5px solid var(--secondary) !important; border-radius: 15px; padding: 25px; color: var(--text); box-shadow: 0 15px 35px rgba(0, 75, 73, 0.08); text-align: right; animation: popIn 0.4s ease-out; position: relative; overflow: hidden; }
         .stealth-form .car-card::before { content: '\f1ba'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; left: -20px; bottom: -20px; font-size: 8rem; color: rgba(0, 124, 119, 0.03); z-index: 0; pointer-events: none; transform: rotate(-15deg); }
         .stealth-form .car-card h3 { color: var(--primary) !important; border-bottom: 2px dashed #e0e6ed !important; text-shadow: none; font-size: 1.2rem; position: relative; z-index: 1; padding-bottom: 12px; }
-        .stealth-form .car-detail { border-bottom: 1px solid #f8f9fa !important; padding: 12px 0; color: var(--muted); font-size: 0.95rem; position: relative; z-index: 1; display: flex; justify-content: flex-start; align-items: center; gap: 15px; }
-        .stealth-form .car-detail span { width: 80px; text-align: right; font-weight: 600; }
-        .stealth-form .car-detail b { color: var(--text); font-size: 1.05rem; }
+        .stealth-form .car-detail { border-bottom: 1px solid #f8f9fa !important; padding: 12px 0; color: var(--muted); font-size: 0.95rem; position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: center; text-align: right; direction: rtl; }
+        .stealth-form .car-detail span { font-weight: 600; color: var(--secondary); flex-shrink: 0; width: 100px; }
+        .stealth-form .car-detail b { color: var(--text); font-size: 1.05rem; text-align: left; flex: 1; }
 
         /* 🏥 ستايل بطاقات وجداول الاستشاريات (Ultra Modern Health Theme) 🏥 */
         .public-clinics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 20px; margin-top: 20px; padding: 5px; }
@@ -170,19 +172,19 @@
         .admin-pane.active { display: block; }
 
         /* User Cards Modern Design & Checkboxes */
-        .user-card-modern { background: linear-gradient(145deg, #ffffff, #f0f4f8); border-radius: 15px; padding: 20px; margin-bottom: 15px; border-right: 5px solid var(--primary); box-shadow: 0 8px 20px rgba(0,0,0,0.06); transition: all 0.3s ease; position: relative; overflow: hidden; display: flex; justify-content: space-between; align-items: center; }
-        .user-card-modern:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,75,73,0.15); }
+        .user-card-modern { background: linear-gradient(145deg, #ffffff, #f0f4f8); border-radius: 15px; padding: 20px; margin-bottom: 15px; border-right: 5px solid var(--primary); box-shadow: 0 8px 20px rgba(0,0,0,0.06); transition: all 0.3s ease; position: relative; overflow: hidden; display: flex; justify-content: space-between; align-items: center; border: 1px solid #e2e8f0; }
+        .user-card-modern:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,75,73,0.15); border-color: var(--secondary); }
         .user-card-modern::before { content:''; position:absolute; top:0; left:-100%; width:50%; height:100%; background:linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent); transform:skewX(-25deg); transition:0.5s; pointer-events:none; }
         .user-card-modern:hover::before { left: 125%; transition: 0.5s; }
-        .role-badge { font-size: 0.75rem; padding: 4px 8px; border-radius: 20px; margin: 2px; display: inline-block; font-weight: bold; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-        .role-admin { background: #e74c3c; box-shadow: 0 0 8px #e74c3c; }
-        .role-secure { background: #3498db; box-shadow: 0 0 8px #3498db; }
-        .role-clinic { background: #f1c40f; color: black; box-shadow: 0 0 8px #f1c40f; }
-        .role-phone { background: #9b59b6; box-shadow: 0 0 8px #9b59b6; }
+        .role-badge { font-size: 0.7rem; padding: 5px 10px; border-radius: 20px; margin: 3px; display: inline-block; font-weight: 900; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.3); animation: pulseIcon 2s infinite alternate; }
+        .role-admin { background: linear-gradient(135deg, #e74c3c, #c0392b); box-shadow: 0 0 10px rgba(231, 76, 60, 0.4); }
+        .role-secure { background: linear-gradient(135deg, #3498db, #2980b9); box-shadow: 0 0 10px rgba(52, 152, 219, 0.4); }
+        .role-clinic { background: linear-gradient(135deg, #f1c40f, #f39c12); color: black; text-shadow: none; box-shadow: 0 0 10px rgba(241, 196, 15, 0.4); }
+        .role-phone { background: linear-gradient(135deg, #9b59b6, #8e44ad); box-shadow: 0 0 10px rgba(155, 89, 182, 0.4); }
         
-        .custom-checkbox { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-weight: bold; cursor: pointer; color: var(--text); flex-direction: row; justify-content: flex-start; background: #fff; padding: 10px; border-radius: 10px; border: 1px solid #eee; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .custom-checkbox { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-weight: bold; cursor: pointer; color: var(--text); flex-direction: row; justify-content: flex-start; background: #fff; padding: 8px 12px; border-radius: 8px; border: 1px solid #eee; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.02); font-size: 0.85rem;}
         .custom-checkbox:hover { border-color: var(--secondary); box-shadow: 0 5px 15px rgba(0,124,119,0.1); transform: translateX(-3px); }
-        .custom-checkbox input { width: 22px; height: 22px; margin: 0; accent-color: var(--secondary); cursor: pointer; flex-shrink: 0; }
+        .custom-checkbox input { width: 18px; height: 18px; margin: 0; accent-color: var(--secondary); cursor: pointer; flex-shrink: 0; }
 
         /* General Components */
         .search-wrapper { position: relative; margin: 15px 0; }
@@ -239,24 +241,25 @@
         .log-type-clinic { border-right-color: var(--gold); } .log-type-clinic i { color: var(--gold); }
 
         /* Admin Panel Neon Forms Styles */
-        .admin-section { background: #ffffff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); border: 1px solid #eee; transition: 0.4s; position: relative; overflow: hidden; }
-        .admin-section:hover { box-shadow: 0 15px 35px rgba(0,0,0,0.08); border-color: #dcdde1; transform: translateY(-2px); }
+        .admin-section { background: #ffffff; border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.04); border: 1px solid #f0f2f5; transition: 0.4s; position: relative; overflow: hidden; animation: borderGlow 4s infinite alternate; }
+        .admin-section:hover { box-shadow: 0 15px 35px rgba(0,124,119,0.1); border-color: rgba(0,124,119,0.3); transform: translateY(-2px); }
         .admin-section::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(0, 124, 119, 0.03) 0%, transparent 70%); opacity: 0; transition: 0.5s; pointer-events: none; }
         .admin-section:hover::before { opacity: 1; animation: rotateBg 15s linear infinite; }
         
-        .admin-section h3 { margin-top: 0; color: var(--primary); border-bottom: 2px solid var(--bg); padding-bottom: 10px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; position: relative; z-index: 1; }
-        .admin-form input, .admin-form select, .admin-form textarea { width: 100%; padding: 12px 15px; margin-bottom: 12px; border: 2px solid #e0e6ed; border-radius: 10px; font-family: inherit; box-sizing: border-box; background: #ffffff; color: var(--text); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: inset 0 2px 5px rgba(0,0,0,0.02); font-weight: 600; position: relative; z-index: 1;}
-        .admin-form input:focus, .admin-form select:focus, .admin-form textarea:focus { border-color: var(--secondary); background: #f4fdfc; box-shadow: 0 0 20px rgba(0, 124, 119, 0.3), inset 0 0 5px rgba(0, 124, 119, 0.1); transform: translateY(-3px); outline: none; }
-        .admin-form textarea { resize: vertical; min-height: 80px; }
+        .admin-section h3 { margin-top: 0; color: var(--primary); border-bottom: 2px dashed #eee; padding-bottom: 12px; font-size: 1.15rem; display: flex; align-items: center; gap: 10px; position: relative; z-index: 1; font-weight: 900; }
+        
+        .admin-form input, .admin-form select, .admin-form textarea { width: 100%; padding: 14px 15px; margin-bottom: 15px; border: 2px solid #e0e6ed; border-radius: 10px; font-family: inherit; box-sizing: border-box; background: #ffffff; color: var(--text); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: inset 0 2px 5px rgba(0,0,0,0.01); font-weight: 600; position: relative; z-index: 1; font-size: 0.95rem; }
+        .admin-form input:focus, .admin-form select:focus, .admin-form textarea:focus { border-color: var(--secondary); background: #f4fdfc; box-shadow: 0 0 20px rgba(0, 124, 119, 0.2), inset 0 0 5px rgba(0, 124, 119, 0.05); transform: translateY(-2px); outline: none; }
+        .admin-form textarea { resize: vertical; min-height: 100px; }
 
         .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--text); color: white; padding: 10px 20px; border-radius: 30px; font-size: 0.9rem; opacity: 0; transition: 0.3s; z-index: 2000; pointer-events: none; }
         .toast.show { opacity: 1; bottom: 100px; }
         
         /* Modals */
-        #installModal, #userProfileModal, #clinicScheduleModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
-        .install-box, .profile-box { background: white; padding: 25px; border-radius: 15px; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: fadeIn 0.3s; }
-        .profile-box { max-width: 450px; max-height: 90vh; overflow-y: auto; text-align: right; }
-        .install-box h3, .profile-box h3 { margin-top: 0; color: var(--primary); }
+        #installModal, #userProfileModal, #clinicScheduleModal, #createUserModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .install-box, .profile-box { background: white; padding: 25px; border-radius: 15px; width: 85%; max-width: 450px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.3); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 1px solid var(--secondary); }
+        .profile-box { max-height: 90vh; overflow-y: auto; text-align: right; }
+        .install-box h3, .profile-box h3 { margin-top: 0; color: var(--primary); font-weight: 900; border-bottom: 2px dashed #eee; padding-bottom: 10px; margin-bottom: 20px; text-align: center;}
         .install-box p { font-size: 0.9rem; color: var(--text); margin-bottom: 20px; line-height: 1.5; }
         .btn-close { background: #eee; color: var(--text); margin-top: 10px; }
         .profile-logs { max-height: 150px; overflow-y: auto; background: var(--bg); padding: 10px; border-radius: 8px; margin-top: 10px; border: 1px solid #eee; }
@@ -637,34 +640,43 @@
                     <h4 style="margin-top:0;">إعدادات حسابي (الأدمن)</h4>
                     <button class="btn-main" style="background:var(--text); width:auto; padding:8px 20px;" onclick="changeMyPassword()">🔑 تغيير كلمة المرور الخاصة بي</button>
                 </div>
-                <div class="admin-form" style="background:#f8f9fa; padding:10px; border-radius:8px; margin-bottom:15px; border:1px solid #eee;">
-                    <h4 style="margin-top:0; font-size:0.9rem;">إنشاء حساب مباشر للموظف</h4>
-                    <div style="display:flex; gap:5px; margin-bottom:5px;">
-                        <input type="text" id="directName" placeholder="الاسم" style="margin:0;">
-                        <input type="text" id="directDept" placeholder="القسم" style="margin:0;">
-                    </div>
-                    <div style="display:flex; gap:5px; margin-bottom:5px;">
-                        <input type="text" id="directUser" placeholder="اليوزر" style="margin:0;">
-                        <input type="password" id="directPass" placeholder="الباسوورد" style="margin:0;">
-                    </div>
-                    
-                    <div style="margin-bottom:10px; padding:10px; background:#fff; border-radius:8px; border:1px solid #ddd; text-align:right;">
-                        <label style="font-size:0.85rem; font-weight:bold; display:block; margin-bottom:8px; color:var(--primary);">صلاحيات الحساب الجديد:</label>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                            <label class="custom-checkbox"><input type="checkbox" id="new_role_secure" checked> أمني (عجلات)</label>
-                            <label class="custom-checkbox"><input type="checkbox" id="new_role_clinic"> استشاريات</label>
-                            <label class="custom-checkbox"><input type="checkbox" id="new_role_phone"> هواتف</label>
-                            <label class="custom-checkbox"><input type="checkbox" id="new_role_admin"> أدمن شامل</label>
-                        </div>
-                    </div>
-                    
-                    <button class="btn-main" style="padding:8px;" onclick="createDirectUser()">➕ إنشاء وتفعيل فوراً</button>
+                
+                <div style="text-align:center; margin-bottom: 20px;">
+                    <button class="btn-main btn-gold" style="width: auto; padding: 10px 25px; box-shadow: 0 5px 15px rgba(212,175,55,0.4);" onclick="document.getElementById('createUserModal').style.display='flex'">➕ إنشاء حساب موظف جديد</button>
                 </div>
+
                 <h4 style="margin-bottom: 10px;">قائمة الموظفين</h4>
                 <div id="usersList"></div>
             </div>
         </div>
 
+    </div>
+
+    <div id="createUserModal">
+        <div class="profile-box">
+            <h3><i class="fas fa-user-plus"></i> إنشاء حساب مباشر للموظف</h3>
+            <div class="admin-form" style="text-align: right;">
+                <input type="text" id="directName" placeholder="الاسم الثلاثي">
+                <input type="text" id="directDept" placeholder="القسم / محل العمل">
+                <input type="text" id="directUser" placeholder="اسم المستخدم (اليوزر)">
+                <input type="password" id="directPass" placeholder="كلمة المرور">
+                
+                <div style="text-align:right; margin:15px 0; padding:15px; background:#f4f6f8; border-radius:12px; border:1px solid #ddd;">
+                    <label style="font-size:0.95rem; color:var(--primary); font-weight:900; display:block; margin-bottom:15px; border-bottom:1px dashed #ccc; padding-bottom:5px;">الصلاحيات (يمكنك تحديد أكثر من خيار):</label>
+                    <div style="display:flex; flex-wrap:wrap; gap:10px;">
+                        <label class="custom-checkbox" style="flex:1; min-width:140px;"><input type="checkbox" id="new_role_secure" checked> مخول أمني</label>
+                        <label class="custom-checkbox" style="flex:1; min-width:140px;"><input type="checkbox" id="new_role_clinic"> محرر استشاريات</label>
+                        <label class="custom-checkbox" style="flex:1; min-width:140px;"><input type="checkbox" id="new_role_phone"> محرر هواتف</label>
+                        <label class="custom-checkbox" style="flex:1; min-width:140px; border-color:var(--danger);"><input type="checkbox" id="new_role_admin"> أدمن شامل</label>
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:10px; margin-top:20px;">
+                    <button class="btn-main" style="background:#27ae60;" onclick="createDirectUser()">➕ إنشاء وتفعيل فوراً</button>
+                    <button class="btn-main btn-close" style="margin-top:0;" onclick="document.getElementById('createUserModal').style.display='none'">إلغاء</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="ai-chat-btn" onclick="toggleChat()">
@@ -703,31 +715,31 @@
             <h3><i class="fas fa-user-edit"></i> تفاصيل الموظف وسجله</h3>
             <div class="admin-form" style="text-align: right;">
                 <label style="font-size:0.85rem; color:var(--muted); font-weight:bold;">الاسم الثلاثي</label>
-                <input type="text" id="profName">
+                <input type="text" id="profName" style="background:#f8f9fa;">
                 <label style="font-size:0.85rem; color:var(--muted); font-weight:bold;">القسم / محل العمل</label>
-                <input type="text" id="profDept">
+                <input type="text" id="profDept" style="background:#f8f9fa;">
                 
-                <div style="text-align:right; margin:15px 0; padding:10px; background:#f4f6f8; border-radius:8px; border:1px solid #ddd;">
-                    <label style="font-size:0.9rem; color:var(--primary); font-weight:900; display:block; margin-bottom:10px; border-bottom:1px dashed #ccc; padding-bottom:5px;">الصلاحيات (يمكنك تحديد أكثر من خيار):</label>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                        <label class="custom-checkbox"><input type="checkbox" id="role_secure"> مخول أمني</label>
-                        <label class="custom-checkbox"><input type="checkbox" id="role_clinic"> محرر استشاريات</label>
-                        <label class="custom-checkbox"><input type="checkbox" id="role_phone"> محرر هواتف</label>
-                        <label class="custom-checkbox"><input type="checkbox" id="role_admin"> أدمن شامل</label>
+                <div style="text-align:right; margin:15px 0; padding:15px; background:#f4f6f8; border-radius:12px; border:1px solid #ddd;">
+                    <label style="font-size:0.95rem; color:var(--primary); font-weight:900; display:block; margin-bottom:15px; border-bottom:1px dashed #ccc; padding-bottom:5px;">الصلاحيات الممنوحة:</label>
+                    <div style="display:flex; flex-wrap:wrap; gap:10px;">
+                        <label class="custom-checkbox" style="flex:1; min-width:140px;"><input type="checkbox" id="role_secure"> مخول أمني</label>
+                        <label class="custom-checkbox" style="flex:1; min-width:140px;"><input type="checkbox" id="role_clinic"> محرر استشاريات</label>
+                        <label class="custom-checkbox" style="flex:1; min-width:140px;"><input type="checkbox" id="role_phone"> محرر هواتف</label>
+                        <label class="custom-checkbox" style="flex:1; min-width:140px; border-color:var(--danger);"><input type="checkbox" id="role_admin"> أدمن شامل</label>
                     </div>
                 </div>
 
                 <div style="display:flex; gap:10px;">
                     <div style="flex:1;">
                         <label style="font-size:0.85rem; color:var(--muted); font-weight:bold;">الحالة</label>
-                        <select id="profStatus">
+                        <select id="profStatus" style="background:#f8f9fa;">
                             <option value="approved">مفعل (approved)</option>
                             <option value="pending">قيد الانتظار (pending)</option>
                         </select>
                     </div>
                 </div>
 
-                <div style="display:flex; gap:10px; margin-top:10px;">
+                <div style="display:flex; gap:10px; margin-top:20px;">
                     <button class="btn-main" style="background:#27ae60;" onclick="saveUserProfile()">💾 حفظ التعديلات</button>
                     <button class="btn-main btn-close" style="margin-top:0;" onclick="document.getElementById('userProfileModal').style.display='none'">إغلاق</button>
                 </div>
