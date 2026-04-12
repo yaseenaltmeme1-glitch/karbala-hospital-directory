@@ -141,39 +141,48 @@
         .btn-danger { background: var(--danger); }
         .btn-gold { background: var(--gold); }
         
-        /* 🌌 داشبورد النيون الجديد 🌌 */
-        .neon-dashboard { background: #050a0f; border-radius: 15px; padding: 20px; box-shadow: inset 0 0 40px rgba(0, 255, 204, 0.05); position: relative; overflow: hidden; margin-top: -10px;}
-        .neon-dashboard::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(0, 255, 204, 0.03) 10%, transparent 60%); pointer-events: none; animation: rotateBg 20s linear infinite; }
-        @keyframes rotateBg { 100% { transform: rotate(360deg); } }
+        /* 🌟 داشبورد الإحصائيات الفخم (Light Modern Glowing Theme) 🌟 */
+        .light-dashboard { background: #ffffff; border-radius: 15px; padding: 20px; position: relative; overflow: hidden; margin-top: -10px; }
         
-        .neon-stats-grid { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; position: relative; z-index: 2; }
-        .neon-stat-card { background: rgba(10, 20, 30, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(0, 255, 204, 0.2); border-radius: 12px; padding: 20px; flex: 1; min-width: 100px; text-align: center; position: relative; overflow: hidden; transition: 0.3s; box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
-        .neon-stat-card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.5); }
+        .light-stats-grid { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; position: relative; z-index: 2; }
+        .light-stat-card { background: #ffffff; border: 1px solid #f0f2f5; border-radius: 12px; padding: 20px; flex: 1; min-width: 100px; text-align: center; position: relative; overflow: hidden; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .light-stat-card:hover { transform: translateY(-5px); background: #fafbfc; }
         
-        .neon-stat-card h4 { color: rgba(255,255,255,0.6); margin: 0 0 10px 0; font-size: 0.8rem; font-weight: bold; }
-        .neon-stat-card span { display: block; font-size: 2rem; font-weight: 900; color: #fff; text-shadow: 0 0 15px currentColor; }
+        .light-stat-card h4 { color: var(--muted); margin: 0 0 10px 0; font-size: 0.85rem; font-weight: bold; transition: 0.3s; }
+        .light-stat-card span { display: block; font-size: 2.2rem; font-weight: 900; transition: 0.3s; }
         
-        .neon-c1:hover { box-shadow: 0 0 20px rgba(0, 255, 204, 0.4); border-color:#00ffcc;} .neon-c1 span { color: #00ffcc; } /* تركوازي */
-        .neon-c2:hover { box-shadow: 0 0 20px rgba(255, 0, 255, 0.4); border-color:#ff00ff;} .neon-c2 span { color: #ff00ff; } /* ماجنتا */
-        .neon-c3:hover { box-shadow: 0 0 20px rgba(241, 196, 15, 0.4); border-color:#f1c40f;} .neon-c3 span { color: #f1c40f; } /* ذهبي */
-        .neon-c4:hover { box-shadow: 0 0 20px rgba(255, 51, 102, 0.4); border-color:#ff3366;} .neon-c4 span { color: #ff3366; } /* أحمر نيون */
-        .neon-c5:hover { box-shadow: 0 0 20px rgba(51, 170, 255, 0.4); border-color:#33aaff;} .neon-c5 span { color: #33aaff; } /* أزرق فاتح */
+        /* تأثيرات النيون (Glow) عند اللمس على الخلفية البيضاء */
+        .light-c1:hover { box-shadow: 0 10px 25px rgba(0, 124, 119, 0.2); border-color: rgba(0, 124, 119, 0.3); } 
+        .light-c1 span { color: var(--primary); } .light-c1:hover h4 { color: var(--primary); }
+        
+        .light-c2:hover { box-shadow: 0 10px 25px rgba(231, 76, 60, 0.2); border-color: rgba(231, 76, 60, 0.3); } 
+        .light-c2 span { color: var(--danger); } .light-c2:hover h4 { color: var(--danger); }
+        
+        .light-c3:hover { box-shadow: 0 10px 25px rgba(155, 89, 182, 0.2); border-color: rgba(155, 89, 182, 0.3); } 
+        .light-c3 span { color: #9b59b6; } .light-c3:hover h4 { color: #9b59b6; }
+        
+        .light-c4:hover { box-shadow: 0 10px 25px rgba(212, 175, 55, 0.2); border-color: rgba(212, 175, 55, 0.3); } 
+        .light-c4 span { color: var(--gold); } .light-c4:hover h4 { color: var(--gold); }
+        
+        .light-c5:hover { box-shadow: 0 10px 25px rgba(52, 152, 219, 0.2); border-color: rgba(52, 152, 219, 0.3); } 
+        .light-c5 span { color: #3498db; } .light-c5:hover h4 { color: #3498db; }
 
-        .neon-chart-wrapper { background: rgba(10, 20, 30, 0.7); border: 1px solid rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; z-index: 2; backdrop-filter: blur(5px); }
-        .neon-chart-wrapper h3 { color: #fff; margin-top: 0; font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
-        .neon-chart-wrapper h3 i { color: #00ffcc; text-shadow: 0 0 10px rgba(0,255,204,0.5); }
+        .light-chart-wrapper { background: #ffffff; border: 1px solid #f0f2f5; border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.04); position: relative; z-index: 2; transition: 0.3s; }
+        .light-chart-wrapper:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.08); border-color: #e2e8f0; }
+        .light-chart-wrapper h3 { color: var(--text); margin-top: 0; font-size: 1.05rem; border-bottom: 1px dashed #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 10px; font-weight: 900; }
+        .light-chart-wrapper h3 i { color: var(--secondary); background: rgba(0,124,119,0.1); padding: 8px; border-radius: 8px; }
         
-        .neon-log-list { max-height: 350px; overflow-y: auto; padding-right: 5px; }
-        .neon-log-list::-webkit-scrollbar { width: 6px; }
-        .neon-log-list::-webkit-scrollbar-thumb { background: rgba(0,255,204,0.3); border-radius: 3px; }
-        .neon-log-item { background: rgba(0,0,0,0.4); border-left: 3px solid #00ffcc; padding: 12px; margin-bottom: 8px; border-radius: 0 8px 8px 0; color: #ccc; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
-        .neon-log-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
-        .neon-log-item b { color: #fff; }
+        .light-log-list { max-height: 350px; overflow-y: auto; padding-right: 5px; }
+        .light-log-list::-webkit-scrollbar { width: 6px; }
+        .light-log-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        .light-log-item { background: #f8f9fa; border-right: 4px solid var(--primary); padding: 12px; margin-bottom: 8px; border-radius: 8px; color: var(--text); font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; border-left: 1px solid #eee; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
+        .light-log-item:hover { background: #fff; transform: translateX(-5px); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .light-log-item b { color: var(--text); }
         
-        .neon-log-type-car { border-color: #ff3366; } .neon-log-type-car i { color: #ff3366; }
-        .neon-log-type-phone { border-color: #33aaff; } .neon-log-type-phone i { color: #33aaff; }
-        .neon-log-type-ai { border-color: #ff00ff; } .neon-log-type-ai i { color: #ff00ff; }
-        .neon-log-type-clinic { border-color: #f1c40f; } .neon-log-type-clinic i { color: #f1c40f; }
+        .log-type-car { border-right-color: var(--danger); } .log-type-car i { color: var(--danger); }
+        .log-type-phone { border-right-color: #3498db; } .log-type-phone i { color: #3498db; }
+        .log-type-ai { border-right-color: #9b59b6; } .log-type-ai i { color: #9b59b6; }
+        .log-type-clinic { border-right-color: var(--gold); } .log-type-clinic i { color: var(--gold); }
 
         /* Admin Panel Styles (Rest) */
         .admin-section { background: white; border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: 0 3px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
@@ -395,34 +404,34 @@
         </div>
 
         <div id="adm-stats" class="admin-pane active">
-            <div class="neon-dashboard">
-                <div class="neon-stats-grid">
-                    <div class="neon-stat-card neon-c1"><h4>🚗 العجلات</h4><span id="countCars">0</span></div>
-                    <div class="neon-stat-card neon-c5"><h4>☎️ الهواتف</h4><span id="countPhones">0</span></div>
-                    <div class="neon-stat-card neon-c2"><h4>🤖 ذكاء اصطناعي</h4><span id="countAi">0</span></div>
-                    <div class="neon-stat-card neon-c3"><h4>🏥 استشاريات</h4><span id="countClinicViews">0</span></div>
-                    <div class="neon-stat-card neon-c4" style="flex-basis: 100%;"><h4>🌐 إجمالي الزيارات والمستخدمين</h4><span id="countVisits" style="display:inline;">0</span> <small style="color:rgba(255,255,255,0.5); font-size:1rem;">|</small> <span id="countUniqueVisitors" style="display:inline; color:#ccc;">0</span></div>
+            <div class="light-dashboard">
+                <div class="light-stats-grid">
+                    <div class="light-stat-card light-c1"><h4>🚗 العجلات</h4><span id="countCars">0</span></div>
+                    <div class="light-stat-card light-c5"><h4>☎️ الهواتف</h4><span id="countPhones">0</span></div>
+                    <div class="light-stat-card light-c3"><h4>🤖 ذكاء اصطناعي</h4><span id="countAi">0</span></div>
+                    <div class="light-stat-card light-c4"><h4>🏥 استشاريات</h4><span id="countClinicViews">0</span></div>
+                    <div class="light-stat-card light-c2" style="flex-basis: 100%;"><h4>🌐 إجمالي الزيارات والمستخدمين</h4><span id="countVisits" style="display:inline;">0</span> <small style="color:var(--muted); font-size:1rem;">|</small> <span id="countUniqueVisitors" style="display:inline; color:var(--muted);">0</span></div>
                 </div>
                 
-                <div class="neon-chart-wrapper">
-                    <h3><i class="fas fa-chart-line"></i> نشاط الموظفين (Top Users)</h3>
-                    <div style="position: relative; height: 250px; width: 100%;"><canvas id="searchChart"></canvas></div>
+                <div class="light-chart-wrapper">
+                    <h3><i class="fas fa-crown"></i> أنشط الموظفين (Top Users)</h3>
+                    <div style="position: relative; height: 260px; width: 100%;"><canvas id="searchChart"></canvas></div>
                 </div>
                 
                 <div style="display:flex; flex-wrap:wrap; gap:15px; margin-bottom: 20px;">
-                    <div class="neon-chart-wrapper" style="flex:1; min-width: 250px; margin-bottom:0;">
-                        <h3><i class="fas fa-radar"></i> شبكة التفاعلات (Radar)</h3>
-                        <div style="position: relative; height: 250px; width: 100%;"><canvas id="deptChart"></canvas></div>
+                    <div class="light-chart-wrapper" style="flex:1; min-width: 250px; margin-bottom:0;">
+                        <h3><i class="fas fa-project-diagram"></i> شبكة التفاعلات والنظام</h3>
+                        <div style="position: relative; height: 260px; width: 100%;"><canvas id="deptChart"></canvas></div>
                     </div>
-                    <div class="neon-chart-wrapper" style="flex:1; min-width: 250px; margin-bottom:0;">
-                        <h3><i class="fas fa-chart-pie"></i> نسبة الاستعلامات (Doughnut)</h3>
-                        <div style="position: relative; height: 250px; width: 100%;"><canvas id="phonesChart"></canvas></div>
+                    <div class="light-chart-wrapper" style="flex:1; min-width: 250px; margin-bottom:0;">
+                        <h3><i class="fas fa-chart-pie"></i> نسبة الاستعلامات</h3>
+                        <div style="position: relative; height: 260px; width: 100%;"><canvas id="phonesChart"></canvas></div>
                     </div>
                 </div>
 
-                <div class="neon-chart-wrapper" style="margin-bottom:0;">
+                <div class="light-chart-wrapper" style="margin-bottom:0;">
                     <h3><i class="fas fa-satellite-dish"></i> سجل المراقبة المركزي الحي (Live Monitor)</h3>
-                    <div id="liveLogs" class="neon-log-list"></div>
+                    <div id="liveLogs" class="light-log-list"></div>
                 </div>
             </div>
             
@@ -1243,7 +1252,7 @@ ${carsContext}
             }
         };
 
-        // 🚀 تحديث نظام الإدارة واستقبال البيانات للوحة النيون 🚀
+        // 🚀 تحديث نظام الإدارة واستقبال البيانات للوحة الفخمة 🚀
         function initAdminPanel() {
             onValue(ref(db, 'visits'), s => {
                 const data = s.val();
@@ -1273,18 +1282,17 @@ ${carsContext}
                 
                 const recentLogs = liveLogs.sort((a,b) => b.timestamp - a.timestamp).slice(0, 100);
                 document.getElementById('liveLogs').innerHTML = recentLogs.map(l => {
-                    let icon = 'fa-search'; let cls = 'neon-log-type-car';
-                    if(l.type === 'phone_search') { icon = 'fa-phone'; cls = 'neon-log-type-phone'; }
-                    if(l.type === 'ai_chat') { icon = 'fa-robot'; cls = 'neon-log-type-ai'; }
-                    if(l.type === 'clinic_view') { icon = 'fa-hospital-user'; cls = 'neon-log-type-clinic'; }
+                    let icon = 'fa-search'; let cls = 'log-type-car';
+                    if(l.type === 'phone_search') { icon = 'fa-phone'; cls = 'log-type-phone'; }
+                    if(l.type === 'ai_chat') { icon = 'fa-robot'; cls = 'log-type-ai'; }
+                    if(l.type === 'clinic_view') { icon = 'fa-hospital-user'; cls = 'log-type-clinic'; }
                     
-                    return `<div class="neon-log-item ${cls}">
+                    return `<div class="light-log-item ${cls}">
                         <span><i class="fas ${icon}" style="margin-left:8px;"></i> <b>${l.user}</b>: ${l.plate}</span> 
-                        <span style="font-size:0.7rem; opacity:0.6;">${l.time}</span>
+                        <span style="font-size:0.75rem; color:var(--muted);">${l.time}</span>
                     </div>`;
                 }).join('');
 
-                // تحديث العدادات الجديدة
                 if(document.getElementById('countAi')) document.getElementById('countAi').innerText = liveLogs.filter(l=>l.type==='ai_chat').length;
                 if(document.getElementById('countClinicViews')) document.getElementById('countClinicViews').innerText = liveLogs.filter(l=>l.type==='clinic_view').length;
 
@@ -1355,86 +1363,96 @@ ${carsContext}
             }
         };
 
-        // 🚀 المخططات النيون الحديثة 🚀
+        // 🚀 المخططات البيانية الاحترافية (Light Mode 3D) 🚀
         let chart1, chart2, chart3;
         function updateCharts(userData) {
             Chart.defaults.font.family = 'Cairo';
             Chart.defaults.color = '#7f8c8d';
 
+            // 1. مخطط أنشط الموظفين (Doughnut بدلاً من Bar)
             const ctx1 = document.getElementById('searchChart');
             if(chart1) chart1.destroy();
             chart1 = new Chart(ctx1, {
-                type: 'bar',
+                type: 'doughnut',
                 data: {
                     labels: Object.keys(userData).slice(0, 5), 
                     datasets: [{ 
-                        label: 'عدد التفاعلات', 
+                        label: 'عمليات البحث', 
                         data: Object.values(userData).slice(0, 5), 
-                        backgroundColor: '#00ffcc', 
-                        hoverBackgroundColor: '#fff',
-                        borderRadius: 8,
+                        backgroundColor: ['#007c77', '#3498db', '#e74c3c', '#d4af37', '#9b59b6'], 
+                        hoverOffset: 15,
+                        borderWidth: 3,
+                        borderColor: '#ffffff',
+                        borderRadius: 5
+                    }]
+                },
+                options: { 
+                    responsive: true, maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: { legend: { position: 'right' } },
+                    animation: { animateScale: true, animateRotate: true }
+                }
+            });
+
+            // 2. شبكة التفاعلات (Horizontal Bar) - يحل مشكلة الأرقام الصغيرة!
+            const ctx2 = document.getElementById('deptChart');
+            if(chart2) chart2.destroy();
+            chart2 = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ['المرشد الذكي', 'الاستشاريات', 'دليل الهواتف', 'عجلات (أمني)', 'عجلات (سريع)'],
+                    datasets: [{
+                        label: 'عدد التفاعلات الكلي',
+                        data: [
+                            liveLogs.filter(l=>l.type==='ai_chat').length,
+                            liveLogs.filter(l=>l.type==='clinic_view').length,
+                            liveLogs.filter(l=>l.type==='phone_search').length,
+                            liveLogs.filter(l=>l.type==='secure').length,
+                            liveLogs.filter(l=>l.type==='quick').length
+                        ],
+                        backgroundColor: [
+                            'rgba(155, 89, 182, 0.8)', // ذكاء اصطناعي
+                            'rgba(212, 175, 55, 0.8)', // استشاريات
+                            'rgba(52, 152, 219, 0.8)', // هواتف
+                            'rgba(231, 76, 60, 0.8)',  // أمني
+                            'rgba(0, 124, 119, 0.8)'   // مرور سريع
+                        ],
+                        hoverBackgroundColor: [
+                            '#9b59b6', '#d4af37', '#3498db', '#e74c3c', '#007c77'
+                        ],
+                        borderRadius: 10,
                         borderSkipped: false
                     }]
                 },
                 options: { 
+                    indexAxis: 'y', // تحويله إلى أفقي ليبرز الأرقام الصغيرة بوضوح
                     responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
-                        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)', borderDash: [5, 5] } },
-                        x: { grid: { display: false } }
+                        x: { beginAtZero: true, grid: { color: '#f0f2f5', borderDash: [5, 5] } },
+                        y: { grid: { display: false } }
                     }
                 }
             });
 
-            const ctx2 = document.getElementById('deptChart');
-            if(chart2) chart2.destroy();
-            chart2 = new Chart(ctx2, {
-                type: 'polarArea',
-                data: {
-                    labels: ['عجلات (سريع)', 'عجلات (أمني)', 'بحث هواتف', 'استشاريات', 'مرشد ذكي'],
-                    datasets: [{
-                        data: [
-                            liveLogs.filter(l=>l.type==='quick').length, 
-                            liveLogs.filter(l=>l.type==='secure').length,
-                            liveLogs.filter(l=>l.type==='phone_search').length,
-                            liveLogs.filter(l=>l.type==='clinic_view').length,
-                            liveLogs.filter(l=>l.type==='ai_chat').length
-                        ],
-                        backgroundColor: [
-                            'rgba(241, 196, 15, 0.6)',   // ذهبي
-                            'rgba(255, 51, 102, 0.6)',   // أحمر خطر
-                            'rgba(51, 170, 255, 0.6)',   // أزرق
-                            'rgba(0, 255, 204, 0.6)',    // تركوازي
-                            'rgba(255, 0, 255, 0.6)'     // ماجنتا
-                        ],
-                        borderColor: '#050a0f',
-                        borderWidth: 2
-                    }]
-                },
-                options: { 
-                    responsive: true, maintainAspectRatio: false,
-                    scales: { r: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { display: false } } },
-                    plugins: { legend: { position: 'right', labels: { color: '#ccc' } } }
-                }
-            });
-
+            // 3. نسبة الاستعلامات المركزية
             const ctx3 = document.getElementById('phonesChart');
             if(chart3) chart3.destroy();
             chart3 = new Chart(ctx3, {
-                type: 'doughnut',
+                type: 'pie',
                 data: {
                     labels: ['قسم العجلات', 'قسم الهواتف'],
                     datasets: [{
                         data: [liveLogs.filter(l=>l.type==='quick'||l.type==='secure').length, liveLogs.filter(l=>l.type==='phone_search').length],
-                        backgroundColor: ['#ff3366', '#33aaff'],
-                        borderWidth: 0,
-                        hoverOffset: 10
+                        backgroundColor: ['#e74c3c', '#3498db'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff',
+                        hoverOffset: 12
                     }]
                 },
                 options: { 
                     responsive: true, maintainAspectRatio: false,
-                    cutout: '75%',
-                    plugins: { legend: { position: 'bottom', labels: { color: '#ccc' } } }
+                    plugins: { legend: { position: 'bottom' } }
                 }
             });
         }
