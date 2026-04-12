@@ -83,6 +83,22 @@
         .tab-content { display: none; padding: 15px; animation: fadeIn 0.4s; max-width: 600px; margin: auto; }
         .tab-content.active { display: block; }
 
+        /* 🚀 بوابة دخول محرر الاستشاريات (Clinic Admin Portal) 🚀 */
+        .clinic-portal-btn { background: linear-gradient(135deg, var(--gold), #e67e22); border: none; width: 52px; height: 52px; border-radius: 14px; color: white; font-size: 1.6rem; cursor: pointer; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; }
+        .clinic-portal-btn::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 60%); opacity: 0; transition: 0.3s; pointer-events: none; }
+        .clinic-portal-btn:hover { transform: scale(1.1); box-shadow: 0 10px 25px rgba(212, 175, 55, 0.6); border-radius: 50%; }
+        .clinic-portal-btn:hover i { animation: spinGear 2s linear infinite; }
+        .clinic-portal-btn:hover::before { opacity: 1; animation: rotateBg 2s linear infinite; }
+        @keyframes spinGear { 100% { transform: rotate(360deg); } }
+        
+        #clinicAuthModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 75, 73, 0.85); z-index: 5000; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
+        .clinic-auth-box { background: #ffffff; padding: 40px 25px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.4); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; border: 2px solid var(--gold); overflow: hidden; }
+        .clinic-auth-box::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%); animation: rotateBg 15s linear infinite; pointer-events: none; }
+        .clinic-auth-icon { font-size: 4.5rem; color: var(--gold); margin-bottom: 15px; text-shadow: 0 10px 25px rgba(212, 175, 55, 0.4); animation: float 3s infinite ease-in-out; }
+        .clinic-auth-box h3 { color: var(--primary); font-weight: 900; font-size: 1.4rem; margin-bottom: 25px; letter-spacing: 0.5px; }
+        .clinic-auth-close { position: absolute; top: 15px; left: 15px; background: rgba(231, 76, 60, 0.1); color: var(--danger); border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; transition: 0.3s; display: flex; justify-content: center; align-items: center; z-index: 10;}
+        .clinic-auth-close:hover { background: var(--danger); color: white; transform: scale(1.1) rotate(90deg); }
+
         /* 🚀 الاستعلام الأمني (Medical Glowing Theme) 🚀 */
         #secure { position: relative; background: #ffffff; border-radius: 15px; min-height: 600px; overflow: hidden; transition: 0.5s ease; box-shadow: 0 10px 40px rgba(0, 75, 73, 0.08); border: 1px solid #f0f2f5; }
         
@@ -314,11 +330,35 @@
     </div>
 
     <div id="clinics-tab" class="tab-content">
-        <div class="search-wrapper">
-            <input type="text" id="clinicSearchPublic" placeholder="ابحث عن استشارية..." onkeyup="renderPublicClinics()">
+        <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 20px;">
+            <div class="search-wrapper" style="flex: 1; margin: 0;">
+                <input type="text" id="clinicSearchPublic" placeholder="ابحث عن استشارية..." onkeyup="renderPublicClinics()">
+            </div>
+            <button class="clinic-portal-btn" onclick="document.getElementById('clinicAuthModal').style.display='flex'" title="بوابة الإدارة الطبية">
+                <i class="fas fa-cog"></i>
+            </button>
         </div>
         <div class="public-clinics-grid" id="publicClinicsGrid">
             <p style="text-align:center; color:var(--muted);"><i class="fas fa-spinner fa-spin"></i> جاري تحميل الاستشاريات...</p>
+        </div>
+    </div>
+
+    <div id="clinicAuthModal">
+        <div class="clinic-auth-box">
+            <button class="clinic-auth-close" onclick="document.getElementById('clinicAuthModal').style.display='none'"><i class="fas fa-times"></i></button>
+            <i class="fas fa-user-md clinic-auth-icon"></i>
+            <h3>بوابة إدارة الاستشاريات</h3>
+            
+            <div id="clinicRegFields" style="display:none;">
+                <input type="text" id="clinicRegName" placeholder="الاسم الثلاثي للطبيب/الموظف" class="stealth-input" style="background:#f8f9fa!important; color:var(--text)!important; border-bottom-color:var(--gold)!important;">
+            </div>
+            
+            <input type="text" id="clinicLoginUser" placeholder="اسم المستخدم" class="stealth-input" style="background:#f8f9fa!important; color:var(--text)!important; border-bottom-color:var(--gold)!important;">
+            <input type="password" id="clinicLoginPass" placeholder="كلمة المرور" class="stealth-input" style="background:#f8f9fa!important; color:var(--text)!important; border-bottom-color:var(--gold)!important;">
+            
+            <button class="stealth-btn" style="background:linear-gradient(135deg, var(--gold), #e67e22);" onclick="handleClinicAuth()">تأكيد الدخول</button>
+            
+            <p id="clinicToggleTxt" style="font-size:0.9rem; color:var(--secondary); font-weight:bold; cursor:pointer; margin-top:20px; transition:0.3s;" onclick="toggleClinicReg()">طلب انضمام كمحرر استشاريات</p>
         </div>
     </div>
 
@@ -781,7 +821,7 @@
             const isSecureUser = (myData && myData.status === 'approved');
             const carsContext = isSecureUser 
                 ? `2. العجلات المصرحة أمنياً (هذا المستخدم لديه صلاحية لرؤيتها): ${JSON.stringify(liveCars.map(c => ({اللوحة: c.plate, المالك: c.name, القسم: c.dept})))}`
-                : `2. العجلات: (أنت الآن تتحدث مع مستخدم عادي. يمنع منعاً باتاً إعطاء أي معلومات عن أرقام السيارات أو أصحابها. إذا سألك عن سيارة، اعتذر بلباقة وأخبره أن কাশী معلومات سرية وتتطلب تسجيل الدخول).`;
+                : `2. العجلات: (أنت الآن تتحدث مع مستخدم عادي. يمنع منعاً باتاً إعطاء أي معلومات عن أرقام السيارات أو أصحابها. إذا سألك عن سيارة، اعتذر بلباقة وأخبره أن هذه المعلومات سرية وتتطلب تسجيل الدخول).`;
 
             const contextText = `
 أنت "المرشد الذكي" لمستشفى الإمام الحسن المجتبى (ع).
@@ -1019,6 +1059,37 @@ ${carsContext}
             }
         };
 
+        let isClinicRegMode = false;
+        window.toggleClinicReg = () => {
+            isClinicRegMode = !isClinicRegMode;
+            document.getElementById('clinicRegFields').style.display = isClinicRegMode ? 'block' : 'none';
+            document.getElementById('clinicToggleTxt').innerText = isClinicRegMode ? "لديك حساب طبي؟ تسجيل الدخول" : "طلب انضمام كمحرر استشاريات";
+        };
+
+        window.handleClinicAuth = async () => {
+            const u = document.getElementById('clinicLoginUser').value.trim();
+            const p = document.getElementById('clinicLoginPass').value;
+            if(!u || !p) return alert("الرجاء إكمال البيانات");
+            const email = u.includes('@') ? u : u + "@hosp.com";
+
+            if(isClinicRegMode) {
+                const name = document.getElementById('clinicRegName').value;
+                const dept = "قسم الاستشاريات"; 
+                try {
+                    const res = await createUserWithEmailAndPassword(auth, email, p);
+                    await set(ref(db, 'users/' + res.user.uid), { name, dept, username: u, status: 'pending', role: 'clinic_admin' });
+                    alert("✅ تم إرسال طلب الانضمام إلى الإدارة بنجاح. يرجى انتظار الموافقة.");
+                    location.reload();
+                } catch(e) { alert("❌ خطأ: يرجى التأكد من البيانات أو أن المستخدم موجود مسبقاً."); }
+            } else {
+                try { 
+                    await signInWithEmailAndPassword(auth, email, p); 
+                } catch(e) { 
+                    alert("❌ اسم المستخدم أو كلمة المرور غير صحيحة!"); 
+                }
+            }
+        };
+
         let isRegMode = false;
         window.toggleReg = () => {
             isRegMode = !isRegMode;
@@ -1077,6 +1148,7 @@ ${carsContext}
                     document.getElementById('authSection').style.display = 'none';
                     document.getElementById('secureSearchSection').style.display = 'block';
                     document.getElementById('logoutBtn').style.display = 'block';
+                    document.getElementById('clinicAuthModal').style.display = 'none';
                     
                     if(myData.role === 'admin' || myData.role === 'clinic_admin') {
                         document.getElementById('homeAdminCard').style.display = 'block';
