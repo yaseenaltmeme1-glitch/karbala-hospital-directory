@@ -86,12 +86,10 @@
         /* 🚀 الاستعلام الأمني (Medical Glowing Theme) 🚀 */
         #secure { position: relative; background: #ffffff; border-radius: 15px; min-height: 600px; overflow: hidden; transition: 0.5s ease; box-shadow: 0 10px 40px rgba(0, 75, 73, 0.08); border: 1px solid #f0f2f5; }
         
-        /* خلفية الشبكة (Medical Grid) */
         .cyber-grid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(0, 124, 119, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 124, 119, 0.04) 1px, transparent 1px); background-size: 30px 30px; opacity: 0; transition: opacity 1.5s ease; pointer-events: none; }
         #secure.unlocked .cyber-grid { opacity: 1; animation: breatheGrid 4s infinite alternate; }
         @keyframes breatheGrid { 0% { opacity: 0.5; } 100% { opacity: 1; } }
 
-        /* مقبض السحب (Swipe Handle) */
         .stealth-pull-area { position: absolute; top: 0; left: 0; width: 100%; height: 80px; z-index: 20; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 100%); }
         .stealth-handle { width: 50px; height: 6px; background: #dcdde1; border-radius: 10px; transition: 0.3s; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 8px; }
         .stealth-pull-area:hover .stealth-handle { background: var(--secondary); box-shadow: 0 0 15px rgba(0, 124, 119, 0.4); width: 70px; }
@@ -99,16 +97,13 @@
         #secure.unlocked .stealth-pull-area { opacity: 0; pointer-events: none; transition: 0.3s; }
         @keyframes securePulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; text-shadow: 0 0 10px rgba(0, 124, 119, 0.3); } }
 
-        /* خط الليزر الماسح (Medical Scanner) */
         .laser-scanner { position: absolute; top: -20px; left: 0; width: 100%; height: 4px; background: var(--secondary); box-shadow: 0 0 30px 10px rgba(0, 124, 119, 0.2), 0 0 10px 2px rgba(0, 124, 119, 0.5); opacity: 0; z-index: 15; pointer-events: none; border-radius: 50%; }
         #secure.unlocked .laser-scanner { animation: scanReveal 2s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         @keyframes scanReveal { 0% { top: 0; opacity: 1; transform: scaleX(0.8); } 50% { transform: scaleX(1); } 70% { top: 100%; opacity: 1; } 100% { top: 100%; opacity: 0; transform: scaleX(0.8); } }
 
-        /* حاوية الحقول والأنميشن */
         .stealth-auth-wrapper { position: relative; z-index: 10; padding: 40px 20px; margin-top: 40px; opacity: 0; transform: translateY(40px) scale(0.95); transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; }
         #secure.unlocked .stealth-auth-wrapper { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; transition-delay: 0.3s; }
 
-        /* تنسيق الحقول (ستايل صحي/أمني فخم) */
         .stealth-form { text-align: center; }
         .stealth-form .stealth-icon { font-size: 4rem; color: var(--secondary); margin-bottom: 20px; text-shadow: 0 10px 25px rgba(0, 124, 119, 0.3); animation: float 4s infinite ease-in-out; }
         .stealth-form h3 { color: var(--primary); letter-spacing: 0.5px; margin-bottom: 30px; font-weight: 900; font-size: 1.3rem; }
@@ -123,12 +118,35 @@
         .stealth-btn:hover::after { left: 125%; }
         .stealth-btn:active { transform: scale(0.98); }
 
-        /* بطاقة النتيجة للمركبات */
         .stealth-form .car-card { background: #ffffff !important; border: 1px solid #f0f2f5 !important; border-right: 5px solid var(--secondary) !important; border-radius: 15px; padding: 25px; color: var(--text); box-shadow: 0 15px 35px rgba(0, 75, 73, 0.08); text-align: right; animation: popIn 0.4s ease-out; position: relative; overflow: hidden; }
         .stealth-form .car-card::before { content: '\f1ba'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; left: -20px; bottom: -20px; font-size: 8rem; color: rgba(0, 124, 119, 0.03); z-index: 0; pointer-events: none; transform: rotate(-15deg); }
         .stealth-form .car-card h3 { color: var(--primary) !important; border-bottom: 2px dashed #e0e6ed !important; text-shadow: none; font-size: 1.2rem; position: relative; z-index: 1; padding-bottom: 12px; }
         .stealth-form .car-detail { border-bottom: 1px solid #f8f9fa !important; padding: 12px 0; color: var(--muted); font-size: 0.95rem; position: relative; z-index: 1; display: flex; justify-content: space-between; }
         .stealth-form .car-detail b { color: var(--text); font-size: 1.05rem; }
+
+        /* 🏥 ستايل بطاقات وجداول الاستشاريات 🏥 */
+        .public-clinics-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
+        .public-clinic-card { background: white; border-radius: 15px; padding: 20px; display:flex; align-items:center; gap:20px; cursor:pointer; border:1px solid #e0e6ed; border-right: 5px solid var(--secondary); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 5px 15px rgba(0,0,0,0.03); position:relative; overflow:hidden; }
+        .public-clinic-card::before { content: ''; position: absolute; top: 0; right: 0; width: 0%; height: 100%; background: linear-gradient(90deg, transparent, rgba(0, 124, 119, 0.05)); transition: 0.4s; }
+        .public-clinic-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 30px rgba(0, 124, 119, 0.15); border-right-color: var(--gold); }
+        .public-clinic-card:hover::before { width: 100%; }
+        .public-clinic-card .icon-box { background: rgba(0,124,119,0.1); color: var(--secondary); width: 55px; height: 55px; border-radius: 12px; display:flex; justify-content:center; align-items:center; font-size:1.8rem; transition:0.4s; z-index:2; }
+        .public-clinic-card:hover .icon-box { background: var(--gold); color: white; transform: rotate(15deg) scale(1.1); box-shadow: 0 0 15px rgba(212, 175, 55, 0.5); }
+        .public-clinic-card .details { flex:1; z-index:2; text-align:right; }
+        .public-clinic-card h3 { margin:0; font-size:1.15rem; color:var(--text); font-weight:900; transition:0.3s; }
+        .public-clinic-card:hover h3 { color:var(--primary); }
+        .public-clinic-card p { margin:5px 0 0; font-size:0.85rem; color:var(--muted); }
+
+        .schedule-table { width:100%; border-collapse: separate; border-spacing: 0; background: white; border-radius: 12px; overflow:hidden; box-shadow: 0 5px 25px rgba(0,0,0,0.08); margin-top: 15px; font-size: 0.95rem; border: 1px solid #e0e6ed; }
+        .schedule-table thead { background: linear-gradient(135deg, var(--primary), var(--secondary)); color:white; }
+        .schedule-table th { padding: 18px 15px; text-align: right; font-weight: 900; font-size: 1rem; border-bottom: 2px solid rgba(0,0,0,0.1); }
+        .schedule-table tbody tr { transition: 0.3s; background: white; }
+        .schedule-table tbody tr:nth-child(even) { background: #fafbfc; }
+        .schedule-table tbody tr:hover { background: rgba(0, 124, 119, 0.08); transform: scale(1.01); box-shadow: 0 0 15px rgba(0,0,0,0.1); position: relative; z-index: 5; }
+        .schedule-table td { padding: 16px 15px; border-bottom: 1px solid #f0f2f5; color: var(--text); font-weight: 600; vertical-align: middle; }
+        .schedule-table td:first-child { color: var(--primary); font-weight: 900; border-right: 4px solid transparent; transition: 0.3s; }
+        .schedule-table tbody tr:hover td:first-child { border-right-color: var(--gold); }
+        .schedule-table i { margin-left: 5px; opacity: 0.7; }
 
         /* Admin Internal Navigation */
         .admin-nav { display: flex; gap: 10px; overflow-x: auto; margin-bottom: 20px; padding-bottom: 5px; }
@@ -140,8 +158,8 @@
 
         /* General Components */
         .search-wrapper { position: relative; margin: 15px 0; }
-        .search-wrapper input { width: 100%; padding: 12px 15px; border: 2px solid #e0e6ed; border-radius: 10px; font-family: inherit; font-size: 1rem; box-sizing: border-box; transition: 0.3s; }
-        .search-wrapper input:focus { border-color: var(--secondary); outline: none; }
+        .search-wrapper input { width: 100%; padding: 14px 15px; border: 2px solid #e0e6ed; border-radius: 12px; font-family: inherit; font-size: 1rem; box-sizing: border-box; transition: 0.3s; font-weight: 600; box-shadow: inset 0 2px 5px rgba(0,0,0,0.02); }
+        .search-wrapper input:focus { border-color: var(--secondary); outline: none; box-shadow: 0 0 0 3px rgba(0, 124, 119, 0.1); }
         
         .card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-right: 4px solid var(--primary); box-shadow: 0 3px 10px rgba(0,0,0,0.03); }
         .number-box { background: var(--primary); color: white; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; direction: ltr; }
@@ -160,7 +178,6 @@
         .light-stat-card h4 { color: var(--muted); margin: 0 0 10px 0; font-size: 0.85rem; font-weight: bold; transition: 0.3s; }
         .light-stat-card span { display: block; font-size: 2.2rem; font-weight: 900; transition: 0.3s; }
         
-        /* تأثيرات النيون (Glow) عند اللمس على الخلفية البيضاء */
         .light-c1:hover { box-shadow: 0 10px 25px rgba(0, 124, 119, 0.2); border-color: rgba(0, 124, 119, 0.3); } 
         .light-c1 span { color: var(--primary); } .light-c1:hover h4 { color: var(--primary); }
         
@@ -203,7 +220,7 @@
         .toast.show { opacity: 1; bottom: 100px; }
         
         /* Modals */
-        #installModal, #userProfileModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; justify-content: center; align-items: center; }
+        #installModal, #userProfileModal, #clinicScheduleModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
         .install-box, .profile-box { background: white; padding: 25px; border-radius: 15px; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: fadeIn 0.3s; }
         .profile-box { max-width: 450px; max-height: 90vh; overflow-y: auto; text-align: right; }
         .install-box h3, .profile-box h3 { margin-top: 0; color: var(--primary); }
@@ -292,13 +309,22 @@
     </div>
 
     <div id="clinics-tab" class="tab-content">
-        <div class="admin-section" style="text-align: center; border-top: 4px solid var(--gold); padding: 40px 20px; margin-top: 20px;">
-            <i class="fas fa-hammer" style="font-size: 4rem; color: var(--gold); margin-bottom: 20px;"></i>
-            <h2 style="color: var(--primary); margin-top: 0;">قريباً جداً...</h2>
-            <p style="color: var(--muted); font-size: 1rem; line-height: 1.7;">
-                جاري العمل على تجهيز نظام <b>"جداول الاستشاريات ومواعيد الأطباء"</b> بتصميم بطاقات ذكية. سيكون متاحاً في التحديث القادم إن شاء الله.
-            </p>
-            <button class="btn-main" onclick="showTab('home')" style="width: auto; padding: 8px 30px; margin-top: 15px;"><i class="fas fa-home"></i> العودة للرئيسية</button>
+        <div class="search-wrapper">
+            <input type="text" id="clinicSearchPublic" placeholder="ابحث عن استشارية..." onkeyup="renderPublicClinics()">
+        </div>
+        <div class="public-clinics-grid" id="publicClinicsGrid">
+            <p style="text-align:center; color:var(--muted);"><i class="fas fa-spinner fa-spin"></i> جاري تحميل الاستشاريات...</p>
+        </div>
+    </div>
+
+    <div id="clinicScheduleModal">
+        <div style="background:white; border-radius:15px; width:95%; max-width:650px; max-height:85vh; display:flex; flex-direction:column; box-shadow:0 15px 40px rgba(0,0,0,0.2); animation:popIn 0.3s; position:relative; overflow:hidden;">
+            <div style="background:linear-gradient(135deg, var(--primary), var(--secondary)); padding:20px; color:white; display:flex; justify-content:space-between; align-items:center; z-index:10; box-shadow:0 4px 15px rgba(0,75,73,0.2);">
+                <h3 id="scheduleModalTitle" style="margin:0; font-family:'Cairo'; font-weight:900; font-size:1.3rem;"><i class="fas fa-stethoscope" style="margin-left:10px; color:var(--gold);"></i> </h3>
+                <button onclick="document.getElementById('clinicScheduleModal').style.display='none'" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer; transition:0.3s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='white'"><i class="fas fa-times-circle"></i></button>
+            </div>
+            <div style="padding:20px; overflow-y:auto; background:#ffffff; position:relative;" id="scheduleModalBody">
+                </div>
         </div>
     </div>
 
@@ -444,8 +470,19 @@
                 </div>
             </div>
             
+            <div class="admin-section" style="border: 2px dashed #3498db; background: #f0f8ff; margin-top: 20px;">
+                <h3 style="color:#2980b9;"><i class="fas fa-database"></i> النسخ الاحتياطي الشامل (Backup)</h3>
+                <p style="font-size:0.85rem; color:var(--text); margin-bottom: 15px; font-weight:600;">سحب أو استرجاع كافة بيانات المستشفى (عجلات، هواتف، مستخدمين، استشاريات، إعلانات، إحصائيات) شلع قلع بضغطة زر.</p>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <button class="btn-main" style="background:#3498db; flex:1; margin:0; box-shadow:0 4px 15px rgba(52, 152, 219, 0.3);" onclick="exportFullBackup()"><i class="fas fa-download"></i> تصدير (سحب نسخة)</button>
+                    <label class="btn-main" style="background:#e74c3c; flex:1; margin:0; text-align:center; cursor:pointer; box-shadow:0 4px 15px rgba(231, 76, 60, 0.3);"><i class="fas fa-upload"></i> استيراد (استعادة نسخة)
+                        <input type="file" id="importBackupFile" accept=".json" style="display:none;" onchange="importFullBackup(event)">
+                    </label>
+                </div>
+            </div>
+            
             <div class="admin-section" style="border: 2px dashed var(--gold); background: #fffcf0; margin-top: 20px;">
-                <h3><i class="fas fa-cloud-upload-alt"></i> استيراد البيانات الأولية</h3>
+                <h3><i class="fas fa-cloud-upload-alt"></i> استيراد البيانات الأولية القديمة</h3>
                 <p style="font-size:0.8rem; color:var(--muted);">استخدم هذه الأزرار مرة واحدة فقط لرفع البيانات من الكود وملف JS إلى السيرفر.</p>
                 <div style="display:flex; gap:10px;">
                     <button class="btn-main btn-gold" onclick="uploadInternalPhones()">رفع دليل الهواتف</button>
@@ -840,16 +877,7 @@ ${carsContext}
             }
             
             if(id === 'clinics-tab') {
-                try {
-                    const userName = (myData && myData.status === 'approved') ? myData.name : 'زائر عام';
-                    push(ref(db, 'logs'), {
-                        user: userName,
-                        plate: `تصفح قسم الاستشاريات`,
-                        type: 'clinic_view',
-                        time: new Date().toLocaleString('ar-IQ'),
-                        timestamp: Date.now()
-                    });
-                } catch(e) {}
+                renderPublicClinics();
             }
 
             if(id === 'admin') {
@@ -860,6 +888,82 @@ ${carsContext}
                     if(typeof chart3 !== 'undefined' && chart3) { chart3.resize(); chart3.update(); }
                 }, 250);
             }
+        };
+
+        // 🚀 نظام الاستشاريات العام (البطاقات والجداول) 🚀
+        window.renderPublicClinics = () => {
+            const q = document.getElementById('clinicSearchPublic').value.trim().toLowerCase();
+            const grid = document.getElementById('publicClinicsGrid');
+            
+            const res = liveClinics.filter(c => c.name.toLowerCase().includes(q));
+            
+            if(res.length === 0) {
+                grid.innerHTML = '<p style="text-align:center; color:var(--muted); width:100%;">لا توجد نتائج</p>';
+                return;
+            }
+
+            grid.innerHTML = res.map(c => {
+                const docCount = c.doctors ? Object.keys(c.doctors).length : 0;
+                return `
+                    <div class="public-clinic-card" onclick="openClinicSchedule('${c.key}')">
+                        <div class="icon-box"><i class="fas fa-stethoscope"></i></div>
+                        <div class="details">
+                            <h3>${c.name}</h3>
+                            <p>الأطباء المتواجدين: <b>${docCount}</b></p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        };
+
+        window.openClinicSchedule = (clinicId) => {
+            const clinic = liveClinics.find(c => c.key === clinicId);
+            if(!clinic) return;
+            
+            document.getElementById('scheduleModalTitle').innerHTML = `<i class="fas fa-notes-medical" style="color:var(--gold); margin-left:10px;"></i> ${clinic.name}`;
+            
+            let html = `
+            <div style="overflow-x:auto;">
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>التاريخ / اليوم المصادف</th>
+                            <th>اسم الطبيب (1)</th>
+                            <th>اسم الطبيب (2) / الوقت</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            if(clinic.doctors && Object.keys(clinic.doctors).length > 0) {
+                Object.values(clinic.doctors).forEach(d => {
+                    html += `
+                        <tr>
+                            <td><i class="far fa-calendar-alt"></i> ${d.days}</td>
+                            <td><i class="fas fa-user-md"></i> ${d.name}</td>
+                            <td><i class="far fa-clock"></i> ${d.time}</td>
+                        </tr>
+                    `;
+                });
+            } else {
+                html += `<tr><td colspan="3" style="text-align:center; padding:25px; color:var(--danger); font-weight:bold;">لا يوجد جدول متاح حالياً لهذه الاستشارية</td></tr>`;
+            }
+            
+            html += `</tbody></table></div>`;
+            
+            document.getElementById('scheduleModalBody').innerHTML = html;
+            document.getElementById('clinicScheduleModal').style.display = 'flex';
+            
+            try {
+                const userName = (myData && myData.status === 'approved') ? myData.name : 'زائر عام';
+                push(ref(db, 'logs'), {
+                    user: userName,
+                    plate: `استعرض جدول: ${clinic.name}`,
+                    type: 'clinic_view',
+                    time: new Date().toLocaleString('ar-IQ'),
+                    timestamp: Date.now()
+                });
+            } catch(e) {}
         };
 
         window.showAdminTab = (paneId, btn) => {
@@ -1089,6 +1193,9 @@ ${carsContext}
                 for(let k in data) liveClinics.push({...data[k], key: k});
             }
             renderAdminClinics();
+            if(document.getElementById('clinics-tab').classList.contains('active')){
+                renderPublicClinics();
+            }
         });
 
         window.renderAdminClinics = () => {
@@ -1259,6 +1366,7 @@ ${carsContext}
             }
         };
 
+        // 🚀 تحديث نظام الإدارة واستقبال البيانات 🚀
         function initAdminPanel() {
             onValue(ref(db, 'visits'), s => {
                 const data = s.val();
@@ -1369,13 +1477,11 @@ ${carsContext}
             }
         };
 
-        // 🚀 المخططات البيانية الاحترافية (Light Mode 3D) 🚀
         let chart1, chart2, chart3;
         function updateCharts(userData) {
             Chart.defaults.font.family = 'Cairo';
             Chart.defaults.color = '#7f8c8d';
 
-            // 1. مخطط أنشط الموظفين (Doughnut بدلاً من Bar)
             const ctx1 = document.getElementById('searchChart');
             if(chart1) chart1.destroy();
             chart1 = new Chart(ctx1, {
@@ -1400,7 +1506,6 @@ ${carsContext}
                 }
             });
 
-            // 2. شبكة التفاعلات (Horizontal Bar) - يحل مشكلة الأرقام الصغيرة!
             const ctx2 = document.getElementById('deptChart');
             if(chart2) chart2.destroy();
             chart2 = new Chart(ctx2, {
@@ -1417,11 +1522,11 @@ ${carsContext}
                             liveLogs.filter(l=>l.type==='quick').length
                         ],
                         backgroundColor: [
-                            'rgba(155, 89, 182, 0.8)', // ذكاء اصطناعي
-                            'rgba(212, 175, 55, 0.8)', // استشاريات
-                            'rgba(52, 152, 219, 0.8)', // هواتف
-                            'rgba(231, 76, 60, 0.8)',  // أمني
-                            'rgba(0, 124, 119, 0.8)'   // مرور سريع
+                            'rgba(155, 89, 182, 0.8)', 
+                            'rgba(212, 175, 55, 0.8)', 
+                            'rgba(52, 152, 219, 0.8)', 
+                            'rgba(231, 76, 60, 0.8)',  
+                            'rgba(0, 124, 119, 0.8)'   
                         ],
                         hoverBackgroundColor: [
                             '#9b59b6', '#d4af37', '#3498db', '#e74c3c', '#007c77'
@@ -1431,7 +1536,7 @@ ${carsContext}
                     }]
                 },
                 options: { 
-                    indexAxis: 'y', // تحويله إلى أفقي ليبرز الأرقام الصغيرة بوضوح
+                    indexAxis: 'y',
                     responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
@@ -1441,7 +1546,6 @@ ${carsContext}
                 }
             });
 
-            // 3. نسبة الاستعلامات المركزية
             const ctx3 = document.getElementById('phonesChart');
             if(chart3) chart3.destroy();
             chart3 = new Chart(ctx3, {
@@ -1632,6 +1736,42 @@ ${carsContext}
             } else if(newPass) {
                 alert("❌ كلمة المرور قصيرة جداً!");
             }
+        };
+
+        // 🚀 دوال النسخ الاحتياطي (Backup & Restore) 🚀
+        window.exportFullBackup = async () => {
+            try {
+                const snap = await get(ref(db, '/'));
+                const data = snap.val();
+                const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `Hospital_Backup_${new Date().toISOString().slice(0,10)}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                alert("✅ تم تصدير النسخة الاحتياطية بنجاح! (شلع قلع)");
+            } catch(e) { alert("❌ حدث خطأ اثناء التصدير."); }
+        };
+
+        window.importFullBackup = async (event) => {
+            const file = event.target.files[0];
+            if(!file) return;
+            if(confirm("⚠️ تحذير خطير: استعادة النسخة الاحتياطية ستمسح كل البيانات الحالية وتستبدلها بالملف المرفوع. هل أنت متأكد 100%؟")) {
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        await set(ref(db, '/'), data);
+                        alert("✅ تمت استعادة النسخة الاحتياطية بنجاح! سيتم تحديث الصفحة لإظهار البيانات.");
+                        location.reload();
+                    } catch(err) {
+                        alert("❌ الملف غير صالح أو تالف.");
+                    }
+                };
+                reader.readAsText(file);
+            }
+            event.target.value = '';
         };
 
         window.uploadInternalPhones = async () => {
