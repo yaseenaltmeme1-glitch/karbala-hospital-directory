@@ -83,43 +83,52 @@
         .tab-content { display: none; padding: 15px; animation: fadeIn 0.4s; max-width: 600px; margin: auto; }
         .tab-content.active { display: block; }
 
-        /* 🚀 الاستعلام الأمني الحديث (Stealth Mode) 🚀 */
-        #secure { position: relative; background: #030708; border-radius: 15px; min-height: 600px; overflow: hidden; transition: 0.5s ease; box-shadow: inset 0 0 50px rgba(0,0,0,0.8); }
+        /* 🚀 الاستعلام الأمني (Medical Glowing Theme) 🚀 */
+        #secure { position: relative; background: #ffffff; border-radius: 15px; min-height: 600px; overflow: hidden; transition: 0.5s ease; box-shadow: 0 10px 40px rgba(0, 75, 73, 0.08); border: 1px solid #f0f2f5; }
         
-        .cyber-grid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(0, 255, 204, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 204, 0.05) 1px, transparent 1px); background-size: 25px 25px; opacity: 0; transition: opacity 1.5s ease; pointer-events: none; }
-        #secure.unlocked .cyber-grid { opacity: 1; }
+        /* خلفية الشبكة (Medical Grid) */
+        .cyber-grid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(0, 124, 119, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 124, 119, 0.04) 1px, transparent 1px); background-size: 30px 30px; opacity: 0; transition: opacity 1.5s ease; pointer-events: none; }
+        #secure.unlocked .cyber-grid { opacity: 1; animation: breatheGrid 4s infinite alternate; }
+        @keyframes breatheGrid { 0% { opacity: 0.5; } 100% { opacity: 1; } }
 
-        .stealth-pull-area { position: absolute; top: 0; left: 0; width: 100%; height: 70px; z-index: 20; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, transparent 100%); }
-        .stealth-handle { width: 50px; height: 5px; background: rgba(255,255,255,0.2); border-radius: 10px; transition: 0.3s; box-shadow: 0 0 10px rgba(0, 255, 204, 0.2); margin-bottom: 8px; }
-        .stealth-pull-area:hover .stealth-handle { background: #00ffcc; box-shadow: 0 0 15px #00ffcc; width: 70px; }
-        .stealth-pull-text { font-size: 0.8rem; color: rgba(255,255,255,0.4); letter-spacing: 1px; transition: 0.3s; animation: securePulse 2s infinite; font-weight: bold; }
+        /* مقبض السحب (Swipe Handle) */
+        .stealth-pull-area { position: absolute; top: 0; left: 0; width: 100%; height: 80px; z-index: 20; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 100%); }
+        .stealth-handle { width: 50px; height: 6px; background: #dcdde1; border-radius: 10px; transition: 0.3s; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 8px; }
+        .stealth-pull-area:hover .stealth-handle { background: var(--secondary); box-shadow: 0 0 15px rgba(0, 124, 119, 0.4); width: 70px; }
+        .stealth-pull-text { font-size: 0.85rem; color: var(--primary); letter-spacing: 1px; transition: 0.3s; animation: securePulse 2s infinite; font-weight: bold; opacity: 0.7; }
         #secure.unlocked .stealth-pull-area { opacity: 0; pointer-events: none; transition: 0.3s; }
-        @keyframes securePulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; color: #00ffcc; } }
+        @keyframes securePulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; text-shadow: 0 0 10px rgba(0, 124, 119, 0.3); } }
 
-        .laser-scanner { position: absolute; top: -10px; left: 0; width: 100%; height: 2px; background: #00ffcc; box-shadow: 0 0 25px 8px rgba(0, 255, 204, 0.6); opacity: 0; z-index: 15; pointer-events: none; }
-        #secure.unlocked .laser-scanner { animation: scanReveal 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-        @keyframes scanReveal { 0% { top: 0; opacity: 1; } 70% { top: 100%; opacity: 1; } 100% { top: 100%; opacity: 0; } }
+        /* خط الليزر الماسح (Medical Scanner) */
+        .laser-scanner { position: absolute; top: -20px; left: 0; width: 100%; height: 4px; background: var(--secondary); box-shadow: 0 0 30px 10px rgba(0, 124, 119, 0.2), 0 0 10px 2px rgba(0, 124, 119, 0.5); opacity: 0; z-index: 15; pointer-events: none; border-radius: 50%; }
+        #secure.unlocked .laser-scanner { animation: scanReveal 2s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        @keyframes scanReveal { 0% { top: 0; opacity: 1; transform: scaleX(0.8); } 50% { transform: scaleX(1); } 70% { top: 100%; opacity: 1; } 100% { top: 100%; opacity: 0; transform: scaleX(0.8); } }
 
+        /* حاوية الحقول والأنميشن */
         .stealth-auth-wrapper { position: relative; z-index: 10; padding: 40px 20px; margin-top: 40px; opacity: 0; transform: translateY(40px) scale(0.95); transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; }
         #secure.unlocked .stealth-auth-wrapper { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; transition-delay: 0.3s; }
 
+        /* تنسيق الحقول (ستايل صحي/أمني فخم) */
         .stealth-form { text-align: center; }
-        .stealth-form .stealth-icon { font-size: 3.5rem; color: #00ffcc; margin-bottom: 20px; text-shadow: 0 0 25px rgba(0, 255, 204, 0.6); animation: float 4s infinite ease-in-out; }
-        .stealth-form h3 { color: white; letter-spacing: 1px; margin-bottom: 30px; text-shadow: 0 0 10px rgba(255,255,255,0.2); font-weight: 900; }
+        .stealth-form .stealth-icon { font-size: 4rem; color: var(--secondary); margin-bottom: 20px; text-shadow: 0 10px 25px rgba(0, 124, 119, 0.3); animation: float 4s infinite ease-in-out; }
+        .stealth-form h3 { color: var(--primary); letter-spacing: 0.5px; margin-bottom: 30px; font-weight: 900; font-size: 1.3rem; }
         
-        .stealth-input { width: 100%; padding: 15px; margin-bottom: 15px; background: rgba(255,255,255,0.02) !important; border: 1px solid rgba(255,255,255,0.05) !important; border-bottom: 2px solid rgba(0, 255, 204, 0.3) !important; border-radius: 8px; color: #00ffcc !important; font-family: inherit; font-size: 1rem; box-sizing: border-box; outline: none; transition: 0.3s; text-align: right; backdrop-filter: blur(10px); }
-        .stealth-input::placeholder { color: rgba(255,255,255,0.3); }
-        .stealth-input:focus { background: rgba(0, 255, 204, 0.08) !important; border-bottom: 2px solid #00ffcc !important; box-shadow: 0 10px 20px rgba(0,0,0,0.5), inset 0 0 15px rgba(0, 255, 204, 0.1); transform: translateY(-2px); }
+        .stealth-input { width: 100%; padding: 16px 20px; margin-bottom: 18px; background: #f8f9fa !important; border: 1px solid #e0e6ed !important; border-bottom: 3px solid rgba(0, 75, 73, 0.1) !important; border-radius: 10px; color: var(--text) !important; font-family: inherit; font-size: 1rem; box-sizing: border-box; outline: none; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-align: right; font-weight: 600; }
+        .stealth-input::placeholder { color: var(--muted); font-weight: 400; }
+        .stealth-input:focus { background: #ffffff !important; border-color: rgba(0, 124, 119, 0.3) !important; border-bottom: 3px solid var(--secondary) !important; box-shadow: 0 15px 35px rgba(0, 124, 119, 0.1), inset 0 0 0 4px rgba(0, 124, 119, 0.05) !important; transform: translateY(-3px); }
 
-        .stealth-btn { width: 100%; padding: 15px; background: linear-gradient(45deg, #004b49, #007c77); color: white; border: 1px solid rgba(0, 255, 204, 0.3); border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.1rem; letter-spacing: 1px; box-shadow: 0 5px 20px rgba(0, 75, 73, 0.5); transition: 0.3s; margin-top: 10px; text-shadow: 0 0 5px rgba(255,255,255,0.5); }
-        .stealth-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0, 255, 204, 0.4); border-color: #00ffcc; }
+        .stealth-btn { width: 100%; padding: 16px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; border-radius: 10px; font-weight: 900; cursor: pointer; font-size: 1.1rem; letter-spacing: 1px; box-shadow: 0 8px 20px rgba(0, 75, 73, 0.2); transition: 0.3s; margin-top: 10px; position: relative; overflow: hidden; }
+        .stealth-btn::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.3), rgba(255,255,255,0)); transform: skewX(-25deg); transition: 0.5s; }
+        .stealth-btn:hover { transform: translateY(-4px); box-shadow: 0 12px 25px rgba(0, 124, 119, 0.3); }
+        .stealth-btn:hover::after { left: 125%; }
         .stealth-btn:active { transform: scale(0.98); }
 
-        #pendingSection.stealth-form h3, #pendingSection.stealth-form p { color: white; }
-        .stealth-form .car-card { background: rgba(255,255,255,0.03) !important; border: 1px solid rgba(0,255,204,0.3) !important; border-radius: 12px; padding: 20px; color: white; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: right; }
-        .stealth-form .car-card h3 { color: #00ffcc !important; border-bottom: 1px solid rgba(255,255,255,0.1) !important; text-shadow: 0 0 10px rgba(0,255,204,0.5); }
-        .stealth-form .car-detail { border-bottom: 1px solid rgba(255,255,255,0.05) !important; padding: 10px 0; color: rgba(255,255,255,0.7); }
-        .stealth-form .car-detail b { color: white; font-size: 1.1rem; }
+        /* بطاقة النتيجة للمركبات */
+        .stealth-form .car-card { background: #ffffff !important; border: 1px solid #f0f2f5 !important; border-right: 5px solid var(--secondary) !important; border-radius: 15px; padding: 25px; color: var(--text); box-shadow: 0 15px 35px rgba(0, 75, 73, 0.08); text-align: right; animation: popIn 0.4s ease-out; position: relative; overflow: hidden; }
+        .stealth-form .car-card::before { content: '\f1ba'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; left: -20px; bottom: -20px; font-size: 8rem; color: rgba(0, 124, 119, 0.03); z-index: 0; pointer-events: none; transform: rotate(-15deg); }
+        .stealth-form .car-card h3 { color: var(--primary) !important; border-bottom: 2px dashed #e0e6ed !important; text-shadow: none; font-size: 1.2rem; position: relative; z-index: 1; padding-bottom: 12px; }
+        .stealth-form .car-detail { border-bottom: 1px solid #f8f9fa !important; padding: 12px 0; color: var(--muted); font-size: 0.95rem; position: relative; z-index: 1; display: flex; justify-content: space-between; }
+        .stealth-form .car-detail b { color: var(--text); font-size: 1.05rem; }
 
         /* Admin Internal Navigation */
         .admin-nav { display: flex; gap: 10px; overflow-x: auto; margin-bottom: 20px; padding-bottom: 5px; }
@@ -370,13 +379,13 @@
                 <input type="password" id="loginPass" placeholder="كلمة المرور" class="stealth-input">
                 <button class="stealth-btn" onclick="handleAuth()">تحقق أمني</button>
                 
-                <p id="toggleTxt" style="font-size:0.85rem; color:rgba(255,255,255,0.5); cursor:pointer; margin-top:20px; transition:0.3s;" onclick="toggleReg()">ليس لديك تصريح؟ طلب انضمام</p>
+                <p id="toggleTxt" style="font-size:0.9rem; color:var(--secondary); font-weight:bold; cursor:pointer; margin-top:20px; transition:0.3s;" onclick="toggleReg()">ليس لديك تصريح؟ طلب انضمام</p>
             </div>
 
             <div id="pendingSection" class="stealth-form" style="display:none; margin-top:40px;">
-                <i class="fas fa-user-clock" style="font-size:4rem; color:var(--gold); margin-bottom:20px; text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);"></i>
+                <i class="fas fa-user-clock" style="font-size:4rem; color:var(--gold); margin-bottom:20px; text-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);"></i>
                 <h3 style="color:var(--gold);">قيد المراجعة الأمنية</h3>
-                <p style="color:rgba(255,255,255,0.7); line-height:1.6; margin-bottom: 20px;">يرجى الانتظار لحين موافقة الإدارة المركزية على تفعيل تصريحك.</p>
+                <p style="color:var(--text); line-height:1.6; margin-bottom: 20px; font-weight:600;">يرجى الانتظار لحين موافقة الإدارة المركزية على تفعيل تصريحك.</p>
                 <button class="stealth-btn" style="background:var(--gold); color:black; border-color:var(--gold);" onclick="location.reload()">تحديث الحالة</button>
             </div>
 
@@ -700,7 +709,6 @@
             inputField.value = '';
             chatBody.scrollTop = chatBody.scrollHeight;
 
-            // 🚀 تسجيل رسائل الذكاء الاصطناعي للداشبورد النيون 🚀
             try {
                 const userName = (myData && myData.status === 'approved') ? myData.name : 'زائر عام';
                 push(ref(db, 'logs'), {
@@ -831,7 +839,6 @@ ${carsContext}
                 hospitalLogo.style.display = 'none';
             }
             
-            // 🚀 تسجيل فتح الاستشاريات للداشبورد النيون 🚀
             if(id === 'clinics-tab') {
                 try {
                     const userName = (myData && myData.status === 'approved') ? myData.name : 'زائر عام';
@@ -1252,7 +1259,6 @@ ${carsContext}
             }
         };
 
-        // 🚀 تحديث نظام الإدارة واستقبال البيانات للوحة الفخمة 🚀
         function initAdminPanel() {
             onValue(ref(db, 'visits'), s => {
                 const data = s.val();
