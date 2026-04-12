@@ -492,6 +492,7 @@
                 <div style="display:flex; gap:10px;">
                     <button class="btn-main btn-gold" onclick="uploadInternalPhones()">رفع دليل الهواتف</button>
                     <button class="btn-main btn-gold" onclick="uploadCarsFromJson()">رفع سجل العجلات (cars.js)</button>
+                    <button class="btn-main btn-gold" onclick="uploadClinicsFromCode()">رفع جدول الاستشاريات</button>
                 </div>
             </div>
         </div>
@@ -676,6 +677,7 @@
                         <select id="profRole">
                             <option value="user">موظف (user)</option>
                             <option value="admin">مسؤول (admin)</option>
+                            <option value="clinic_admin">محرر استشاريات</option>
                         </select>
                     </div>
                     <div style="flex:1;">
@@ -779,7 +781,7 @@
             const isSecureUser = (myData && myData.status === 'approved');
             const carsContext = isSecureUser 
                 ? `2. العجلات المصرحة أمنياً (هذا المستخدم لديه صلاحية لرؤيتها): ${JSON.stringify(liveCars.map(c => ({اللوحة: c.plate, المالك: c.name, القسم: c.dept})))}`
-                : `2. العجلات: (أنت الآن تتحدث مع مستخدم عادي. يمنع منعاً باتاً إعطاء أي معلومات عن أرقام السيارات أو أصحابها. إذا سألك عن سيارة، اعتذر بلباقة وأخبره أن هذه المعلومات سرية وتتطلب تسجيل الدخول).`;
+                : `2. العجلات: (أنت الآن تتحدث مع مستخدم عادي. يمنع منعاً باتاً إعطاء أي معلومات عن أرقام السيارات أو أصحابها. إذا سألك عن سيارة، اعتذر بلباقة وأخبره أن কাশী معلومات سرية وتتطلب تسجيل الدخول).`;
 
             const contextText = `
 أنت "المرشد الذكي" لمستشفى الإمام الحسن المجتبى (ع).
@@ -869,8 +871,18 @@ ${carsContext}
                 document.getElementById('authSection').style.display = 'none';
                 document.getElementById('secureSearchSection').style.display = 'block';
                 document.getElementById('logoutBtn').style.display = 'block';
-                if(myData.role === 'admin') {
+                
+                if(myData.role === 'admin' || myData.role === 'clinic_admin') {
                     document.getElementById('homeAdminCard').style.display = 'block';
+                    if(myData.role === 'clinic_admin') {
+                        document.querySelector('#homeAdminCard h3').innerText = 'إدارة الاستشاريات';
+                        document.querySelectorAll('.admin-nav-btn').forEach(btn => {
+                            if(!btn.innerText.includes('الاستشاريات')) btn.style.display = 'none';
+                        });
+                    } else {
+                        document.querySelector('#homeAdminCard h3').innerText = 'لوحة الإدارة';
+                        document.querySelectorAll('.admin-nav-btn').forEach(btn => btn.style.display = 'inline-block');
+                    }
                     initAdminPanel();
                 }
             }
@@ -896,6 +908,10 @@ ${carsContext}
             }
 
             if(id === 'admin') {
+                if(myData && myData.role === 'clinic_admin') {
+                    const clinicBtn = Array.from(document.querySelectorAll('.admin-nav-btn')).find(b => b.innerText.includes('الاستشاريات'));
+                    if(clinicBtn) showAdminTab('adm-clinics', clinicBtn);
+                }
                 setTimeout(() => {
                     window.dispatchEvent(new Event('resize'));
                     if(typeof chart1 !== 'undefined' && chart1) { chart1.resize(); chart1.update(); }
@@ -1062,8 +1078,17 @@ ${carsContext}
                     document.getElementById('secureSearchSection').style.display = 'block';
                     document.getElementById('logoutBtn').style.display = 'block';
                     
-                    if(myData.role === 'admin') {
+                    if(myData.role === 'admin' || myData.role === 'clinic_admin') {
                         document.getElementById('homeAdminCard').style.display = 'block';
+                        if(myData.role === 'clinic_admin') {
+                            document.querySelector('#homeAdminCard h3').innerText = 'إدارة الاستشاريات';
+                            document.querySelectorAll('.admin-nav-btn').forEach(btn => {
+                                if(!btn.innerText.includes('الاستشاريات')) btn.style.display = 'none';
+                            });
+                        } else {
+                            document.querySelector('#homeAdminCard h3').innerText = 'لوحة الإدارة';
+                            document.querySelectorAll('.admin-nav-btn').forEach(btn => btn.style.display = 'inline-block');
+                        }
                         initAdminPanel();
                     }
                 } else {
