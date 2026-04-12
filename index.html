@@ -245,7 +245,7 @@
         .developer-footer { position: fixed; bottom: 0; width: 100%; background: white; text-align: center; padding: 10px 0; font-size: 0.8rem; border-top: 1px solid #eee; z-index: 900; }
 
         /* 🌟 المساعد الذكي (AI Chat) 🌟 */
-        #ai-chat-btn { position: fixed; bottom: 35px; left: 20px; width: 55px; height: 55px; background: linear-gradient(135deg, var(--secondary), var(--primary)); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; box-shadow: 0 5px 20px rgba(0,75,73,0.4); cursor: pointer; z-index: 4000; transition: 0.3s; animation: float 4s infinite ease-in-out; border: 2px solid white; }
+        #ai-chat-btn { fixed; bottom: 35px; left: 20px; width: 55px; height: 55px; background: linear-gradient(135deg, var(--secondary), var(--primary)); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; box-shadow: 0 5px 20px rgba(0,75,73,0.4); cursor: pointer; z-index: 4000; transition: 0.3s; animation: float 4s infinite ease-in-out; border: 2px solid white; }
         #ai-chat-btn:hover { transform: scale(1.1); box-shadow: 0 8px 25px rgba(0,75,73,0.6); }
         #ai-chat-window { position: fixed; bottom: 100px; left: 20px; width: 320px; max-width: calc(100vw - 40px); background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); z-index: 4000; display: none; flex-direction: column; overflow: hidden; border: 1px solid #eee; animation: popIn 0.3s ease-out; }
         .chat-header { background: var(--primary); color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
@@ -492,6 +492,7 @@
                 <div style="display:flex; gap:10px;">
                     <button class="btn-main btn-gold" onclick="uploadInternalPhones()">رفع دليل الهواتف</button>
                     <button class="btn-main btn-gold" onclick="uploadCarsFromJson()">رفع سجل العجلات (cars.js)</button>
+                    <button class="btn-main btn-gold" onclick="uploadClinicsFromCode()">رفع جدول الاستشاريات</button>
                 </div>
             </div>
         </div>
@@ -676,12 +677,13 @@
                         <select id="profRole">
                             <option value="user">موظف (user)</option>
                             <option value="admin">مسؤول (admin)</option>
+                            <option value="clinic_admin">محرر استشاريات</option>
                         </select>
                     </div>
                     <div style="flex:1;">
                         <label style="font-size:0.85rem; color:var(--muted); font-weight:bold;">الحالة</label>
                         <select id="profStatus">
-                            <option value="approved">مفعل (approved)</option>
+                            <option value="approved">م مفعل (approved)</option>
                             <option value="pending">قيد الانتظار (pending)</option>
                         </select>
                     </div>
@@ -869,8 +871,18 @@ ${carsContext}
                 document.getElementById('authSection').style.display = 'none';
                 document.getElementById('secureSearchSection').style.display = 'block';
                 document.getElementById('logoutBtn').style.display = 'block';
-                if(myData.role === 'admin') {
+                
+                if(myData.role === 'admin' || myData.role === 'clinic_admin') {
                     document.getElementById('homeAdminCard').style.display = 'block';
+                    if(myData.role === 'clinic_admin') {
+                        document.querySelector('#homeAdminCard h3').innerText = 'إدارة الاستشاريات';
+                        document.querySelectorAll('.admin-nav-btn').forEach(btn => {
+                            if(!btn.innerText.includes('الاستشاريات')) btn.style.display = 'none';
+                        });
+                    } else {
+                        document.querySelector('#homeAdminCard h3').innerText = 'لوحة الإدارة';
+                        document.querySelectorAll('.admin-nav-btn').forEach(btn => btn.style.display = 'inline-block');
+                    }
                     initAdminPanel();
                 }
             }
@@ -896,6 +908,10 @@ ${carsContext}
             }
 
             if(id === 'admin') {
+                if(myData && myData.role === 'clinic_admin') {
+                    const clinicBtn = Array.from(document.querySelectorAll('.admin-nav-btn')).find(b => b.innerText.includes('الاستشاريات'));
+                    if(clinicBtn) showAdminTab('adm-clinics', clinicBtn);
+                }
                 setTimeout(() => {
                     window.dispatchEvent(new Event('resize'));
                     if(typeof chart1 !== 'undefined' && chart1) { chart1.resize(); chart1.update(); }
@@ -903,89 +919,6 @@ ${carsContext}
                     if(typeof chart3 !== 'undefined' && chart3) { chart3.resize(); chart3.update(); }
                 }, 250);
             }
-        };
-
-        window.renderPublicClinics = () => {
-            const q = document.getElementById('clinicSearchPublic').value.trim().toLowerCase();
-            const grid = document.getElementById('publicClinicsGrid');
-            
-            const res = liveClinics.filter(c => c.name.toLowerCase().includes(q));
-            
-            if(res.length === 0) {
-                grid.innerHTML = `
-                <div style="grid-column: 1 / -1; text-align:center; padding: 50px 20px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 2px dashed #e0e6ed;">
-                    <i class="fas fa-notes-medical" style="font-size:4rem; color:var(--muted); margin-bottom:15px; opacity:0.5;"></i>
-                    <h3 style="color:var(--text); margin-bottom:5px;">لا توجد بيانات استشاريات حالياً</h3>
-                    <p style="color:var(--muted); font-size:0.9rem;">يرجى رفع بيانات الاستشاريات من لوحة الإدارة ليتم عرضها هنا.</p>
-                </div>`;
-                return;
-            }
-
-            grid.innerHTML = res.map(c => {
-                const docCount = c.doctors ? Object.keys(c.doctors).length : 0;
-                return `
-                    <div class="public-clinic-card" onclick="openClinicSchedule('${c.key}')">
-                        <div class="icon-box"><i class="fas fa-heartbeat"></i></div>
-                        <div class="details">
-                            <h3>${c.name}</h3>
-                            <p><i class="fas fa-user-md" style="color:var(--secondary);"></i> الأطباء المتاحين: <b style="color:var(--primary); font-size:1.1rem;">${docCount}</b></p>
-                        </div>
-                        <div class="go-icon"><i class="fas fa-chevron-left"></i></div>
-                    </div>
-                `;
-            }).join('');
-        };
-
-        window.openClinicSchedule = (clinicId) => {
-            const clinic = liveClinics.find(c => c.key === clinicId);
-            if(!clinic) return;
-            
-            let subtitle = currentClinicMonth ? `<span style="font-size:0.9rem; display:block; opacity:0.8;">${currentClinicMonth}</span>` : '';
-            document.getElementById('scheduleModalTitle').innerHTML = `<div><i class="fas fa-notes-medical" style="color:var(--gold); margin-left:10px;"></i> ${clinic.name} ${subtitle}</div>`;
-            
-            let html = `
-            <div class="schedule-table-container">
-                <div style="overflow-x:auto;">
-                    <table class="schedule-table">
-                        <thead>
-                            <tr>
-                                <th style="width:30%;">التاريخ / اليوم المصادف</th>
-                                <th style="width:35%;">اسم الطبيب</th>
-                                <th style="width:35%;">الوقت</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
-            
-            if(clinic.doctors && Object.keys(clinic.doctors).length > 0) {
-                Object.values(clinic.doctors).forEach(d => {
-                    html += `
-                        <tr>
-                            <td><div class="td-content"><i class="far fa-calendar-check td-icon"></i> <span>${d.days}</span></div></td>
-                            <td><div class="td-content"><i class="fas fa-user-md td-icon" style="background:rgba(212, 175, 55, 0.1); color:var(--gold);"></i> <span><b style="color:var(--primary);">${d.name}</b></span></div></td>
-                            <td><div class="td-content"><i class="far fa-clock td-icon"></i> <span>${d.time}</span></div></td>
-                        </tr>
-                    `;
-                });
-            } else {
-                html += `<tr><td colspan="3" style="text-align:center; padding:25px; color:var(--danger); font-weight:bold;">لا يوجد جدول متاح حالياً لهذه الاستشارية</td></tr>`;
-            }
-            
-            html += `</tbody></table></div></div>`;
-            
-            document.getElementById('scheduleModalBody').innerHTML = html;
-            document.getElementById('clinicScheduleModal').style.display = 'flex';
-            
-            try {
-                const userName = (myData && myData.status === 'approved') ? myData.name : 'زائر عام';
-                push(ref(db, 'logs'), {
-                    user: userName,
-                    plate: `استعرض جدول: ${clinic.name}`,
-                    type: 'clinic_view',
-                    time: new Date().toLocaleString('ar-IQ'),
-                    timestamp: Date.now()
-                });
-            } catch(e) {}
         };
 
         window.showAdminTab = (paneId, btn) => {
@@ -1062,8 +995,17 @@ ${carsContext}
                     document.getElementById('secureSearchSection').style.display = 'block';
                     document.getElementById('logoutBtn').style.display = 'block';
                     
-                    if(myData.role === 'admin') {
+                    if(myData.role === 'admin' || myData.role === 'clinic_admin') {
                         document.getElementById('homeAdminCard').style.display = 'block';
+                        if(myData.role === 'clinic_admin') {
+                            document.querySelector('#homeAdminCard h3').innerText = 'إدارة الاستشاريات';
+                            document.querySelectorAll('.admin-nav-btn').forEach(btn => {
+                                if(!btn.innerText.includes('الاستشاريات')) btn.style.display = 'none';
+                            });
+                        } else {
+                            document.querySelector('#homeAdminCard h3').innerText = 'لوحة الإدارة';
+                            document.querySelectorAll('.admin-nav-btn').forEach(btn => btn.style.display = 'inline-block');
+                        }
                         initAdminPanel();
                     }
                 } else {
