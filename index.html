@@ -28,6 +28,8 @@
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0px); } }
         @keyframes popIn { 0% { opacity: 0; transform: scale(0.8) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
         @keyframes pulseIcon { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        @keyframes neonGlowLogin { 0% { box-shadow: 0 0 10px rgba(39, 174, 96, 0.4), 0 0 20px rgba(39, 174, 96, 0.2); } 50% { box-shadow: 0 0 20px rgba(39, 174, 96, 0.7), 0 0 30px rgba(39, 174, 96, 0.4); } 100% { box-shadow: 0 0 10px rgba(39, 174, 96, 0.4), 0 0 20px rgba(39, 174, 96, 0.2); } }
+        @keyframes neonPulseRed { from { text-shadow: 0 0 10px #e74c3c, 0 0 20px #e74c3c, 0 0 30px #e74c3c; transform: scale(1); } to { text-shadow: 0 0 5px #e74c3c, 0 0 10px #c0392b, 0 0 15px #c0392b; transform: scale(1.05); } }
 
         .home-card { 
             background: linear-gradient(145deg, #ffffff, #fdfdfd); 
@@ -50,7 +52,7 @@
         .home-card:nth-child(4) { animation-delay: 0.4s, 3s; }
         .home-card:nth-child(5) { animation-delay: 0.5s, 4s; }
         .home-card:nth-child(6) { animation-delay: 0.6s, 5s; }
-        #homeAdminCard { animation-delay: 0.7s, 0s; } 
+        #homeAdminCard, #mainLoginBtn { animation-delay: 0.7s, 0s; } 
 
         .home-card:hover, .home-card:active { 
             transform: translateY(-8px) scale(1.02); 
@@ -79,25 +81,23 @@
         #homeAdminCard:active { box-shadow: 0 15px 35px rgba(212, 175, 55, 0.4), 0 0 20px rgba(212, 175, 55, 0.3); transform: translateY(-5px) scale(1.02); }
         #homeAdminCard:active i { text-shadow: 0 0 20px var(--gold); animation: pulseIcon 0.5s ease; }
 
+        /* تسجيل الدخول المركزي الفخم */
+        .home-login-card { background: linear-gradient(135deg, #27ae60, #2ecc71); grid-column: span 2; border: 2px solid rgba(255,255,255,0.5); animation: popIn 0.5s ease forwards, float 6s infinite, neonGlowLogin 3s infinite; }
+        .home-login-card:hover { transform: translateY(-5px) scale(1.01); border-color: white; }
+        .home-login-card i, .home-login-card h3 { color: white !important; text-shadow: 0 4px 15px rgba(0,0,0,0.2) !important; }
+
         /* Tabs Handling */
         .tab-content { display: none; padding: 15px; animation: fadeIn 0.4s; max-width: 600px; margin: auto; }
         .tab-content.active { display: block; }
 
-        /* 🚀 بوابة دخول محرر الاستشاريات (Clinic Admin Portal) 🚀 */
-        .clinic-portal-btn { background: linear-gradient(135deg, var(--gold), #e67e22); border: none; width: 52px; height: 52px; border-radius: 14px; color: white; font-size: 1.6rem; cursor: pointer; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; }
-        .clinic-portal-btn::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 60%); opacity: 0; transition: 0.3s; pointer-events: none; }
-        .clinic-portal-btn:hover { transform: scale(1.1); box-shadow: 0 10px 25px rgba(212, 175, 55, 0.6); border-radius: 50%; }
-        .clinic-portal-btn:hover i { animation: spinGear 2s linear infinite; }
-        .clinic-portal-btn:hover::before { opacity: 1; animation: rotateBg 2s linear infinite; }
-        @keyframes spinGear { 100% { transform: rotate(360deg); } }
-        
-        #clinicAuthModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 75, 73, 0.85); z-index: 5000; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
-        .clinic-auth-box { background: #ffffff; padding: 40px 25px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.4); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; border: 2px solid var(--gold); overflow: hidden; }
-        .clinic-auth-box::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%); animation: rotateBg 15s linear infinite; pointer-events: none; }
-        .clinic-auth-icon { font-size: 4.5rem; color: var(--gold); margin-bottom: 15px; text-shadow: 0 10px 25px rgba(212, 175, 55, 0.4); animation: float 3s infinite ease-in-out; }
-        .clinic-auth-box h3 { color: var(--primary); font-weight: 900; font-size: 1.4rem; margin-bottom: 25px; letter-spacing: 0.5px; }
-        .clinic-auth-close { position: absolute; top: 15px; left: 15px; background: rgba(231, 76, 60, 0.1); color: var(--danger); border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; transition: 0.3s; display: flex; justify-content: center; align-items: center; z-index: 10;}
-        .clinic-auth-close:hover { background: var(--danger); color: white; transform: scale(1.1) rotate(90deg); }
+        /* 🚀 النافذة الموحدة لتسجيل الدخول 🚀 */
+        #unifiedLoginModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 75, 73, 0.85); z-index: 5000; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
+        .unified-auth-box { background: #ffffff; padding: 40px 25px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.4); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; border: 2px solid var(--secondary); overflow: hidden; }
+        .unified-auth-box::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(0, 124, 119, 0.08) 0%, transparent 70%); animation: rotateBg 15s linear infinite; pointer-events: none; }
+        .unified-auth-icon { font-size: 4.5rem; color: var(--secondary); margin-bottom: 15px; text-shadow: 0 10px 25px rgba(0, 124, 119, 0.4); animation: float 3s infinite ease-in-out; }
+        .unified-auth-box h3 { color: var(--primary); font-weight: 900; font-size: 1.4rem; margin-bottom: 25px; letter-spacing: 0.5px; }
+        .unified-auth-close { position: absolute; top: 15px; left: 15px; background: rgba(231, 76, 60, 0.1); color: var(--danger); border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; transition: 0.3s; display: flex; justify-content: center; align-items: center; z-index: 10;}
+        .unified-auth-close:hover { background: var(--danger); color: white; transform: scale(1.1) rotate(90deg); }
 
         /* 🚀 الاستعلام الأمني (Medical Glowing Theme) 🚀 */
         #secure { position: relative; background: #ffffff; border-radius: 15px; min-height: 600px; overflow: hidden; transition: 0.5s ease; box-shadow: 0 10px 40px rgba(0, 75, 73, 0.08); border: 1px solid #f0f2f5; }
@@ -111,14 +111,10 @@
         .stealth-pull-area:hover .stealth-handle { background: var(--secondary); box-shadow: 0 0 15px rgba(0, 124, 119, 0.4); width: 70px; }
         .stealth-pull-text { font-size: 0.85rem; color: var(--primary); letter-spacing: 1px; transition: 0.3s; animation: securePulse 2s infinite; font-weight: bold; opacity: 0.7; }
         #secure.unlocked .stealth-pull-area { opacity: 0; pointer-events: none; transition: 0.3s; }
-        @keyframes securePulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; text-shadow: 0 0 10px rgba(0, 124, 119, 0.3); } }
 
         .laser-scanner { position: absolute; top: -20px; left: 0; width: 100%; height: 4px; background: var(--secondary); box-shadow: 0 0 30px 10px rgba(0, 124, 119, 0.2), 0 0 10px 2px rgba(0, 124, 119, 0.5); opacity: 0; z-index: 15; pointer-events: none; border-radius: 50%; }
         #secure.unlocked .laser-scanner { animation: scanReveal 2s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         @keyframes scanReveal { 0% { top: 0; opacity: 1; transform: scaleX(0.8); } 50% { transform: scaleX(1); } 70% { top: 100%; opacity: 1; } 100% { top: 100%; opacity: 0; transform: scaleX(0.8); } }
-
-        .stealth-auth-wrapper { position: relative; z-index: 10; padding: 40px 20px; margin-top: 40px; opacity: 0; transform: translateY(40px) scale(0.95); transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; }
-        #secure.unlocked .stealth-auth-wrapper { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; transition-delay: 0.3s; }
 
         .stealth-form { text-align: center; }
         .stealth-form .stealth-icon { font-size: 4rem; color: var(--secondary); margin-bottom: 20px; text-shadow: 0 10px 25px rgba(0, 124, 119, 0.3); animation: float 4s infinite ease-in-out; }
@@ -176,6 +172,20 @@
         .admin-nav-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(0,75,73,0.3); }
         .admin-pane { display: none; animation: fadeIn 0.3s; }
         .admin-pane.active { display: block; }
+
+        /* User Cards Modern Design */
+        .user-card-modern { background: linear-gradient(145deg, #ffffff, #f0f4f8); border-radius: 15px; padding: 20px; margin-bottom: 15px; border-right: 5px solid var(--primary); box-shadow: 0 8px 20px rgba(0,0,0,0.06); transition: all 0.3s ease; position: relative; overflow: hidden; display: flex; justify-content: space-between; align-items: center; }
+        .user-card-modern:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,75,73,0.15); }
+        .user-card-modern::before { content:''; position:absolute; top:0; left:-100%; width:50%; height:100%; background:linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent); transform:skewX(-25deg); transition:0.5s; pointer-events:none; }
+        .user-card-modern:hover::before { left: 125%; transition: 0.5s; }
+        .role-badge { font-size: 0.75rem; padding: 4px 8px; border-radius: 20px; margin: 2px; display: inline-block; font-weight: bold; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        .role-admin { background: #e74c3c; box-shadow: 0 0 8px #e74c3c; }
+        .role-secure { background: #3498db; box-shadow: 0 0 8px #3498db; }
+        .role-clinic { background: #f1c40f; color: black; box-shadow: 0 0 8px #f1c40f; }
+        .role-phone { background: #9b59b6; box-shadow: 0 0 8px #9b59b6; }
+        
+        .custom-checkbox { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-weight: bold; cursor: pointer; color: var(--text); }
+        .custom-checkbox input { width: 20px; height: 20px; accent-color: var(--secondary); cursor: pointer; }
 
         /* General Components */
         .search-wrapper { position: relative; margin: 15px 0; }
@@ -297,6 +307,12 @@
 
     <div id="home" class="tab-content active">
         <div class="home-grid">
+            
+            <div class="home-card home-login-card" id="mainLoginBtn" onclick="document.getElementById('unifiedLoginModal').style.display='flex'">
+                <i class="fas fa-user-shield"></i>
+                <h3>بوابة الدخول المركزية</h3>
+            </div>
+
             <div class="home-card" onclick="showTab('phones')">
                 <i class="fas fa-phone-alt"></i>
                 <h3>دليل الهواتف</h3>
@@ -329,36 +345,34 @@
         </div>
     </div>
 
+    <div id="unifiedLoginModal">
+        <div class="unified-auth-box">
+            <button class="unified-auth-close" onclick="document.getElementById('unifiedLoginModal').style.display='none'"><i class="fas fa-times"></i></button>
+            <i class="fas fa-fingerprint unified-auth-icon" style="color:var(--secondary); text-shadow:0 0 20px rgba(0,124,119,0.5);"></i>
+            <h3 style="color:var(--primary);">بوابة الدخول المركزية</h3>
+            
+            <div id="unifiedRegFields" style="display:none;">
+                <input type="text" id="unifiedRegName" placeholder="الاسم الثلاثي" class="stealth-input" style="background:#f8f9fa!important; border-bottom-color:var(--secondary)!important;">
+                <input type="text" id="unifiedRegDept" placeholder="محل العمل / القسم" class="stealth-input" style="background:#f8f9fa!important; border-bottom-color:var(--secondary)!important;">
+            </div>
+            
+            <input type="text" id="unifiedLoginUser" placeholder="اسم المستخدم" class="stealth-input" style="background:#f8f9fa!important; border-bottom-color:var(--secondary)!important;">
+            <input type="password" id="unifiedLoginPass" placeholder="كلمة المرور" class="stealth-input" style="background:#f8f9fa!important; border-bottom-color:var(--secondary)!important;">
+            
+            <button class="stealth-btn" style="background:linear-gradient(135deg, var(--primary), var(--secondary));" onclick="handleUnifiedAuth()">تأكيد الدخول</button>
+            
+            <p id="unifiedToggleTxt" style="font-size:0.9rem; color:var(--secondary); font-weight:bold; cursor:pointer; margin-top:20px; transition:0.3s;" onclick="toggleUnifiedReg()">ليس لديك حساب؟ طلب انضمام</p>
+        </div>
+    </div>
+
     <div id="clinics-tab" class="tab-content">
         <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 20px;">
             <div class="search-wrapper" style="flex: 1; margin: 0;">
                 <input type="text" id="clinicSearchPublic" placeholder="ابحث عن استشارية..." onkeyup="renderPublicClinics()">
             </div>
-            <button class="clinic-portal-btn" onclick="document.getElementById('clinicAuthModal').style.display='flex'" title="بوابة الإدارة الطبية">
-                <i class="fas fa-cog"></i>
-            </button>
         </div>
         <div class="public-clinics-grid" id="publicClinicsGrid">
             <p style="text-align:center; color:var(--muted);"><i class="fas fa-spinner fa-spin"></i> جاري تحميل الاستشاريات...</p>
-        </div>
-    </div>
-
-    <div id="clinicAuthModal">
-        <div class="clinic-auth-box">
-            <button class="clinic-auth-close" onclick="document.getElementById('clinicAuthModal').style.display='none'"><i class="fas fa-times"></i></button>
-            <i class="fas fa-user-md clinic-auth-icon"></i>
-            <h3>بوابة إدارة الاستشاريات</h3>
-            
-            <div id="clinicRegFields" style="display:none;">
-                <input type="text" id="clinicRegName" placeholder="الاسم الثلاثي للطبيب/الموظف" class="stealth-input" style="background:#f8f9fa!important; color:var(--text)!important; border-bottom-color:var(--gold)!important;">
-            </div>
-            
-            <input type="text" id="clinicLoginUser" placeholder="اسم المستخدم" class="stealth-input" style="background:#f8f9fa!important; color:var(--text)!important; border-bottom-color:var(--gold)!important;">
-            <input type="password" id="clinicLoginPass" placeholder="كلمة المرور" class="stealth-input" style="background:#f8f9fa!important; color:var(--text)!important; border-bottom-color:var(--gold)!important;">
-            
-            <button class="stealth-btn" style="background:linear-gradient(135deg, var(--gold), #e67e22);" onclick="handleClinicAuth()">تأكيد الدخول</button>
-            
-            <p id="clinicToggleTxt" style="font-size:0.9rem; color:var(--secondary); font-weight:bold; cursor:pointer; margin-top:20px; transition:0.3s;" onclick="toggleClinicReg()">طلب انضمام كمحرر استشاريات</p>
         </div>
     </div>
 
@@ -424,43 +438,17 @@
     </div>
 
     <div id="secure" class="tab-content">
-        <div class="cyber-grid"></div>
-        <div class="laser-scanner"></div>
-        
-        <div class="stealth-pull-area" 
-             onclick="document.getElementById('secure').classList.add('unlocked')"
-             ontouchstart="this.dataset.y = event.touches[0].clientY" 
-             ontouchmove="if(event.touches[0].clientY > parseInt(this.dataset.y) + 40) document.getElementById('secure').classList.add('unlocked')">
-            <div class="stealth-handle"></div>
-            <div class="stealth-pull-text">اسحب للأسفل للوصول الأمني</div>
-        </div>
-
-        <div class="stealth-auth-wrapper">
-            
-            <div id="authSection" class="stealth-form">
-                <i class="fas fa-fingerprint stealth-icon"></i>
-                <h3>بوابة الاستعلام المركزي</h3>
-                
-                <div id="regFields" style="display:none;">
-                    <input type="text" id="regName" placeholder="الاسم الثلاثي" class="stealth-input">
-                    <input type="text" id="regDept" placeholder="محل العمل / القسم" class="stealth-input">
-                </div>
-                
-                <input type="text" id="loginUser" placeholder="اسم المستخدم" class="stealth-input">
-                <input type="password" id="loginPass" placeholder="كلمة المرور" class="stealth-input">
-                <button class="stealth-btn" onclick="handleAuth()">تحقق أمني</button>
-                
-                <p id="toggleTxt" style="font-size:0.9rem; color:var(--secondary); font-weight:bold; cursor:pointer; margin-top:20px; transition:0.3s;" onclick="toggleReg()">ليس لديك تصريح؟ طلب انضمام</p>
+        <div id="secureSearchSection" class="stealth-form" style="display:none;">
+            <div class="cyber-grid"></div>
+            <div class="laser-scanner"></div>
+            <div class="stealth-pull-area" 
+                 onclick="this.parentElement.classList.add('unlocked')"
+                 ontouchstart="this.dataset.y = event.touches[0].clientY" 
+                 ontouchmove="if(event.touches[0].clientY > parseInt(this.dataset.y) + 40) this.parentElement.classList.add('unlocked')">
+                <div class="stealth-handle"></div>
+                <div class="stealth-pull-text">اسحب للأسفل للوصول الأمني</div>
             </div>
-
-            <div id="pendingSection" class="stealth-form" style="display:none; margin-top:40px;">
-                <i class="fas fa-user-clock" style="font-size:4rem; color:var(--gold); margin-bottom:20px; text-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);"></i>
-                <h3 style="color:var(--gold);">قيد المراجعة الأمنية</h3>
-                <p style="color:var(--text); line-height:1.6; margin-bottom: 20px; font-weight:600;">يرجى الانتظار لحين موافقة الإدارة المركزية على تفعيل تصريحك.</p>
-                <button class="stealth-btn" style="background:var(--gold); color:black; border-color:var(--gold);" onclick="location.reload()">تحديث الحالة</button>
-            </div>
-
-            <div id="secureSearchSection" class="stealth-form" style="display:none;">
+            <div class="stealth-auth-wrapper">
                 <i class="fas fa-shield-alt stealth-icon" style="margin-bottom:10px;"></i>
                 <h3 style="margin-bottom: 25px;">الاستعلام الأمني المفصل</h3>
                 <div class="search-wrapper" style="margin-bottom:20px;">
@@ -469,7 +457,14 @@
                 <button class="stealth-btn" onclick="checkCar('secure')"><i class="fas fa-search"></i> بدء الفحص</button>
                 <div id="secureRes" style="margin-top: 25px; text-align:right;"></div>
             </div>
+        </div>
 
+        <div id="secureLockedSection" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; min-height:400px; padding: 20px;">
+            <i class="fas fa-lock" style="font-size:6rem; color:var(--danger); animation: neonPulseRed 1.5s infinite alternate; margin-bottom: 20px;"></i>
+            <h2 style="color:var(--danger); margin-top:0; text-shadow: 0 0 10px rgba(231,76,60,0.5); font-weight:900;">بوابة محظورة</h2>
+            <p style="color:var(--text); font-weight:bold; text-align:center; font-size: 1.1rem; max-width: 80%;">
+                عذراً، هذه البوابة مخصصة للاستعلام الأمني حصراً.<br>أنت لا تملك الصلاحية للوصول إلى هذه البيانات.
+            </p>
         </div>
     </div>
     
@@ -523,16 +518,6 @@
                     <label class="btn-main" style="background:#e74c3c; flex:1; margin:0; text-align:center; cursor:pointer; box-shadow:0 4px 15px rgba(231, 76, 60, 0.3);"><i class="fas fa-upload"></i> استيراد (استعادة نسخة)
                         <input type="file" id="importBackupFile" accept=".json" style="display:none;" onchange="importFullBackup(event)">
                     </label>
-                </div>
-            </div>
-            
-            <div class="admin-section" style="border: 2px dashed var(--gold); background: #fffcf0; margin-top: 20px;">
-                <h3><i class="fas fa-cloud-upload-alt"></i> استيراد البيانات الأولية القديمة</h3>
-                <p style="font-size:0.8rem; color:var(--muted);">استخدم هذه الأزرار مرة واحدة فقط لرفع البيانات من الكود وملف JS إلى السيرفر.</p>
-                <div style="display:flex; gap:10px;">
-                    <button class="btn-main btn-gold" onclick="uploadInternalPhones()">رفع دليل الهواتف</button>
-                    <button class="btn-main btn-gold" onclick="uploadCarsFromJson()">رفع سجل العجلات (cars.js)</button>
-                    <button class="btn-main btn-gold" onclick="uploadClinicsFromCode()">رفع جدول الاستشاريات</button>
                 </div>
             </div>
         </div>
@@ -711,15 +696,15 @@
                 <label style="font-size:0.85rem; color:var(--muted); font-weight:bold;">القسم / محل العمل</label>
                 <input type="text" id="profDept">
                 
+                <div style="text-align:right; margin:15px 0; padding:10px; background:#f4f6f8; border-radius:8px; border:1px solid #ddd;">
+                    <label style="font-size:0.9rem; color:var(--primary); font-weight:900; display:block; margin-bottom:10px; border-bottom:1px dashed #ccc; padding-bottom:5px;">الصلاحيات (يمكنك تحديد أكثر من خيار):</label>
+                    <label class="custom-checkbox"><input type="checkbox" id="role_secure"> مخول أمني (عجلات)</label>
+                    <label class="custom-checkbox"><input type="checkbox" id="role_clinic"> محرر استشاريات</label>
+                    <label class="custom-checkbox"><input type="checkbox" id="role_phone"> محرر هواتف</label>
+                    <label class="custom-checkbox"><input type="checkbox" id="role_admin"> أدمن شامل</label>
+                </div>
+
                 <div style="display:flex; gap:10px;">
-                    <div style="flex:1;">
-                        <label style="font-size:0.85rem; color:var(--muted); font-weight:bold;">الصلاحية</label>
-                        <select id="profRole">
-                            <option value="user">موظف (user)</option>
-                            <option value="admin">مسؤول (admin)</option>
-                            <option value="clinic_admin">محرر استشاريات</option>
-                        </select>
-                    </div>
                     <div style="flex:1;">
                         <label style="font-size:0.85rem; color:var(--muted); font-weight:bold;">الحالة</label>
                         <select id="profStatus">
@@ -908,23 +893,7 @@ ${carsContext}
             searchPhones();
             
             if(myData && myData.status === 'approved') {
-                document.getElementById('authSection').style.display = 'none';
-                document.getElementById('secureSearchSection').style.display = 'block';
-                document.getElementById('logoutBtn').style.display = 'block';
-                
-                if(myData.role === 'admin' || myData.role === 'clinic_admin') {
-                    document.getElementById('homeAdminCard').style.display = 'block';
-                    if(myData.role === 'clinic_admin') {
-                        document.querySelector('#homeAdminCard h3').innerText = 'إدارة الاستشاريات';
-                        document.querySelectorAll('.admin-nav-btn').forEach(btn => {
-                            if(!btn.innerText.includes('الاستشاريات')) btn.style.display = 'none';
-                        });
-                    } else {
-                        document.querySelector('#homeAdminCard h3').innerText = 'لوحة الإدارة';
-                        document.querySelectorAll('.admin-nav-btn').forEach(btn => btn.style.display = 'inline-block');
-                    }
-                    initAdminPanel();
-                }
+                // If logged in initially (offline or cached)
             }
         }, 100);
 
@@ -948,7 +917,11 @@ ${carsContext}
             }
 
             if(id === 'admin') {
-                if(myData && myData.role === 'clinic_admin') {
+                let roles = myData.roles || {};
+                if (myData.role === 'admin') roles.admin = true;
+                else if (myData.role === 'clinic_admin') roles.clinic = true;
+                
+                if(roles.clinic && !roles.admin) {
                     const clinicBtn = Array.from(document.querySelectorAll('.admin-nav-btn')).find(b => b.innerText.includes('الاستشاريات'));
                     if(clinicBtn) showAdminTab('adm-clinics', clinicBtn);
                 }
@@ -1059,26 +1032,27 @@ ${carsContext}
             }
         };
 
-        let isClinicRegMode = false;
-        window.toggleClinicReg = () => {
-            isClinicRegMode = !isClinicRegMode;
-            document.getElementById('clinicRegFields').style.display = isClinicRegMode ? 'block' : 'none';
-            document.getElementById('clinicToggleTxt').innerText = isClinicRegMode ? "لديك حساب طبي؟ تسجيل الدخول" : "طلب انضمام كمحرر استشاريات";
+        let isUnifiedRegMode = false;
+        window.toggleUnifiedReg = () => {
+            isUnifiedRegMode = !isUnifiedRegMode;
+            document.getElementById('unifiedRegFields').style.display = isUnifiedRegMode ? 'block' : 'none';
+            document.getElementById('unifiedToggleTxt').innerText = isUnifiedRegMode ? "لديك حساب؟ تسجيل الدخول" : "ليس لديك حساب؟ طلب انضمام";
         };
 
-        window.handleClinicAuth = async () => {
-            const u = document.getElementById('clinicLoginUser').value.trim();
-            const p = document.getElementById('clinicLoginPass').value;
-            if(!u || !p) return alert("الرجاء إكمال البيانات");
+        window.handleUnifiedAuth = async () => {
+            const u = document.getElementById('unifiedLoginUser').value.trim();
+            const p = document.getElementById('unifiedLoginPass').value;
+            if(!u || !p) return alert("⚠️ الرجاء إكمال البيانات");
             const email = u.includes('@') ? u : u + "@hosp.com";
 
-            if(isClinicRegMode) {
-                const name = document.getElementById('clinicRegName').value;
-                const dept = "قسم الاستشاريات"; 
+            if(isUnifiedRegMode) {
+                const name = document.getElementById('unifiedRegName').value;
+                const dept = document.getElementById('unifiedRegDept').value || "غير محدد";
                 try {
                     const res = await createUserWithEmailAndPassword(auth, email, p);
-                    await set(ref(db, 'users/' + res.user.uid), { name, dept, username: u, status: 'pending', role: 'clinic_admin' });
-                    alert("✅ تم إرسال طلب الانضمام إلى الإدارة بنجاح. يرجى انتظار الموافقة.");
+                    // Account created pending with secure search by default (can be changed by admin)
+                    await set(ref(db, 'users/' + res.user.uid), { name, dept, username: u, status: 'pending', roles: {secure: true} });
+                    alert("✅ تم إرسال طلب الانضمام للإدارة. يرجى انتظار الموافقة.");
                     location.reload();
                 } catch(e) { alert("❌ خطأ: يرجى التأكد من البيانات أو أن المستخدم موجود مسبقاً."); }
             } else {
@@ -1087,70 +1061,15 @@ ${carsContext}
                     const snap = await get(ref(db, 'users/' + res.user.uid));
                     if(snap.exists()) {
                         const data = snap.val();
-                        if(data.role !== 'clinic_admin') {
-                            alert("❌ عذراً: هذه البوابة مخصصة حصراً لمحرري الاستشاريات. لا يمكنك الدخول من هنا.");
-                            await signOut(auth);
-                            return;
-                        }
                         if(data.status !== 'approved') {
-                            alert("❌ حسابك قيد المراجعة ولم يتم تفعيله بعد.");
-                            await signOut(auth);
-                            return;
-                        }
-                        alert("✅ تم تسجيل الدخول كـ (محرر استشاريات) بنجاح!");
-                        location.reload();
-                    } else {
-                        alert("❌ الحساب غير موجود!");
-                        await signOut(auth);
-                    }
-                } catch(e) { 
-                    alert("❌ اسم المستخدم أو كلمة المرور غير صحيحة!"); 
-                }
-            }
-        };
-
-        let isRegMode = false;
-        window.toggleReg = () => {
-            isRegMode = !isRegMode;
-            document.getElementById('regFields').style.display = isRegMode ? 'block' : 'none';
-            document.getElementById('toggleTxt').innerText = isRegMode ? "لديك حساب؟ تسجيل الدخول" : "ليس لديك حساب؟ طلب انضمام";
-        };
-
-        window.handleAuth = async () => {
-            const u = document.getElementById('loginUser').value.trim();
-            const p = document.getElementById('loginPass').value;
-            if(!u || !p) return alert("الرجاء إكمال البيانات");
-            const email = u.includes('@') ? u : u + "@hosp.com";
-
-            if(isRegMode) {
-                const name = document.getElementById('regName').value;
-                const dept = document.getElementById('regDept').value;
-                try {
-                    const res = await createUserWithEmailAndPassword(auth, email, p);
-                    await set(ref(db, 'users/' + res.user.uid), { name, dept, username: u, status: 'pending', role: 'user' });
-                    alert("تم إرسال الطلب، يرجى انتظار تفعيل الإدارة.");
-                    location.reload();
-                } catch(e) { alert("خطأ: يرجى التأكد من البيانات أو أن المستخدم موجود مسبقاً."); }
-            } else {
-                try { 
-                    const res = await signInWithEmailAndPassword(auth, email, p); 
-                    const snap = await get(ref(db, 'users/' + res.user.uid));
-                    if(snap.exists()) {
-                        const data = snap.val();
-                        if(data.role === 'clinic_admin') {
-                            alert("❌ عذراً: حسابك مخصص للاستشاريات فقط. يرجى الدخول من بوابة الاستشاريات المخصصة لك.");
-                            await signOut(auth);
-                            return;
-                        }
-                        if(data.status !== 'approved') {
-                            alert("❌ حسابك قيد المراجعة ولم يتم تفعيله بعد.");
+                            alert("❌ عذراً، حسابك قيد المراجعة ولم يتم تفعيله بعد من قبل الإدارة.");
                             await signOut(auth);
                             return;
                         }
                         alert("✅ تم تسجيل الدخول بنجاح!");
                         location.reload();
                     } else {
-                        alert("❌ الحساب غير موجود!");
+                        alert("❌ الحساب غير موجود في قاعدة البيانات!");
                         await signOut(auth);
                     }
                 } catch(e) { 
@@ -1167,7 +1086,6 @@ ${carsContext}
         onAuthStateChanged(auth, async (user) => {
             if(user) {
                 currentUser = user;
-                
                 const savedData = localStorage.getItem('offlineUser_' + user.uid);
                 if(savedData) myData = JSON.parse(savedData);
 
@@ -1178,41 +1096,54 @@ ${carsContext}
                         localStorage.setItem('offlineUser_' + user.uid, JSON.stringify(myData));
                         localStorage.setItem('offline_my_data', JSON.stringify(myData)); 
                     }
-                } catch(e) {
-                    console.log("تعمل الآن بوضع الأوفلاين ⚡");
-                }
+                } catch(e) { console.log("Offline Mode ⚡"); }
                 
                 if(myData && myData.status === 'approved') {
                     document.getElementById('logoutBtn').style.display = 'block';
-                    document.getElementById('clinicAuthModal').style.display = 'none';
+                    document.getElementById('unifiedLoginModal').style.display = 'none';
+                    document.getElementById('mainLoginBtn').style.display = 'none'; // Hide Home Login
                     
-                    if(myData.role === 'clinic_admin') {
+                    let roles = myData.roles || {};
+                    // Migration from old string role
+                    if (myData.role === 'admin') roles.admin = true;
+                    if (myData.role === 'clinic_admin') roles.clinic = true;
+                    if (myData.role === 'user') roles.secure = true;
+                    
+                    // Secure Search Access Check
+                    if(roles.admin || roles.secure) {
+                        document.getElementById('secureSearchSection').style.display = 'block';
+                        document.getElementById('secureLockedSection').style.display = 'none';
+                    } else {
                         document.getElementById('secureSearchSection').style.display = 'none';
-                        document.getElementById('authSection').style.display = 'block';
-                        document.getElementById('authSection').innerHTML = '<i class="fas fa-lock stealth-icon" style="color:var(--danger); font-size:5rem;"></i><h3 style="color:var(--danger);">بوابة محظورة</h3><p style="color:var(--text); font-size:1.1rem; font-weight:bold;">حسابك الحالي مخصص حصراً لإدارة الاستشاريات. لا تملك صلاحية الدخول للاستعلام الأمني المركزي.</p>';
+                        document.getElementById('secureLockedSection').style.display = 'flex';
+                    }
 
+                    // Admin Panel Visibility Check
+                    let hasAnyAdmin = roles.admin || roles.clinic || roles.phone;
+                    if(hasAnyAdmin) {
                         document.getElementById('homeAdminCard').style.display = 'block';
-                        document.querySelector('#homeAdminCard h3').innerText = 'إدارة الاستشاريات';
+                        document.querySelector('#homeAdminCard h3').innerText = roles.admin ? 'لوحة الإدارة' : (roles.clinic ? 'إدارة الاستشاريات' : 'إدارة النظام');
+                        
+                        let firstVisibleTab = null;
                         document.querySelectorAll('.admin-nav-btn').forEach(btn => {
-                            if(!btn.innerText.includes('الاستشاريات')) btn.style.display = 'none';
+                            let txt = btn.innerText;
+                            if(roles.admin) {
+                                btn.style.display = 'inline-block';
+                            } else {
+                                btn.style.display = 'none';
+                                if(roles.clinic && txt.includes('الاستشاريات')) { btn.style.display = 'inline-block'; }
+                                if(roles.phone && txt.includes('الهواتف')) { btn.style.display = 'inline-block'; }
+                            }
                         });
                         initAdminPanel();
-                    } else {
-                        document.getElementById('authSection').style.display = 'none';
-                        document.getElementById('secureSearchSection').style.display = 'block';
-                        
-                        if(myData.role === 'admin') {
-                            document.getElementById('homeAdminCard').style.display = 'block';
-                            document.querySelector('#homeAdminCard h3').innerText = 'لوحة الإدارة';
-                            document.querySelectorAll('.admin-nav-btn').forEach(btn => btn.style.display = 'inline-block');
-                            initAdminPanel();
-                        }
                     }
-                } else {
-                    document.getElementById('authSection').style.display = 'none';
-                    document.getElementById('pendingSection').style.display = 'block';
-                    document.getElementById('logoutBtn').style.display = 'block';
                 }
+            } else {
+                // Not logged in
+                document.getElementById('secureSearchSection').style.display = 'none';
+                document.getElementById('secureLockedSection').style.display = 'flex';
+                document.getElementById('homeAdminCard').style.display = 'none';
+                document.getElementById('mainLoginBtn').style.display = 'block';
             }
         });
 
@@ -1645,18 +1576,34 @@ ${carsContext}
                 for(let id in users) {
                     count++;
                     const u = users[id];
+                    
+                    let rolesHtml = '';
+                    let rolesObj = u.roles || {};
+                    // التوافقية مع الأنظمة السابقة
+                    if (u.role === 'admin') rolesObj.admin = true;
+                    if (u.role === 'clinic_admin') rolesObj.clinic = true;
+                    if (u.role === 'user') rolesObj.secure = true;
+                    
+                    if (rolesObj.admin) rolesHtml += '<span class="role-badge role-admin">أدمن شامل</span>';
+                    if (rolesObj.secure) rolesHtml += '<span class="role-badge role-secure">مخول أمني</span>';
+                    if (rolesObj.clinic) rolesHtml += '<span class="role-badge role-clinic">محرر استشاريات</span>';
+                    if (rolesObj.phone) rolesHtml += '<span class="role-badge role-phone">محرر هواتف</span>';
+                    if (!rolesHtml) rolesHtml = '<span class="role-badge" style="background:#7f8c8d;">بدون صلاحية</span>';
+
                     html += `
-                        <div class="card" style="flex-direction:column; align-items:flex-start; gap:10px;">
-                            <div style="width:100%; display:flex; justify-content:space-between;">
-                                <b onclick="openUserProfile('${id}')" style="cursor:pointer; color:var(--primary); text-decoration:underline;">
-                                    <i class="fas fa-user-circle"></i> ${u.name} 
-                                    <small style="color:${u.status==='approved'?'green':'red'}; text-decoration:none;">(${u.status})</small>
+                        <div class="user-card-modern">
+                            <div style="flex:1;">
+                                <b onclick="openUserProfile('${id}')" style="cursor:pointer; color:var(--primary); text-decoration:none; font-size:1.1rem;">
+                                    <i class="fas fa-user-circle" style="color:var(--secondary); font-size:1.3rem;"></i> ${u.name} 
                                 </b>
-                                <span style="font-size:0.85rem; background:#eee; padding:2px 8px; border-radius:10px;">${u.role}</span>
+                                <div style="margin-top:5px;">${rolesHtml}</div>
                             </div>
-                            <div style="display:flex; gap:5px; width:100%;">
-                                ${u.status === 'pending' ? `<button class="btn-main" style="margin:0; padding:5px; background:#27ae60;" onclick="adminAction('approve', '${id}')">تفعيل</button>` : ''}
-                                <button class="btn-main btn-danger" style="margin:0; padding:5px;" onclick="adminAction('delete', '${id}')">حذف نهائي</button>
+                            <div style="display:flex; flex-direction:column; gap:5px; text-align:left;">
+                                <span style="font-size:0.8rem; font-weight:bold; color:${u.status==='approved'?'#27ae60':'#e74c3c'};"><i class="fas ${u.status==='approved'?'fa-check-circle':'fa-clock'}"></i> ${u.status==='approved'?'مفعل':'مراجعة'}</span>
+                                <div style="display:flex; gap:5px;">
+                                    ${u.status === 'pending' ? `<button class="btn-main" style="margin:0; padding:4px 8px; font-size:0.8rem; background:#27ae60;" onclick="adminAction('approve', '${id}')">تفعيل</button>` : ''}
+                                    <button class="btn-main btn-danger" style="margin:0; padding:4px 8px; font-size:0.8rem;" onclick="adminAction('delete', '${id}')" title="حذف"><i class="fas fa-trash"></i></button>
+                                </div>
                             </div>
                         </div>`;
                 }
@@ -1672,8 +1619,17 @@ ${carsContext}
             
             document.getElementById('profName').value = user.name || '';
             document.getElementById('profDept').value = user.dept || '';
-            document.getElementById('profRole').value = user.role || 'user';
             document.getElementById('profStatus').value = user.status || 'pending';
+            
+            let roles = user.roles || {};
+            if (user.role === 'admin') roles.admin = true;
+            else if (user.role === 'clinic_admin') roles.clinic = true;
+            else if (user.role === 'user') roles.secure = true;
+            
+            document.getElementById('role_secure').checked = !!roles.secure;
+            document.getElementById('role_clinic').checked = !!roles.clinic;
+            document.getElementById('role_phone').checked = !!roles.phone;
+            document.getElementById('role_admin').checked = !!roles.admin;
             
             const userLogs = liveLogs.filter(l => l.user === user.name).sort((a,b) => b.timestamp - a.timestamp);
             document.getElementById('profLogs').innerHTML = userLogs.length > 0 
@@ -1687,13 +1643,19 @@ ${carsContext}
             if(!window.currentEditingProfileId) return;
             const n = document.getElementById('profName').value.trim();
             const d = document.getElementById('profDept').value.trim();
-            const r = document.getElementById('profRole').value;
             const s = document.getElementById('profStatus').value;
+            
+            const roles = {
+                secure: document.getElementById('role_secure').checked,
+                clinic: document.getElementById('role_clinic').checked,
+                phone: document.getElementById('role_phone').checked,
+                admin: document.getElementById('role_admin').checked
+            };
             
             if(!n) return alert("الاسم مطلوب!");
             
             try {
-                await update(ref(db, 'users/' + window.currentEditingProfileId), { name: n, dept: d, role: r, status: s });
+                await update(ref(db, 'users/' + window.currentEditingProfileId), { name: n, dept: d, roles: roles, status: s });
                 alert("✅ تم حفظ التعديلات بنجاح!");
                 document.getElementById('userProfileModal').style.display = 'none';
             } catch(e) {
@@ -1818,7 +1780,7 @@ ${carsContext}
                     dept: d, 
                     username: u, 
                     status: 'approved', 
-                    role: 'user' 
+                    roles: {secure: true} // الصلاحية الافتراضية
                 });
                 
                 await signOut(secondaryAuth);
@@ -1995,20 +1957,6 @@ ${carsContext}
                 reader.readAsText(file);
             }
             event.target.value = '';
-        };
-
-        window.uploadInternalPhones = async () => {
-            if(!confirm("سيتم رفع الهواتف القديمة للسيرفر. استمرار؟")) return;
-            for(let p of legacyPhones) await push(ref(db, 'phones'), p);
-            alert("تم رفع الهواتف بنجاح");
-        };
-
-        window.uploadCarsFromJson = async () => {
-            if(typeof carDb === 'undefined') return alert("ملف cars.js غير متصل أو غير موجود.");
-            if(!confirm("سيتم رفع " + carDb.length + " سيارة لقاعدة البيانات. استمرار؟")) return;
-            
-            for(let c of carDb) await push(ref(db, 'cars'), c);
-            alert("تم رفع سجل العجلات بنجاح!");
         };
 
     </script>
