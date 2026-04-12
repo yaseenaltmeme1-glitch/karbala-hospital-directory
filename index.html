@@ -86,11 +86,9 @@
         /* 🚀 الاستعلام الأمني الحديث (Stealth Mode) 🚀 */
         #secure { position: relative; background: #030708; border-radius: 15px; min-height: 600px; overflow: hidden; transition: 0.5s ease; box-shadow: inset 0 0 50px rgba(0,0,0,0.8); }
         
-        /* خلفية الشبكة (Matrix/Cyber Grid) */
         .cyber-grid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(0, 255, 204, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 204, 0.05) 1px, transparent 1px); background-size: 25px 25px; opacity: 0; transition: opacity 1.5s ease; pointer-events: none; }
         #secure.unlocked .cyber-grid { opacity: 1; }
 
-        /* مقبض السحب (Swipe Handle) */
         .stealth-pull-area { position: absolute; top: 0; left: 0; width: 100%; height: 70px; z-index: 20; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, transparent 100%); }
         .stealth-handle { width: 50px; height: 5px; background: rgba(255,255,255,0.2); border-radius: 10px; transition: 0.3s; box-shadow: 0 0 10px rgba(0, 255, 204, 0.2); margin-bottom: 8px; }
         .stealth-pull-area:hover .stealth-handle { background: #00ffcc; box-shadow: 0 0 15px #00ffcc; width: 70px; }
@@ -98,16 +96,13 @@
         #secure.unlocked .stealth-pull-area { opacity: 0; pointer-events: none; transition: 0.3s; }
         @keyframes securePulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; color: #00ffcc; } }
 
-        /* خط الليزر الماسح (Laser Scanner) */
         .laser-scanner { position: absolute; top: -10px; left: 0; width: 100%; height: 2px; background: #00ffcc; box-shadow: 0 0 25px 8px rgba(0, 255, 204, 0.6); opacity: 0; z-index: 15; pointer-events: none; }
         #secure.unlocked .laser-scanner { animation: scanReveal 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         @keyframes scanReveal { 0% { top: 0; opacity: 1; } 70% { top: 100%; opacity: 1; } 100% { top: 100%; opacity: 0; } }
 
-        /* حاوية الحقول والأنميشن */
         .stealth-auth-wrapper { position: relative; z-index: 10; padding: 40px 20px; margin-top: 40px; opacity: 0; transform: translateY(40px) scale(0.95); transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; }
         #secure.unlocked .stealth-auth-wrapper { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; transition-delay: 0.3s; }
 
-        /* تنسيق الحقول (ستايل أمني بحت بدون بطاقة) */
         .stealth-form { text-align: center; }
         .stealth-form .stealth-icon { font-size: 3.5rem; color: #00ffcc; margin-bottom: 20px; text-shadow: 0 0 25px rgba(0, 255, 204, 0.6); animation: float 4s infinite ease-in-out; }
         .stealth-form h3 { color: white; letter-spacing: 1px; margin-bottom: 30px; text-shadow: 0 0 10px rgba(255,255,255,0.2); font-weight: 900; }
@@ -120,7 +115,6 @@
         .stealth-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0, 255, 204, 0.4); border-color: #00ffcc; }
         .stealth-btn:active { transform: scale(0.98); }
 
-        /* تخصيص إجابات البحث الأمني لتناسب الثيم الأسود */
         #pendingSection.stealth-form h3, #pendingSection.stealth-form p { color: white; }
         .stealth-form .car-card { background: rgba(255,255,255,0.03) !important; border: 1px solid rgba(0,255,204,0.3) !important; border-radius: 12px; padding: 20px; color: white; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: right; }
         .stealth-form .car-card h3 { color: #00ffcc !important; border-bottom: 1px solid rgba(255,255,255,0.1) !important; text-shadow: 0 0 10px rgba(0,255,204,0.5); }
@@ -147,15 +141,45 @@
         .btn-danger { background: var(--danger); }
         .btn-gold { background: var(--gold); }
         
-        /* Admin Panel Styles */
+        /* 🌌 داشبورد النيون الجديد 🌌 */
+        .neon-dashboard { background: #050a0f; border-radius: 15px; padding: 20px; box-shadow: inset 0 0 40px rgba(0, 255, 204, 0.05); position: relative; overflow: hidden; margin-top: -10px;}
+        .neon-dashboard::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(0, 255, 204, 0.03) 10%, transparent 60%); pointer-events: none; animation: rotateBg 20s linear infinite; }
+        @keyframes rotateBg { 100% { transform: rotate(360deg); } }
+        
+        .neon-stats-grid { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; position: relative; z-index: 2; }
+        .neon-stat-card { background: rgba(10, 20, 30, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(0, 255, 204, 0.2); border-radius: 12px; padding: 20px; flex: 1; min-width: 100px; text-align: center; position: relative; overflow: hidden; transition: 0.3s; box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
+        .neon-stat-card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.5); }
+        
+        .neon-stat-card h4 { color: rgba(255,255,255,0.6); margin: 0 0 10px 0; font-size: 0.8rem; font-weight: bold; }
+        .neon-stat-card span { display: block; font-size: 2rem; font-weight: 900; color: #fff; text-shadow: 0 0 15px currentColor; }
+        
+        .neon-c1:hover { box-shadow: 0 0 20px rgba(0, 255, 204, 0.4); border-color:#00ffcc;} .neon-c1 span { color: #00ffcc; } /* تركوازي */
+        .neon-c2:hover { box-shadow: 0 0 20px rgba(255, 0, 255, 0.4); border-color:#ff00ff;} .neon-c2 span { color: #ff00ff; } /* ماجنتا */
+        .neon-c3:hover { box-shadow: 0 0 20px rgba(241, 196, 15, 0.4); border-color:#f1c40f;} .neon-c3 span { color: #f1c40f; } /* ذهبي */
+        .neon-c4:hover { box-shadow: 0 0 20px rgba(255, 51, 102, 0.4); border-color:#ff3366;} .neon-c4 span { color: #ff3366; } /* أحمر نيون */
+        .neon-c5:hover { box-shadow: 0 0 20px rgba(51, 170, 255, 0.4); border-color:#33aaff;} .neon-c5 span { color: #33aaff; } /* أزرق فاتح */
+
+        .neon-chart-wrapper { background: rgba(10, 20, 30, 0.7); border: 1px solid rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; z-index: 2; backdrop-filter: blur(5px); }
+        .neon-chart-wrapper h3 { color: #fff; margin-top: 0; font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .neon-chart-wrapper h3 i { color: #00ffcc; text-shadow: 0 0 10px rgba(0,255,204,0.5); }
+        
+        .neon-log-list { max-height: 350px; overflow-y: auto; padding-right: 5px; }
+        .neon-log-list::-webkit-scrollbar { width: 6px; }
+        .neon-log-list::-webkit-scrollbar-thumb { background: rgba(0,255,204,0.3); border-radius: 3px; }
+        .neon-log-item { background: rgba(0,0,0,0.4); border-left: 3px solid #00ffcc; padding: 12px; margin-bottom: 8px; border-radius: 0 8px 8px 0; color: #ccc; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
+        .neon-log-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
+        .neon-log-item b { color: #fff; }
+        
+        .neon-log-type-car { border-color: #ff3366; } .neon-log-type-car i { color: #ff3366; }
+        .neon-log-type-phone { border-color: #33aaff; } .neon-log-type-phone i { color: #33aaff; }
+        .neon-log-type-ai { border-color: #ff00ff; } .neon-log-type-ai i { color: #ff00ff; }
+        .neon-log-type-clinic { border-color: #f1c40f; } .neon-log-type-clinic i { color: #f1c40f; }
+
+        /* Admin Panel Styles (Rest) */
         .admin-section { background: white; border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: 0 3px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
         .admin-section h3 { margin-top: 0; color: var(--primary); border-bottom: 2px solid var(--bg); padding-bottom: 10px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
         .admin-form input, .admin-form select { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; box-sizing: border-box; }
         .admin-form textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; box-sizing: border-box; resize: vertical; min-height: 80px; }
-        .log-item { font-size: 0.8rem; padding: 8px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
-        .stat-box { background: var(--bg); padding: 15px; border-radius: 10px; text-align: center; flex: 1; border: 1px solid #ddd; min-width: 100px; }
-        .stat-box h4 { margin: 0; color: var(--muted); font-size: 0.85rem; }
-        .stat-box span { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
 
         .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--text); color: white; padding: 10px 20px; border-radius: 30px; font-size: 0.9rem; opacity: 0; transition: 0.3s; z-index: 2000; pointer-events: none; }
         .toast.show { opacity: 1; bottom: 100px; }
@@ -359,6 +383,7 @@
 
         </div>
     </div>
+    
     <div id="admin" class="tab-content">
         <div class="admin-nav">
             <button class="admin-nav-btn active" onclick="showAdminTab('adm-stats', this)">📊 الإحصائيات</button>
@@ -370,24 +395,38 @@
         </div>
 
         <div id="adm-stats" class="admin-pane active">
-            <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap: wrap;">
-                <div class="stat-box"><h4>السيارات</h4><span id="countCars">0</span></div>
-                <div class="stat-box"><h4>الهواتف</h4><span id="countPhones">0</span></div>
-                <div class="stat-box"><h4>إجمالي الزيارات</h4><span id="countVisits">0</span></div>
-                <div class="stat-box"><h4>زوار فريدين</h4><span id="countUniqueVisitors">0</span></div>
-                <div class="stat-box"><h4>المستخدمين</h4><span id="countUsers">0</span></div>
+            <div class="neon-dashboard">
+                <div class="neon-stats-grid">
+                    <div class="neon-stat-card neon-c1"><h4>🚗 العجلات</h4><span id="countCars">0</span></div>
+                    <div class="neon-stat-card neon-c5"><h4>☎️ الهواتف</h4><span id="countPhones">0</span></div>
+                    <div class="neon-stat-card neon-c2"><h4>🤖 ذكاء اصطناعي</h4><span id="countAi">0</span></div>
+                    <div class="neon-stat-card neon-c3"><h4>🏥 استشاريات</h4><span id="countClinicViews">0</span></div>
+                    <div class="neon-stat-card neon-c4" style="flex-basis: 100%;"><h4>🌐 إجمالي الزيارات والمستخدمين</h4><span id="countVisits" style="display:inline;">0</span> <small style="color:rgba(255,255,255,0.5); font-size:1rem;">|</small> <span id="countUniqueVisitors" style="display:inline; color:#ccc;">0</span></div>
+                </div>
+                
+                <div class="neon-chart-wrapper">
+                    <h3><i class="fas fa-chart-line"></i> نشاط الموظفين (Top Users)</h3>
+                    <div style="position: relative; height: 250px; width: 100%;"><canvas id="searchChart"></canvas></div>
+                </div>
+                
+                <div style="display:flex; flex-wrap:wrap; gap:15px; margin-bottom: 20px;">
+                    <div class="neon-chart-wrapper" style="flex:1; min-width: 250px; margin-bottom:0;">
+                        <h3><i class="fas fa-radar"></i> شبكة التفاعلات (Radar)</h3>
+                        <div style="position: relative; height: 250px; width: 100%;"><canvas id="deptChart"></canvas></div>
+                    </div>
+                    <div class="neon-chart-wrapper" style="flex:1; min-width: 250px; margin-bottom:0;">
+                        <h3><i class="fas fa-chart-pie"></i> نسبة الاستعلامات (Doughnut)</h3>
+                        <div style="position: relative; height: 250px; width: 100%;"><canvas id="phonesChart"></canvas></div>
+                    </div>
+                </div>
+
+                <div class="neon-chart-wrapper" style="margin-bottom:0;">
+                    <h3><i class="fas fa-satellite-dish"></i> سجل المراقبة المركزي الحي (Live Monitor)</h3>
+                    <div id="liveLogs" class="neon-log-list"></div>
+                </div>
             </div>
-            <div class="admin-section">
-                <h3><i class="fas fa-chart-bar"></i> الرقابة والتحليل (Charts)</h3>
-                <div style="position: relative; height: 250px; width: 100%; margin-bottom: 20px;"><canvas id="searchChart"></canvas></div>
-                <div style="position: relative; height: 250px; width: 100%; margin-bottom: 20px;"><canvas id="deptChart"></canvas></div>
-                <div style="position: relative; height: 250px; width: 100%; margin-bottom: 20px;"><canvas id="phonesChart"></canvas></div>
-            </div>
-            <div class="admin-section">
-                <h3><i class="fas fa-history"></i> سجل المراقبة الحي (Live Logs)</h3>
-                <div id="liveLogs" style="max-height: 350px; overflow-y: auto; padding-right: 5px;"></div>
-            </div>
-            <div class="admin-section" style="border: 2px dashed var(--gold); background: #fffcf0;">
+            
+            <div class="admin-section" style="border: 2px dashed var(--gold); background: #fffcf0; margin-top: 20px;">
                 <h3><i class="fas fa-cloud-upload-alt"></i> استيراد البيانات الأولية</h3>
                 <p style="font-size:0.8rem; color:var(--muted);">استخدم هذه الأزرار مرة واحدة فقط لرفع البيانات من الكود وملف JS إلى السيرفر.</p>
                 <div style="display:flex; gap:10px;">
@@ -601,7 +640,6 @@
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getDatabase, ref, set, get, update, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // 🔥 خدعة إخفاء المفتاح عن روبوتات GitHub 🔥
         const part1 = "AIzaSy";
         const part2 = "CA4S6amURxecHXfQktLZ3Mq3P031jPZ4Y";
         const GEMINI_API_KEY = part1 + part2;
@@ -637,7 +675,6 @@
         window.openComments = new Set(); 
         let viewedAnns = new Set(); 
 
-        // 🌟 وظائف المساعد الذكي (AI) 🌟
         window.toggleChat = () => {
             const chatWindow = document.getElementById('ai-chat-window');
             chatWindow.style.display = chatWindow.style.display === 'flex' ? 'none' : 'flex';
@@ -650,17 +687,26 @@
 
             const chatBody = document.getElementById('chatBody');
             
-            // رسالة المستخدم
             chatBody.innerHTML += `<div class="chat-msg user-msg">${text}</div>`;
             inputField.value = '';
             chatBody.scrollTop = chatBody.scrollHeight;
 
-            // علامة التحميل
+            // 🚀 تسجيل رسائل الذكاء الاصطناعي للداشبورد النيون 🚀
+            try {
+                const userName = (myData && myData.status === 'approved') ? myData.name : 'زائر عام';
+                push(ref(db, 'logs'), {
+                    user: userName,
+                    plate: `سؤال للمرشد: ${text.substring(0,25)}...`,
+                    type: 'ai_chat',
+                    time: new Date().toLocaleString('ar-IQ'),
+                    timestamp: Date.now()
+                });
+            } catch(e) {}
+
             const loadingId = 'loading-' + Date.now();
             chatBody.innerHTML += `<div id="${loadingId}" class="chat-msg ai-msg"><i class="fas fa-spinner fa-spin"></i> جاري البحث والتفكير...</div>`;
             chatBody.scrollTop = chatBody.scrollHeight;
 
-            // التغذية السياقية الديناميكية (Dynamic Context) مع حماية بيانات السيارات
             const isSecureUser = (myData && myData.status === 'approved');
             const carsContext = isSecureUser 
                 ? `2. العجلات المصرحة أمنياً (هذا المستخدم لديه صلاحية لرؤيتها): ${JSON.stringify(liveCars.map(c => ({اللوحة: c.plate, المالك: c.name, القسم: c.dept})))}`
@@ -706,7 +752,7 @@ ${carsContext}
                 
                 if (data.candidates && data.candidates[0].content.parts[0].text) {
                     let aiResponse = data.candidates[0].content.parts[0].text;
-                    aiResponse = aiResponse.replace(/\n/g, '<br>'); // ترتيب الأسطر
+                    aiResponse = aiResponse.replace(/\n/g, '<br>'); 
                     chatBody.innerHTML += `<div class="chat-msg ai-msg">${aiResponse}</div>`;
                 } else {
                     chatBody.innerHTML += `<div class="chat-msg ai-msg">عذراً، حدث خطأ غير متوقع. حاول مرة أخرى 😔</div>`;
@@ -717,7 +763,6 @@ ${carsContext}
             }
             chatBody.scrollTop = chatBody.scrollHeight;
         };
-        // 🌟 نهاية وظائف المساعد الذكي 🌟
 
         let deviceId = localStorage.getItem('device_id');
         if (!deviceId) {
@@ -777,6 +822,20 @@ ${carsContext}
                 hospitalLogo.style.display = 'none';
             }
             
+            // 🚀 تسجيل فتح الاستشاريات للداشبورد النيون 🚀
+            if(id === 'clinics-tab') {
+                try {
+                    const userName = (myData && myData.status === 'approved') ? myData.name : 'زائر عام';
+                    push(ref(db, 'logs'), {
+                        user: userName,
+                        plate: `تصفح قسم الاستشاريات`,
+                        type: 'clinic_view',
+                        time: new Date().toLocaleString('ar-IQ'),
+                        timestamp: Date.now()
+                    });
+                } catch(e) {}
+            }
+
             if(id === 'admin') {
                 setTimeout(() => {
                     window.dispatchEvent(new Event('resize'));
@@ -1184,6 +1243,7 @@ ${carsContext}
             }
         };
 
+        // 🚀 تحديث نظام الإدارة واستقبال البيانات للوحة النيون 🚀
         function initAdminPanel() {
             onValue(ref(db, 'visits'), s => {
                 const data = s.val();
@@ -1212,12 +1272,21 @@ ${carsContext}
                 }
                 
                 const recentLogs = liveLogs.sort((a,b) => b.timestamp - a.timestamp).slice(0, 100);
-                document.getElementById('liveLogs').innerHTML = recentLogs.map(l => 
-                    `<div class="log-item" style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #f0f0f0;">
-                        <span><i class="${l.type === 'phone_search' ? 'fas fa-phone' : 'fas fa-search'}" style="color:var(--secondary); margin-left:5px;"></i> <b>${l.user}</b> بحث عن [<b>${l.plate}</b>]</span> 
-                        <span style="color:var(--muted); font-size:0.75rem;">${l.time}</span>
-                    </div>`
-                ).join('');
+                document.getElementById('liveLogs').innerHTML = recentLogs.map(l => {
+                    let icon = 'fa-search'; let cls = 'neon-log-type-car';
+                    if(l.type === 'phone_search') { icon = 'fa-phone'; cls = 'neon-log-type-phone'; }
+                    if(l.type === 'ai_chat') { icon = 'fa-robot'; cls = 'neon-log-type-ai'; }
+                    if(l.type === 'clinic_view') { icon = 'fa-hospital-user'; cls = 'neon-log-type-clinic'; }
+                    
+                    return `<div class="neon-log-item ${cls}">
+                        <span><i class="fas ${icon}" style="margin-left:8px;"></i> <b>${l.user}</b>: ${l.plate}</span> 
+                        <span style="font-size:0.7rem; opacity:0.6;">${l.time}</span>
+                    </div>`;
+                }).join('');
+
+                // تحديث العدادات الجديدة
+                if(document.getElementById('countAi')) document.getElementById('countAi').innerText = liveLogs.filter(l=>l.type==='ai_chat').length;
+                if(document.getElementById('countClinicViews')) document.getElementById('countClinicViews').innerText = liveLogs.filter(l=>l.type==='clinic_view').length;
 
                 updateCharts(userActivity);
             });
@@ -1286,31 +1355,67 @@ ${carsContext}
             }
         };
 
+        // 🚀 المخططات النيون الحديثة 🚀
         let chart1, chart2, chart3;
         function updateCharts(userData) {
+            Chart.defaults.font.family = 'Cairo';
+            Chart.defaults.color = '#7f8c8d';
+
             const ctx1 = document.getElementById('searchChart');
             if(chart1) chart1.destroy();
             chart1 = new Chart(ctx1, {
                 type: 'bar',
                 data: {
                     labels: Object.keys(userData).slice(0, 5), 
-                    datasets: [{ label: 'عمليات البحث لكل مستخدم', data: Object.values(userData).slice(0, 5), backgroundColor: '#007c77' }]
+                    datasets: [{ 
+                        label: 'عدد التفاعلات', 
+                        data: Object.values(userData).slice(0, 5), 
+                        backgroundColor: '#00ffcc', 
+                        hoverBackgroundColor: '#fff',
+                        borderRadius: 8,
+                        borderSkipped: false
+                    }]
                 },
-                options: { responsive: true, maintainAspectRatio: false }
+                options: { 
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)', borderDash: [5, 5] } },
+                        x: { grid: { display: false } }
+                    }
+                }
             });
 
             const ctx2 = document.getElementById('deptChart');
             if(chart2) chart2.destroy();
             chart2 = new Chart(ctx2, {
-                type: 'doughnut',
+                type: 'polarArea',
                 data: {
-                    labels: ['فحص سريع للسيارات', 'استعلام أمني مفصل'],
+                    labels: ['عجلات (سريع)', 'عجلات (أمني)', 'بحث هواتف', 'استشاريات', 'مرشد ذكي'],
                     datasets: [{
-                        data: [liveLogs.filter(l=>l.type==='quick').length, liveLogs.filter(l=>l.type==='secure').length],
-                        backgroundColor: ['#d4af37', '#004b49']
+                        data: [
+                            liveLogs.filter(l=>l.type==='quick').length, 
+                            liveLogs.filter(l=>l.type==='secure').length,
+                            liveLogs.filter(l=>l.type==='phone_search').length,
+                            liveLogs.filter(l=>l.type==='clinic_view').length,
+                            liveLogs.filter(l=>l.type==='ai_chat').length
+                        ],
+                        backgroundColor: [
+                            'rgba(241, 196, 15, 0.6)',   // ذهبي
+                            'rgba(255, 51, 102, 0.6)',   // أحمر خطر
+                            'rgba(51, 170, 255, 0.6)',   // أزرق
+                            'rgba(0, 255, 204, 0.6)',    // تركوازي
+                            'rgba(255, 0, 255, 0.6)'     // ماجنتا
+                        ],
+                        borderColor: '#050a0f',
+                        borderWidth: 2
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false }
+                options: { 
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { r: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { display: false } } },
+                    plugins: { legend: { position: 'right', labels: { color: '#ccc' } } }
+                }
             });
 
             const ctx3 = document.getElementById('phonesChart');
@@ -1318,13 +1423,19 @@ ${carsContext}
             chart3 = new Chart(ctx3, {
                 type: 'doughnut',
                 data: {
-                    labels: ['بحث هواتف', 'بحث عجلات'],
+                    labels: ['قسم العجلات', 'قسم الهواتف'],
                     datasets: [{
-                        data: [liveLogs.filter(l=>l.type==='phone_search').length, liveLogs.filter(l=>l.type !== 'phone_search').length],
-                        backgroundColor: ['#3498db', '#e74c3c']
+                        data: [liveLogs.filter(l=>l.type==='quick'||l.type==='secure').length, liveLogs.filter(l=>l.type==='phone_search').length],
+                        backgroundColor: ['#ff3366', '#33aaff'],
+                        borderWidth: 0,
+                        hoverOffset: 10
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false }
+                options: { 
+                    responsive: true, maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: { legend: { position: 'bottom', labels: { color: '#ccc' } } }
+                }
             });
         }
 
