@@ -186,10 +186,11 @@
         
         @keyframes neonPulseBadge { 0% { filter: brightness(1); transform: scale(1); } 100% { filter: brightness(1.2); transform: scale(1.05); } }
         
-        /* الصلاحيات النازكة */
-        .custom-checkbox { display: inline-flex; align-items: center; gap: 6px; margin: 5px; font-weight: 700; cursor: pointer; color: var(--text); background: #fdfdfd; padding: 6px 12px; border-radius: 8px; border: 1px solid #e0e6ed; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.02); font-size: 0.85rem;}
-        .custom-checkbox:hover { border-color: var(--secondary); box-shadow: 0 0 10px rgba(0,124,119,0.2); transform: translateY(-2px); }
-        .custom-checkbox input { width: 16px; height: 16px; margin: 0; accent-color: var(--secondary); cursor: pointer; flex-shrink: 0; transition: 0.2s;}
+       
+        /* 🚀 الصلاحيات النازكة (حل مشكلة الحجم الكبير والتداخل) 🚀 */
+        .custom-checkbox { display: inline-flex; align-items: center; justify-content: flex-start; gap: 10px; margin-bottom: 5px; font-weight: bold; cursor: pointer; color: var(--text); background: #ffffff; padding: 8px 15px; border-radius: 10px; border: 1px solid #e0e6ed; transition: all 0.3s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.02); font-size: 0.85rem; width: 100%; box-sizing: border-box; }
+        .custom-checkbox:hover { border-color: var(--secondary); box-shadow: 0 5px 15px rgba(0,124,119,0.15); transform: translateY(-2px); background: #f4fdfc; }
+        .custom-checkbox input[type="checkbox"] { width: 20px !important; height: 20px !important; padding: 0 !important; margin: 0 !important; accent-color: var(--secondary); cursor: pointer; flex-shrink: 0; border: none !important; box-shadow: none !important; }
 
         /* General Components */
         .search-wrapper { position: relative; margin: 15px 0; }
@@ -511,14 +512,11 @@
                     <div style="position: relative; height: 260px; width: 100%;"><canvas id="searchChart"></canvas></div>
                 </div>
                 
-                <div style="display:flex; flex-wrap:wrap; gap:15px; margin-bottom: 20px;">
-                    <div class="light-chart-wrapper" style="flex:1; min-width: 250px; margin-bottom:0;">
-                        <h3><i class="fas fa-project-diagram"></i> شبكة التفاعلات والنظام</h3>
-                        <div style="position: relative; height: 260px; width: 100%;"><canvas id="deptChart"></canvas></div>
-                    </div>
-                    <div class="light-chart-wrapper" style="flex:1; min-width: 250px; margin-bottom:0;">
-                        <h3><i class="fas fa-chart-pie"></i> نسبة الاستعلامات</h3>
-                        <div style="position: relative; height: 260px; width: 100%;"><canvas id="phonesChart"></canvas></div>
+               <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+                        <label class="custom-checkbox"><input type="checkbox" id="new_role_secure" checked> مخول أمني</label>
+                        <label class="custom-checkbox"><input type="checkbox" id="new_role_clinic"> محرر استشاريات</label>
+                        <label class="custom-checkbox"><input type="checkbox" id="new_role_phone"> محرر هواتف</label>
+                        <label class="custom-checkbox" style="border-right: 3px solid var(--danger);"><input type="checkbox" id="new_role_admin"> أدمن شامل</label>
                     </div>
                 </div>
 
@@ -675,11 +673,11 @@
                 
                 <div style="text-align:right; margin:15px 0; padding:10px; background:#f4f6f8; border-radius:10px; border:1px solid #ddd;">
                     <label style="font-size:0.9rem; color:var(--primary); font-weight:900; display:block; margin-bottom:10px; border-bottom:1px dashed #ccc; padding-bottom:5px;">صلاحيات الحساب الجديد:</label>
-                    <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:5px;">
-                        <label class="custom-checkbox"><input type="checkbox" id="new_role_secure" checked> مخول أمني</label>
-                        <label class="custom-checkbox"><input type="checkbox" id="new_role_clinic"> محرر استشاريات</label>
-                        <label class="custom-checkbox"><input type="checkbox" id="new_role_phone"> محرر هواتف</label>
-                        <label class="custom-checkbox"><input type="checkbox" id="new_role_admin"> أدمن شامل</label>
+                   <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+                        <label class="custom-checkbox"><input type="checkbox" id="role_secure"> مخول أمني</label>
+                        <label class="custom-checkbox"><input type="checkbox" id="role_clinic"> محرر استشاريات</label>
+                        <label class="custom-checkbox"><input type="checkbox" id="role_phone"> محرر هواتف</label>
+                        <label class="custom-checkbox" style="border-right: 3px solid var(--danger);"><input type="checkbox" id="role_admin"> أدمن شامل</label>
                     </div>
                 </div>
 
