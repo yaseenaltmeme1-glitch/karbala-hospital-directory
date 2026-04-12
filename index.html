@@ -492,7 +492,6 @@
                 <div style="display:flex; gap:10px;">
                     <button class="btn-main btn-gold" onclick="uploadInternalPhones()">رفع دليل الهواتف</button>
                     <button class="btn-main btn-gold" onclick="uploadCarsFromJson()">رفع سجل العجلات (cars.js)</button>
-                    <button class="btn-main btn-gold" onclick="uploadClinicsFromCode()">رفع جدول الاستشاريات</button>
                 </div>
             </div>
         </div>
@@ -556,6 +555,14 @@
         </div>
 
         <div id="adm-clinics" class="admin-pane">
+            <div class="admin-section" style="border-right: 4px solid var(--secondary);">
+                <h3><i class="far fa-calendar-alt"></i> إعدادات فترة الجدول (الشهر)</h3>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="clinicMonthInput" placeholder="مثال: جدول شهر أيار (5) لسنة 2026" style="flex:2; margin:0; padding:10px; border-radius:8px; border:1px solid #ddd; font-family:inherit;">
+                    <button class="btn-main" style="flex:1; margin:0; background:var(--primary);" onclick="saveClinicMonth()">💾 حفظ</button>
+                </div>
+            </div>
+
             <div class="admin-section" style="border-right: 4px solid var(--gold);">
                 <h3><i class="fas fa-clinic-medical"></i> إضافة استشارية جديدة</h3>
                 <div class="admin-form" style="display:flex; gap:10px;">
@@ -574,11 +581,12 @@
                         <input type="text" id="docDays" placeholder="الأيام (مثال: الأحد والثلاثاء)" style="flex:1;">
                         <input type="text" id="docTime" placeholder="الوقت (مثال: 8 ص - 1 ظ)" style="flex:1;">
                     </div>
-                    <button class="btn-main" style="background:var(--secondary);" onclick="addDoctor()">إضافة الطبيب للجدول</button>
+                    <button id="addDocBtn" class="btn-main" style="background:var(--secondary);" onclick="addDoctor()">إضافة الطبيب للجدول</button>
                 </div>
             </div>
             <div class="admin-section">
-                <h3><i class="fas fa-list"></i> إدارة وتعديل الاستشاريات</h3>
+                <h3><i class="fas fa-list"></i> إدارة وتعديل الاستشاريات والأطباء</h3>
+                <input type="text" id="adminDocSearch" placeholder="🔍 ابحث عن طبيب أو استشارية..." onkeyup="renderAdminClinics()" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd; margin-bottom:15px; font-family:inherit;">
                 <div id="adminClinicsList">
                     <p style="text-align:center; color:var(--muted);"><i class="fas fa-spinner fa-spin"></i> جاري التحميل...</p>
                 </div>
@@ -727,6 +735,7 @@
         let livePhones = JSON.parse(localStorage.getItem('offlinePhones')) || [];
         let liveAnnouncements = JSON.parse(localStorage.getItem('offlineAnnouncements')) || [];
         let liveClinics = []; 
+        let currentClinicMonth = "";
         
         let liveLogs = [];
         let currentEditCarKey = null; 
@@ -896,7 +905,6 @@ ${carsContext}
             }
         };
 
-        // 🚀 نظام الاستشاريات العام (البطاقات والجداول) 🚀
         window.renderPublicClinics = () => {
             const q = document.getElementById('clinicSearchPublic').value.trim().toLowerCase();
             const grid = document.getElementById('publicClinicsGrid');
@@ -932,7 +940,8 @@ ${carsContext}
             const clinic = liveClinics.find(c => c.key === clinicId);
             if(!clinic) return;
             
-            document.getElementById('scheduleModalTitle').innerHTML = `<i class="fas fa-notes-medical" style="color:var(--gold); margin-left:10px;"></i> ${clinic.name}`;
+            let subtitle = currentClinicMonth ? `<span style="font-size:0.9rem; display:block; opacity:0.8;">${currentClinicMonth}</span>` : '';
+            document.getElementById('scheduleModalTitle').innerHTML = `<div><i class="fas fa-notes-medical" style="color:var(--gold); margin-left:10px;"></i> ${clinic.name} ${subtitle}</div>`;
             
             let html = `
             <div class="schedule-table-container">
@@ -941,8 +950,8 @@ ${carsContext}
                         <thead>
                             <tr>
                                 <th style="width:30%;">التاريخ / اليوم المصادف</th>
-                                <th style="width:35%;">اسم الطبيب (1)</th>
-                                <th style="width:35%;">اسم الطبيب (2) / الوقت</th>
+                                <th style="width:35%;">اسم الطبيب</th>
+                                <th style="width:35%;">الوقت</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1199,6 +1208,19 @@ ${carsContext}
             }
         };
 
+        onValue(ref(db, 'settings/clinicMonth'), (s) => {
+            currentClinicMonth = s.val() || "";
+            if(document.getElementById('clinicMonthInput')) {
+                document.getElementById('clinicMonthInput').value = currentClinicMonth;
+            }
+        });
+
+        window.saveClinicMonth = async () => {
+            const val = document.getElementById('clinicMonthInput').value.trim();
+            await set(ref(db, 'settings/clinicMonth'), val);
+            alert('تم حفظ عنوان الشهر بنجاح!');
+        };
+
         onValue(ref(db, 'clinics'), (s) => {
             liveClinics = [];
             const data = s.val();
@@ -1214,6 +1236,7 @@ ${carsContext}
         window.renderAdminClinics = () => {
             const select = document.getElementById('selectClinicForDoc');
             const list = document.getElementById('adminClinicsList');
+            const q = document.getElementById('adminDocSearch') ? document.getElementById('adminDocSearch').value.trim().toLowerCase() : "";
             
             if(select) {
                 select.innerHTML = '<option value="">-- اختر الاستشارية أولاً --</option>' + 
@@ -1221,16 +1244,31 @@ ${carsContext}
             }
             
             if(list) {
-                list.innerHTML = liveClinics.map(c => {
-                    const docs = c.doctors ? Object.entries(c.doctors).map(([dKey, d]) => `
+                let filteredClinics = liveClinics.map(c => {
+                    let matchingDocs = [];
+                    if (c.doctors) {
+                        matchingDocs = Object.entries(c.doctors).filter(([dKey, d]) => {
+                            if (!q) return true;
+                            return c.name.toLowerCase().includes(q) || d.name.toLowerCase().includes(q) || d.days.toLowerCase().includes(q);
+                        });
+                    }
+                    if (q && !c.name.toLowerCase().includes(q) && matchingDocs.length === 0) return null;
+                    return { ...c, matchingDocs };
+                }).filter(c => c !== null);
+
+                list.innerHTML = filteredClinics.map(c => {
+                    const docs = c.matchingDocs.length > 0 ? c.matchingDocs.map(([dKey, d]) => `
                         <div style="background:white; padding:10px; border-radius:5px; margin-top:8px; border:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
                             <div>
                                 <b style="color:var(--text);"><i class="fas fa-user-md" style="color:var(--secondary);"></i> ${d.name}</b><br>
                                 <span style="font-size:0.8rem; color:var(--muted);"><i class="far fa-calendar-alt"></i> ${d.days} | <i class="far fa-clock"></i> ${d.time}</span>
                             </div>
-                            <button class="btn-main btn-danger" style="width:auto; padding:5px 12px; margin:0;" onclick="deleteDoctor('${c.key}', '${dKey}')" title="حذف الطبيب"><i class="fas fa-trash"></i></button>
+                            <div style="display:flex; gap:5px;">
+                                <button class="btn-main" style="width:auto; padding:5px 12px; margin:0; background:#f39c12; color:white;" onclick="editDoctor('${c.key}', '${dKey}', '${d.name.replace(/'/g,"\\'")}', '${d.days.replace(/'/g,"\\'")}', '${d.time.replace(/'/g,"\\'")}')" title="تعديل"><i class="fas fa-edit"></i></button>
+                                <button class="btn-main btn-danger" style="width:auto; padding:5px 12px; margin:0;" onclick="deleteDoctor('${c.key}', '${dKey}')" title="حذف الطبيب"><i class="fas fa-trash"></i></button>
+                            </div>
                         </div>
-                    `).join('') : '<p style="font-size:0.85rem; color:var(--muted); text-align:center; padding:10px 0;">لا يوجد أطباء مضافين في هذه الاستشارية.</p>';
+                    `).join('') : '<p style="font-size:0.85rem; color:var(--muted); text-align:center; padding:10px 0;">لا يوجد أطباء مطابقين في هذه الاستشارية.</p>';
 
                     return `
                     <div style="background:#f8f9fa; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid #ddd; border-right: 4px solid var(--gold);">
@@ -1241,7 +1279,7 @@ ${carsContext}
                         ${docs}
                     </div>
                     `;
-                }).join('') || '<p style="text-align:center; color:var(--muted);">لا توجد استشاريات مضافة حالياً.</p>';
+                }).join('') || '<p style="text-align:center; color:var(--muted);">لا توجد استشاريات مطابقة للبحث.</p>';
             }
         };
 
@@ -1255,6 +1293,25 @@ ${carsContext}
             } catch(e) { alert('❌ حدث خطأ أثناء الإضافة.'); }
         };
 
+        window.currentEditClinicId = null;
+        window.currentEditDocId = null;
+
+        window.editDoctor = (clinicKey, docKey, name, days, time) => {
+            document.getElementById('selectClinicForDoc').value = clinicKey;
+            document.getElementById('docName').value = name;
+            document.getElementById('docDays').value = days;
+            document.getElementById('docTime').value = time;
+            
+            window.currentEditClinicId = clinicKey;
+            window.currentEditDocId = docKey;
+            
+            const btn = document.getElementById('addDocBtn');
+            btn.innerHTML = '💾 حفظ التعديلات';
+            btn.style.background = '#f39c12';
+            
+            window.scrollTo({ top: document.getElementById('adm-clinics').offsetTop - 50, behavior: 'smooth' });
+        };
+
         window.addDoctor = async () => {
             const clinicId = document.getElementById('selectClinicForDoc').value;
             const name = document.getElementById('docName').value.trim();
@@ -1265,12 +1322,25 @@ ${carsContext}
             if(!name || !days || !time) return alert('الرجاء إكمال بيانات الطبيب والمواعيد.');
             
             try {
-                await push(ref(db, `clinics/${clinicId}/doctors`), { name, days, time });
+                if (window.currentEditDocId) {
+                    await update(ref(db, `clinics/${window.currentEditClinicId}/doctors/${window.currentEditDocId}`), { name, days, time });
+                    alert('✅ تم حفظ تعديلات الطبيب بنجاح!');
+                } else {
+                    await push(ref(db, `clinics/${clinicId}/doctors`), { name, days, time });
+                    alert('✅ تم إضافة الطبيب للجدول بنجاح!');
+                }
+                
                 document.getElementById('docName').value = '';
                 document.getElementById('docDays').value = '';
                 document.getElementById('docTime').value = '';
-                alert('✅ تم إضافة الطبيب للجدول بنجاح!');
-            } catch(e) { alert('❌ حدث خطأ أثناء الإضافة.'); }
+                
+                window.currentEditClinicId = null;
+                window.currentEditDocId = null;
+                const btn = document.getElementById('addDocBtn');
+                btn.innerHTML = 'إضافة الطبيب للجدول';
+                btn.style.background = 'var(--secondary)';
+
+            } catch(e) { alert('❌ حدث خطأ أثناء الإضافة أو التعديل.'); }
         };
 
         window.deleteClinic = async (key) => {
@@ -1797,143 +1867,6 @@ ${carsContext}
             
             for(let c of carDb) await push(ref(db, 'cars'), c);
             alert("تم رفع سجل العجلات بنجاح!");
-        };
-
-        const hospitalClinicsDb = [
-            { name: "استشارية الأطفال", doctors: {
-                d1: { name: "د. حسن خليفة", days: "13, 19, 27 نيسان (الأحد، الاثنين)", time: "8 ص - 1 ظ" },
-                d2: { name: "د. علي شعيب", days: "1, 4, 11, 18 نيسان (السبت، الأربعاء)", time: "8 ص - 1 ظ" },
-                d3: { name: "د. زينب جبار", days: "6, 13, 20, 26, 29 نيسان", time: "8 ص - 1 ظ" },
-                d4: { name: "د. مؤيد عبد مسلم", days: "2, 7, 14, 30 نيسان", time: "8 ص - 1 ظ" },
-                d5: { name: "د. امير محسن", days: "8, 15, 28 نيسان", time: "8 ص - 1 ظ" },
-                d6: { name: "د. هبة حسام", days: "9, 14, 16 نيسان", time: "8 ص - 1 ظ" },
-                d7: { name: "د. اكرم حمدي", days: "5, 12, 14 نيسان", time: "8 ص - 1 ظ" }
-            }},
-            { name: "استشارية الحروق والتجميل", doctors: {
-                d1: { name: "د. احمد بهاء", days: "كل أحد وخميس (طيلة نيسان)", time: "8 ص - 1 ظ" },
-                d2: { name: "د. امير حسن", days: "كل أحد، ثلاثاء، جمعة", time: "8 ص - 1 ظ" },
-                d3: { name: "د. علي ضياء", days: "كل أحد، اثنين، أربعاء، جمعة", time: "8 ص - 1 ظ" },
-                d4: { name: "د. زهراء ستار", days: "كل ثلاثاء، خميس، سبت", time: "8 ص - 1 ظ" }
-            }},
-            { name: "استشارية جراحة الوجه والفكين", doctors: {
-                d1: { name: "د. حسام غازي + د. امجد جواد", days: "كل يوم اثنين (طيلة نيسان)", time: "8 ص - 1 ظ" },
-                d2: { name: "د. حسن باسم", days: "كل يوم ثلاثاء (طيلة نيسان)", time: "8 ص - 1 ظ" },
-                d3: { name: "د. على عامر", days: "كل يوم أربعاء (طيلة نيسان)", time: "8 ص - 1 ظ" },
-                d4: { name: "د. سيف سعود", days: "كل يوم خميس (طيلة نيسان)", time: "8 ص - 1 ظ" },
-                d5: { name: "د. حيدر سباهي", days: "كل يوم جمعة (طيلة نيسان)", time: "8 ص - 1 ظ" },
-                d6: { name: "د. منتظر صالح", days: "كل يوم أحد (طيلة نيسان)", time: "8 ص - 1 ظ" }
-            }},
-            { name: "استشارية الأنف والأذن والحنجرة", doctors: {
-                d1: { name: "د. عبد الجبار علي حمزة", days: "كل سبت، أربعاء، جمعة", time: "8 ص - 1 ظ" },
-                d2: { name: "د. حسن محمد علي", days: "كل سبت، ثلاثاء، جمعة", time: "8 ص - 1 ظ" },
-                d3: { name: "د. حسين علي الحسيني", days: "كل خميس، جمعة", time: "8 ص - 1 ظ" }
-            }},
-            { name: "استشارية الجراحة العامة", doctors: {
-                d1: { name: "د. ليلى مهدي + د. مروان على", days: "كل يوم ثلاثاء (طيلة نيسان)", time: "8 ص - 1 ظ" },
-                d2: { name: "د. راوية رياض + د. حسين زيني", days: "كل يوم خميس (طيلة نيسان)", time: "8 ص - 1 ظ" }
-            }},
-            { name: "استشارية العيون", doctors: {
-                d1: { name: "د. اريج، منتصر، اوراد، ربيحة", days: "كل يوم جمعة (طيلة نيسان)", time: "8 ص - 1 ظ" }
-            }},
-            { name: "استشارية الكسور والعظام", doctors: {
-                d1: { name: "د. زيد مهدي", days: "كل يوم سبت (طيلة نيسان)", time: "8 ص - 1 ظ" },
-                d2: { name: "د. مصطفى صلاح", days: "كل يوم أحد وجمعة", time: "8 ص - 1 ظ" },
-                d3: { name: "د. احمد نعمة", days: "كل يوم إثنين وجمعة", time: "8 ص - 1 ظ" },
-                d4: { name: "د. هيثم محمود", days: "كل يوم ثلاثاء وجمعة", time: "8 ص - 1 ظ" },
-                d5: { name: "د. محمد عبد المهدي + ضرغام حسن", days: "كل يوم أربعاء", time: "8 ص - 1 ظ" },
-                d6: { name: "د. علي عبد الحسين", days: "كل يوم خميس وجمعة", time: "8 ص - 1 ظ" }
-            }},
-            { name: "استشارية المجاري البولية", doctors: {
-                d1: { name: "د. حسين جبار", days: "كل يوم سبت", time: "8 ص - 1 ظ" },
-                d2: { name: "د. فاضل شمخي + د. زهراء ضاهر", days: "كل يوم أحد وجمعة", time: "8 ص - 1 ظ" },
-                d3: { name: "د. محمد حمید + د. مصطفى شاكر", days: "كل يوم إثنين", time: "8 ص - 1 ظ" },
-                d4: { name: "د. صلاح مهدي + د. مصطفى شاكر", days: "كل يوم أربعاء", time: "8 ص - 1 ظ" },
-                d5: { name: "د. يحيى محيسن", days: "كل يوم ثلاثاء وخميس", time: "8 ص - 1 ظ" }
-            }},
-            { name: "استشارية الباطنية (نساء)", doctors: {
-                d1: { name: "د. جنان قاسم + د. وليد بدر", days: "4, 11, 18, 25 (السبت) | 5, 12, 19, 26 (الأحد)", time: "8 ص - 1 ظ" },
-                d2: { name: "د. حيدر حميد + د. محمد شعلان", days: "6, 13, 20, 27 (الاثنين)", time: "8 ص - 1 ظ" },
-                d3: { name: "د. محمد شعلان", days: "7, 14, 21, 28 (الثلاثاء)", time: "8 ص - 1 ظ" },
-                d4: { name: "د. احسان عليوي + د. ليث زهير", days: "1, 8, 15, 22, 29 (الأربعاء)", time: "8 ص - 1 ظ" },
-                d5: { name: "د. حسن محمود + د. ليث زهير", days: "2, 9, 16, 23, 30 (الخميس)", time: "8 ص - 1 ظ" },
-                d6: { name: "د. احسان عليوي + د. ليث زهير", days: "3, 10, 17, 24 (الجمعة)", time: "8 ص - 1 ظ" }
-            }},
-            { name: "استشارية الباطنية (رجال)", doctors: {
-                d1: { name: "د. محمد عبد الكريم + محمد عبد الامير", days: "4, 11, 18, 25 (السبت) | 5, 12, 19, 26 (الأحد)", time: "8 ص - 1 ظ" },
-                d2: { name: "د. حيدر صبحي", days: "6, 13, 20, 27 (الاثنين)", time: "8 ص - 1 ظ" },
-                d3: { name: "د. حيدر صبحي + د. ایمن حسن", days: "7, 14, 21, 28 (الثلاثاء)", time: "8 ص - 1 ظ" },
-                d4: { name: "د. رافد رضا", days: "1, 8, 15, 22, 29 (الأربعاء)", time: "8 ص - 1 ظ" },
-                d5: { name: "د. حيدر سلوم", days: "2, 9, 16, 23, 30 (الخميس) | 3, 10, 17, 24 (الجمعة)", time: "8 ص - 1 ظ" }
-            }},
-            { name: "النسائية والتوليد (طب عدلي وخفر)", doctors: {
-                d1: { name: "د. رويدة عبد الله", days: "1, 7, 9, 13, 15, 16, 18, 21, 22, 25, 27, 28, 30 نيسان", time: "خفر / صباحي" },
-                d2: { name: "د. ميادة عبد الأمير", days: "2, 3, 4, 6, 9, 10, 11, 14, 17, 19, 20, 22, 25, 29 نيسان", time: "خفر / صباحي" },
-                d3: { name: "د. سارة محمد", days: "1, 5, 8, 12, 14, 18, 19, 22, 24, 27, 30 نيسان", time: "خفر / صباحي" },
-                d4: { name: "د. جیهان صاحب", days: "1, 3, 6, 8, 11, 13, 14, 15, 16, 21, 23, 26, 27, 29 نيسان", time: "خفر / صباحي" },
-                d5: { name: "د. عطور حسون", days: "2, 4, 5, 7, 12, 13, 15, 18, 20, 21, 23, 27, 28 نيسان", time: "خفر / صباحي" },
-                d6: { name: "د. ختام محمد", days: "2, 7, 8, 9, 14, 15, 16, 17, 21, 23, 24, 26, 29, 30 نيسان", time: "خفر / صباحي" },
-                d7: { name: "د. علا عبد الله", days: "2, 4, 6, 10, 11, 16, 19, 20, 25 نيسان", time: "خفر / صباحي" },
-                d8: { name: "د. حوراء رعد", days: "5, 6, 12, 13, 19, 20, 26, 29 نيسان", time: "خفر / صباحي" }
-            }},
-            { name: "الاستشارية النفسية", doctors: {
-                d1: { name: "د. صالح علي + د. زهراء محمد", days: "1, 8, 15, 22, 29 (الأربعاء)", time: "8 ص - 1 ظ" },
-                d2: { name: "د. جبار جودة فيصل", days: "2, 9, 16, 23, 30 (الخميس)", time: "8 ص - 1 ظ" },
-                d3: { name: "د. شاكر عبد الرزاق", days: "4, 11, 18, 25 (السبت)", time: "8 ص - 1 ظ" },
-                d4: { name: "د. محمد رضا ورور", days: "5, 12, 19, 26 (الأحد)", time: "8 ص - 1 ظ" },
-                d5: { name: "د. عامر فاضل الحيدري", days: "6, 13, 20, 27 (الاثنين)", time: "8 ص - 1 ظ" },
-                d6: { name: "د. علي لطيف كريم", days: "7, 14, 21, 28 (الثلاثاء)", time: "8 ص - 1 ظ" }
-            }},
-            { name: "استشارية ناظور الجهاز الهضمي", doctors: {
-                d1: { name: "د. احمد هاشم عباس", days: "1, 8, 15, 22, 29 (الأربعاء)", time: "8 ص - 1 ظ" },
-                d2: { name: "د. مؤيد كاظم النقيب", days: "4, 11, 18, 25 (السبت)", time: "8 ص - 1 ظ" },
-                d3: { name: "د. نجاح كاظم السعدي", days: "5, 12, 19, 26 (الاحد)", time: "8 ص - 1 ظ" }
-            }},
-            { name: "استشارية المفاصل", doctors: {
-                d1: { name: "د. حيدر محمد مهدي + عمار الجبوري", days: "كل يوم سبت", time: "8 ص - 1 ظ" },
-                d2: { name: "د. حسين البيضاني + د. خالد جواد", days: "كل يوم أحد", time: "8 ص - 1 ظ" },
-                d3: { name: "د. نقاء + د. ايناس + د. انوار", days: "كل يوم اثنين وثلاثاء", time: "8 ص - 1 ظ" },
-                d4: { name: "د. انوار + د. نقاء + د. خالد جواد", days: "كل يوم أربعاء", time: "8 ص - 1 ظ" },
-                d5: { name: "د. حسين البيضاني + د. ايناس", days: "كل يوم خميس", time: "8 ص - 1 ظ" }
-            }},
-            { name: "الاستشارية الجلدية", doctors: {
-                d1: { name: "د. هدى هادي", days: "كل يوم سبت", time: "8 ص - 1 ظ" },
-                d2: { name: "د. ميادة هادي + د. رشا کاظم", days: "كل يوم أحد", time: "8 ص - 1 ظ" },
-                d3: { name: "د. اسامة نعمة + د. الفت عايد", days: "كل يوم اثنين", time: "8 ص - 1 ظ" },
-                d4: { name: "د. لؤي محمد + د. هدى هادي", days: "كل يوم ثلاثاء", time: "8 ص - 1 ظ" },
-                d5: { name: "د. رشا كاظم + د. امال", days: "كل يوم أربعاء", time: "8 ص - 1 ظ" },
-                d6: { name: "د. الفت عايد + د. اسامة نعمة", days: "كل يوم خميس", time: "8 ص - 1 ظ" }
-            }},
-            { name: "استشارية الايكو القلبية", doctors: {
-                d1: { name: "د. بسمة عيدان", days: "كل يوم سبت، ثلاثاء", time: "8 ص - 1 ظ" },
-                d2: { name: "د. منتظر يحيى", days: "كل يوم أحد، أربعاء", time: "8 ص - 1 ظ" },
-                d3: { name: "د. از هر عباس", days: "كل يوم اثنين", time: "8 ص - 1 ظ" }
-            }},
-            { name: "استشارية الجملة العصبية", doctors: {
-                d1: { name: "د. اكرم علي كرم", days: "1, 8, 15, 22, 29 (الأربعاء)", time: "8 ص - 1 ظ" },
-                d2: { name: "د. فراس ظاهر مهدي", days: "4, 11, 18, 25 (السبت)", time: "8 ص - 1 ظ" },
-                d3: { name: "د. احمد ناظم شاكر", days: "5, 12, 19, 26 (الأحد)", time: "8 ص - 1 ظ" },
-                d4: { name: "د. محمود صادق الغرابي", days: "7, 14, 21, 28 (الثلاثاء)", time: "8 ص - 1 ظ" }
-            }},
-            { name: "الاستشارية التنفسية", doctors: {
-                d1: { name: "د. ميثم المعموري", days: "كل يوم إثنين", time: "8 ص - 1 ظ" }
-            }},
-            { name: "مركز العقم", doctors: {
-                d1: { name: "د. اطلال جمعه عبد الرسول", days: "كل يوم أحد واثنين", time: "8 ص - 1 ظ" },
-                d2: { name: "د. دجی حسن کاظم", days: "كل يوم ثلاثاء وأربعاء", time: "8 ص - 1 ظ" },
-                d3: { name: "د. علي بدن + د. عصام الحلي", days: "يوم الأحد والأربعاء", time: "8 ص - 1 ظ" }
-            }}
-        ];
-
-        window.uploadClinicsFromCode = async () => {
-            if(!confirm("سيتم رفع جميع الاستشاريات (19 قسم) والأطباء للجدول. استمرار؟")) return;
-            for (let clinic of hospitalClinicsDb) {
-                try {
-                    await push(ref(db, 'clinics'), clinic);
-                } catch(e) {
-                    console.error("Error uploading clinic:", clinic.name);
-                }
-            }
-            alert("✅ تم رفع الاستشاريات بنجاح! قم بتحديث الصفحة.");
         };
 
     </script>
