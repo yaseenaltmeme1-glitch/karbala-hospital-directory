@@ -1083,7 +1083,26 @@ ${carsContext}
                 } catch(e) { alert("❌ خطأ: يرجى التأكد من البيانات أو أن المستخدم موجود مسبقاً."); }
             } else {
                 try { 
-                    await signInWithEmailAndPassword(auth, email, p); 
+                    const res = await signInWithEmailAndPassword(auth, email, p); 
+                    const snap = await get(ref(db, 'users/' + res.user.uid));
+                    if(snap.exists()) {
+                        const data = snap.val();
+                        if(data.role !== 'clinic_admin') {
+                            alert("❌ عذراً: هذه البوابة مخصصة حصراً لمحرري الاستشاريات. لا يمكنك الدخول من هنا.");
+                            await signOut(auth);
+                            return;
+                        }
+                        if(data.status !== 'approved') {
+                            alert("❌ حسابك قيد المراجعة ولم يتم تفعيله بعد.");
+                            await signOut(auth);
+                            return;
+                        }
+                        alert("✅ تم تسجيل الدخول كـ (محرر استشاريات) بنجاح!");
+                        location.reload();
+                    } else {
+                        alert("❌ الحساب غير موجود!");
+                        await signOut(auth);
+                    }
                 } catch(e) { 
                     alert("❌ اسم المستخدم أو كلمة المرور غير صحيحة!"); 
                 }
@@ -1114,9 +1133,28 @@ ${carsContext}
                 } catch(e) { alert("خطأ: يرجى التأكد من البيانات أو أن المستخدم موجود مسبقاً."); }
             } else {
                 try { 
-                    await signInWithEmailAndPassword(auth, email, p); 
+                    const res = await signInWithEmailAndPassword(auth, email, p); 
+                    const snap = await get(ref(db, 'users/' + res.user.uid));
+                    if(snap.exists()) {
+                        const data = snap.val();
+                        if(data.role === 'clinic_admin') {
+                            alert("❌ عذراً: حسابك مخصص للاستشاريات فقط. يرجى الدخول من بوابة الاستشاريات المخصصة لك.");
+                            await signOut(auth);
+                            return;
+                        }
+                        if(data.status !== 'approved') {
+                            alert("❌ حسابك قيد المراجعة ولم يتم تفعيله بعد.");
+                            await signOut(auth);
+                            return;
+                        }
+                        alert("✅ تم تسجيل الدخول بنجاح!");
+                        location.reload();
+                    } else {
+                        alert("❌ الحساب غير موجود!");
+                        await signOut(auth);
+                    }
                 } catch(e) { 
-                    alert("❌ اسم المستخدم أو كلمة المرور غير صحيحة، أو الحساب غير موجود!"); 
+                    alert("❌ اسم المستخدم أو كلمة المرور غير صحيحة!"); 
                 }
             }
         };
@@ -1145,23 +1183,30 @@ ${carsContext}
                 }
                 
                 if(myData && myData.status === 'approved') {
-                    document.getElementById('authSection').style.display = 'none';
-                    document.getElementById('secureSearchSection').style.display = 'block';
                     document.getElementById('logoutBtn').style.display = 'block';
                     document.getElementById('clinicAuthModal').style.display = 'none';
                     
-                    if(myData.role === 'admin' || myData.role === 'clinic_admin') {
+                    if(myData.role === 'clinic_admin') {
+                        document.getElementById('secureSearchSection').style.display = 'none';
+                        document.getElementById('authSection').style.display = 'block';
+                        document.getElementById('authSection').innerHTML = '<i class="fas fa-lock stealth-icon" style="color:var(--danger); font-size:5rem;"></i><h3 style="color:var(--danger);">بوابة محظورة</h3><p style="color:var(--text); font-size:1.1rem; font-weight:bold;">حسابك الحالي مخصص حصراً لإدارة الاستشاريات. لا تملك صلاحية الدخول للاستعلام الأمني المركزي.</p>';
+
                         document.getElementById('homeAdminCard').style.display = 'block';
-                        if(myData.role === 'clinic_admin') {
-                            document.querySelector('#homeAdminCard h3').innerText = 'إدارة الاستشاريات';
-                            document.querySelectorAll('.admin-nav-btn').forEach(btn => {
-                                if(!btn.innerText.includes('الاستشاريات')) btn.style.display = 'none';
-                            });
-                        } else {
+                        document.querySelector('#homeAdminCard h3').innerText = 'إدارة الاستشاريات';
+                        document.querySelectorAll('.admin-nav-btn').forEach(btn => {
+                            if(!btn.innerText.includes('الاستشاريات')) btn.style.display = 'none';
+                        });
+                        initAdminPanel();
+                    } else {
+                        document.getElementById('authSection').style.display = 'none';
+                        document.getElementById('secureSearchSection').style.display = 'block';
+                        
+                        if(myData.role === 'admin') {
+                            document.getElementById('homeAdminCard').style.display = 'block';
                             document.querySelector('#homeAdminCard h3').innerText = 'لوحة الإدارة';
                             document.querySelectorAll('.admin-nav-btn').forEach(btn => btn.style.display = 'inline-block');
+                            initAdminPanel();
                         }
-                        initAdminPanel();
                     }
                 } else {
                     document.getElementById('authSection').style.display = 'none';
