@@ -1130,12 +1130,13 @@
             
             document.getElementById('scheduleModalTitle').innerHTML = `<div><i class="fas fa-notes-medical" style="color:var(--gold); margin-left:10px;"></i> ${clinic.name}</div>`;
             
-            // Build schedule map: doctorName -> daysText
-            const doctorSchedules = {};
+            // Build schedule map: daysText -> [doctorNames]
+            const scheduleByDays = {};
             if(clinic.doctors) {
                 Object.values(clinic.doctors).forEach(d => {
-                    if(!doctorSchedules[d.name]) doctorSchedules[d.name] = [];
-                    doctorSchedules[d.name].push(d.days.toString());
+                    const daysText = d.days.toString().trim();
+                    if(!scheduleByDays[daysText]) scheduleByDays[daysText] = [];
+                    scheduleByDays[daysText].push(d.name);
                 });
             }
 
@@ -1151,14 +1152,14 @@
                     <tbody>
             `;
             
-            const doctorNames = Object.keys(doctorSchedules);
-            if(doctorNames.length > 0) {
-                doctorNames.forEach(name => {
-                    const allDays = doctorSchedules[name].join(' | ');
+            const uniqueDays = Object.keys(scheduleByDays);
+            if(uniqueDays.length > 0) {
+                uniqueDays.forEach(days => {
+                    const doctorsMerged = scheduleByDays[days].join(' <span style="color:var(--danger); font-weight:900; margin:0 5px;">+</span> ');
                     html += `
                         <tr>
-                            <td><div class="td-content"><i class="fas fa-user-md td-icon" style="background:rgba(212, 175, 55, 0.1); color:var(--gold);"></i> <span><b style="color:var(--primary);">${name}</b></span></div></td>
-                            <td><div class="td-content"><i class="far fa-calendar-check td-icon"></i> <span>${allDays}</span></div></td>
+                            <td><div class="td-content"><i class="fas fa-user-md td-icon" style="background:rgba(212, 175, 55, 0.1); color:var(--gold);"></i> <span style="white-space: normal; line-height: 1.5;"><b style="color:var(--primary);">${doctorsMerged}</b></span></div></td>
+                            <td><div class="td-content"><i class="far fa-calendar-check td-icon"></i> <span style="white-space: normal; line-height: 1.5;">${days}</span></div></td>
                         </tr>
                     `;
                 });
