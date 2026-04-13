@@ -609,10 +609,29 @@
 
         <div id="adm-clinics" class="admin-pane">
             <div class="admin-section" style="border-right: 4px solid var(--secondary);">
-                <h3><i class="far fa-calendar-alt"></i> إعدادات فترة الجدول (الشهر)</h3>
-                <div style="display:flex; gap:10px;">
-                    <input type="text" id="clinicMonthInput" placeholder="مثال: جدول شهر أيار (5) لسنة 2026" style="flex:2; margin:0; padding:10px; border-radius:8px; border:1px solid #ddd; font-family:inherit;">
-                    <button class="btn-main" style="flex:1; margin:0; background:var(--primary);" onclick="saveClinicMonth()">💾 حفظ</button>
+                <h3><i class="far fa-calendar-alt"></i> إعدادات فترة الجدول (الشهر والسنة)</h3>
+                <div style="display:flex; gap:10px; flex-wrap: wrap;">
+                    <select id="clinicMonthSelect" class="stealth-input" style="flex:1; min-width:120px; margin:0; background:#f8f9fa!important; border-bottom-color:var(--secondary)!important;">
+                        <option value="1">كانون الثاني (1)</option>
+                        <option value="2">شباط (2)</option>
+                        <option value="3">آذار (3)</option>
+                        <option value="4">نيسان (4)</option>
+                        <option value="5">أيار (5)</option>
+                        <option value="6">حزيران (6)</option>
+                        <option value="7">تموز (7)</option>
+                        <option value="8">آب (8)</option>
+                        <option value="9">أيلول (9)</option>
+                        <option value="10">تشرين الأول (10)</option>
+                        <option value="11">تشرين الثاني (11)</option>
+                        <option value="12">كانون الأول (12)</option>
+                    </select>
+                    <select id="clinicYearSelect" class="stealth-input" style="flex:1; min-width:120px; margin:0; background:#f8f9fa!important; border-bottom-color:var(--secondary)!important;">
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                        <option value="2027">2027</option>
+                        <option value="2028">2028</option>
+                    </select>
+                    <button class="btn-main" style="flex:1; min-width:100px; margin:0; background:var(--primary);" onclick="saveClinicMonth()">💾 حفظ الفترة</button>
                 </div>
             </div>
 
@@ -631,8 +650,8 @@
                     </select>
                     <input type="text" id="docName" placeholder="اسم الطبيب (مثال: د. علي محمد)">
                     <div style="display:flex; gap:10px;">
-                        <input type="text" id="docDays" placeholder="الأيام (مثال: الأحد والثلاثاء)" style="flex:1;">
-                        <input type="text" id="docTime" placeholder="الوقت (مثال: 8 ص - 1 ظ)" style="flex:1;">
+                        <button class="stealth-input" style="flex:1; cursor:pointer; text-align:center; background:#f8f9fa!important;" onclick="openCalendarPicker()">📅 اختر التواريخ</button>
+                        <input type="hidden" id="docDays">
                     </div>
                     <button id="addDocBtn" class="btn-main" style="background:var(--secondary);" onclick="addDoctor()">إضافة الطبيب للجدول</button>
                 </div>
@@ -701,15 +720,15 @@
     </div>
 
     <div id="ai-chat-btn" onclick="toggleChat()">
-        <i class="fas fa-headset"></i>
+        <i class="fas fa-robot"></i>
     </div>
     <div id="ai-chat-window">
         <div class="chat-header">
-            <div><i class="fas fa-headset"></i> المرشد الذكي للمستشفى</div>
+            <div><i class="fas fa-robot"></i> المرشد الذكي للمستشفى</div>
             <button onclick="toggleChat()"><i class="fas fa-times"></i></button>
         </div>
         <div class="chat-body" id="chatBody">
-            <div class="chat-msg ai-msg">أهلاً بك أستاذ ياسين! أنا المرشد الذكي الخاص بمستشفى الإمام الحسن (ع). تفضل، اسألني عن أرقام الأقسام أو الاستشاريات وسأجيبك بكل سرور. 😊✨</div>
+            <div class="chat-msg ai-msg">أهلاً بك! أنا المرشد الذكي والمساعد الطبي لمستشفى الإمام الحسن (ع). تفضل، اسألني عن الأقسام، الاستشاريات، أو أي استشارة طبية وسأجيبك بكل سرور. 😊✨</div>
         </div>
         <div class="chat-footer">
             <input type="text" id="chatInput" placeholder="اسألني عن شيء في النظام..." onkeypress="if(event.key === 'Enter') sendMessageToAI()">
@@ -772,7 +791,16 @@
         </div>
     </div>
 
-    <div class="developer-footer">System Developed & Designed by <b>Yaseen ALtmeme</b> &copy; 2026</div>
+    <div id="calendarModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:6000; justify-content:center; align-items:center; backdrop-filter:blur(5px);">
+        <div class="profile-box" style="max-width:350px;">
+            <h3><i class="far fa-calendar-alt"></i> اختر أيام الدوام</h3>
+            <div id="calendarGrid" style="display:grid; grid-template-columns: repeat(7, 1fr); gap:5px; margin-bottom:20px;"></div>
+            <div style="display:flex; gap:10px;">
+                <button class="btn-main" style="background:var(--secondary);" onclick="confirmCalendarSelection()">حفظ التواريخ</button>
+                <button class="btn-main btn-close" style="margin-top:0;" onclick="document.getElementById('calendarModal').style.display='none'">إلغاء</button>
+            </div>
+        </div>
+    </div>
 
     <script src="cars.js"></script>
 
@@ -865,7 +893,7 @@
                 chatWindow.style.display = 'none'; 
                 // تصفير المحادثة والذاكرة عند الإغلاق 
                 aiConversationHistory = []; 
-                document.getElementById('chatBody').innerHTML = `<div class="chat-msg ai-msg">أهلاً بك أستاذ ياسين! أنا المرشد الذكي والمساعد الطبي لمستشفى الإمام الحسن (ع). تفضل، اسألني عن الأقسام، الاستشاريات، أو أي استشارة طبية وسأجيبك بكل سرور. 😊✨</div>`; 
+                document.getElementById('chatBody').innerHTML = `<div class="chat-msg ai-msg">أهلاً بك! أنا المرشد الذكي والمساعد الطبي لمستشفى الإمام الحسن (ع). تفضل، اسألني عن الأقسام، الاستشاريات، أو أي استشارة طبية وسأجيبك بكل سرور. 😊✨</div>`; 
             } else { 
                 chatWindow.style.display = 'flex'; 
             } 
@@ -1080,30 +1108,46 @@
             const clinic = liveClinics.find(c => c.key === clinicId);
             if(!clinic) return;
             
-            let subtitle = currentClinicMonth ? `<span style="font-size:0.9rem; display:block; opacity:0.8;">${currentClinicMonth}</span>` : '';
+            let subtitle = currentClinicMonth ? `<span style="font-size:0.9rem; display:block; opacity:0.8;">الفترة: ${currentClinicMonth}</span>` : '';
             document.getElementById('scheduleModalTitle').innerHTML = `<div><i class="fas fa-notes-medical" style="color:var(--gold); margin-left:10px;"></i> ${clinic.name} ${subtitle}</div>`;
             
+            // Build schedule map: date -> [doctors]
+            const scheduleMap = {};
+            if(clinic.doctors) {
+                Object.values(clinic.doctors).forEach(d => {
+                    const dates = d.days.toString().split(',');
+                    dates.forEach(date => {
+                        const trimmedDate = date.trim();
+                        if(!scheduleMap[trimmedDate]) scheduleMap[trimmedDate] = [];
+                        scheduleMap[trimmedDate].push(d.name);
+                    });
+                });
+            }
+
+            // Sort dates numerically
+            const sortedDates = Object.keys(scheduleMap).sort((a,b) => parseInt(a) - parseInt(b));
+
             let html = `
-            <div class="schedule-table-container">
-                <div style="overflow-x:auto;">
-                    <table class="schedule-table">
-                        <thead>
-                            <tr>
-                                <th style="width:30%;">التاريخ / اليوم المصادف</th>
-                                <th style="width:35%;">اسم الطبيب</th>
-                                <th style="width:35%;">الوقت</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+            <div class="schedule-table-container" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                <table class="schedule-table" style="min-width: 450px; white-space: nowrap;">
+                    <thead>
+                        <tr>
+                            <th style="width:20%;">التاريخ</th>
+                            <th style="width:40%;">اسم الطبيب 1</th>
+                            <th style="width:40%;">اسم الطبيب 2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
             `;
             
-            if(clinic.doctors && Object.keys(clinic.doctors).length > 0) {
-                Object.values(clinic.doctors).forEach(d => {
+            if(sortedDates.length > 0) {
+                sortedDates.forEach(date => {
+                    const docs = scheduleMap[date];
                     html += `
                         <tr>
-                            <td><div class="td-content"><i class="far fa-calendar-check td-icon"></i> <span>${d.days}</span></div></td>
-                            <td><div class="td-content"><i class="fas fa-user-md td-icon" style="background:rgba(212, 175, 55, 0.1); color:var(--gold);"></i> <span><b style="color:var(--primary);">${d.name}</b></span></div></td>
-                            <td><div class="td-content"><i class="far fa-clock td-icon"></i> <span>${d.time}</span></div></td>
+                            <td><div class="td-content"><i class="far fa-calendar-check td-icon"></i> <span>${date}</span></div></td>
+                            <td><div class="td-content">${docs[0] ? `<i class="fas fa-user-md td-icon" style="background:rgba(212, 175, 55, 0.1); color:var(--gold);"></i> <span><b style="color:var(--primary);">${docs[0]}</b></span>` : '-'}</div></td>
+                            <td><div class="td-content">${docs[1] ? `<i class="fas fa-user-md td-icon" style="background:rgba(52, 152, 219, 0.1); color:var(--secondary);"></i> <span><b style="color:var(--primary);">${docs[1]}</b></span>` : '-'}</div></td>
                         </tr>
                     `;
                 });
@@ -1111,7 +1155,7 @@
                 html += `<tr><td colspan="3" style="text-align:center; padding:25px; color:var(--danger); font-weight:bold;">لا يوجد جدول متاح حالياً لهذه الاستشارية</td></tr>`;
             }
             
-            html += `</tbody></table></div></div>`;
+            html += `</tbody></table></div>`;
             
             document.getElementById('scheduleModalBody').innerHTML = html;
             document.getElementById('clinicScheduleModal').style.display = 'flex';
@@ -1396,15 +1440,21 @@
 
         onValue(ref(db, 'settings/clinicMonth'), (s) => {
             currentClinicMonth = s.val() || "";
-            if(document.getElementById('clinicMonthInput')) {
-                document.getElementById('clinicMonthInput').value = currentClinicMonth;
+            if(document.getElementById('clinicMonthSelect')) {
+                const parts = currentClinicMonth.match(/(\d+)\/(\d+)/);
+                if(parts) {
+                    document.getElementById('clinicMonthSelect').value = parts[1];
+                    document.getElementById('clinicYearSelect').value = parts[2];
+                }
             }
         });
 
         window.saveClinicMonth = async () => {
-            const val = document.getElementById('clinicMonthInput').value.trim();
+            const month = document.getElementById('clinicMonthSelect').value;
+            const year = document.getElementById('clinicYearSelect').value;
+            const val = `${month}/${year}`;
             await set(ref(db, 'settings/clinicMonth'), val);
-            showAlert('✅ تم حفظ عنوان الشهر بنجاح!', "success");
+            showAlert('✅ تم حفظ فترة الجدول بنجاح!', "success");
         };
 
         onValue(ref(db, 'clinics'), (s) => {
@@ -1419,6 +1469,49 @@
             }
         });
 
+        let selectedDates = new Set();
+        window.openCalendarPicker = () => {
+            selectedDates.clear();
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+            
+            // Get days in current period
+            const month = document.getElementById('clinicMonthSelect').value || 1;
+            const year = document.getElementById('clinicYearSelect').value || 2026;
+            const daysInMonth = new Date(year, month, 0).getDate();
+
+            for(let i=1; i<=daysInMonth; i++) {
+                const dayBtn = document.createElement('div');
+                dayBtn.innerText = i;
+                dayBtn.style.padding = '10px';
+                dayBtn.style.border = '1px solid #eee';
+                dayBtn.style.borderRadius = '5px';
+                dayBtn.style.textAlign = 'center';
+                dayBtn.style.cursor = 'pointer';
+                dayBtn.style.fontWeight = 'bold';
+                
+                dayBtn.onclick = () => {
+                    if(selectedDates.has(i)) {
+                        selectedDates.delete(i);
+                        dayBtn.style.background = 'white';
+                        dayBtn.style.color = 'var(--text)';
+                    } else {
+                        selectedDates.add(i);
+                        dayBtn.style.background = 'var(--secondary)';
+                        dayBtn.style.color = 'white';
+                    }
+                };
+                grid.appendChild(dayBtn);
+            }
+            document.getElementById('calendarModal').style.display = 'flex';
+        };
+
+        window.confirmCalendarSelection = () => {
+            const sortedDates = Array.from(selectedDates).sort((a,b) => a-b);
+            document.getElementById('docDays').value = sortedDates.join(',');
+            document.getElementById('calendarModal').style.display = 'none';
+            showAlert(`✅ تم اختيار ${sortedDates.length} أيام`, "success");
+        };
         window.renderAdminClinics = () => {
             const select = document.getElementById('selectClinicForDoc');
             const list = document.getElementById('adminClinicsList');
@@ -1435,7 +1528,7 @@
                     if (c.doctors) {
                         matchingDocs = Object.entries(c.doctors).filter(([dKey, d]) => {
                             if (!q) return true;
-                            return c.name.toLowerCase().includes(q) || d.name.toLowerCase().includes(q) || d.days.toLowerCase().includes(q);
+                            return c.name.toLowerCase().includes(q) || d.name.toLowerCase().includes(q) || (d.days && d.days.toString().toLowerCase().includes(q));
                         });
                     }
                     if (q && !c.name.toLowerCase().includes(q) && matchingDocs.length === 0) return null;
@@ -1447,10 +1540,10 @@
                         <div style="background:white; padding:10px; border-radius:5px; margin-top:8px; border:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
                             <div>
                                 <b style="color:var(--text);"><i class="fas fa-user-md" style="color:var(--secondary);"></i> ${d.name}</b><br>
-                                <span style="font-size:0.8rem; color:var(--muted);"><i class="far fa-calendar-alt"></i> ${d.days} | <i class="far fa-clock"></i> ${d.time}</span>
+                                <span style="font-size:0.8rem; color:var(--muted);"><i class="far fa-calendar-alt"></i> التواريخ: ${d.days}</span>
                             </div>
                             <div style="display:flex; gap:5px;">
-                                <button class="btn-main" style="width:auto; padding:5px 12px; margin:0; background:#f39c12; color:white;" onclick="editDoctor('${c.key}', '${dKey}', '${d.name.replace(/'/g,"\\'")}', '${d.days.replace(/'/g,"\\'")}', '${d.time.replace(/'/g,"\\'")}')" title="تعديل"><i class="fas fa-edit"></i></button>
+                                <button class="btn-main" style="width:auto; padding:5px 12px; margin:0; background:#f39c12; color:white;" onclick="editDoctor('${c.key}', '${dKey}', '${d.name.replace(/'/g,"\\'")}', '${d.days}')" title="تعديل"><i class="fas fa-edit"></i></button>
                                 <button class="btn-main btn-danger" style="width:auto; padding:5px 12px; margin:0;" onclick="deleteDoctor('${c.key}', '${dKey}')" title="حذف الطبيب"><i class="fas fa-trash"></i></button>
                             </div>
                         </div>
@@ -1460,12 +1553,25 @@
                     <div style="background:#f8f9fa; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid #ddd; border-right: 4px solid var(--gold);">
                         <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px dashed #ccc; padding-bottom:8px; margin-bottom:10px;">
                             <h4 style="margin:0; color:var(--primary); font-size:1.1rem;">${c.name}</h4>
-                            <button class="btn-main btn-danger" style="width:auto; padding:5px 12px; margin:0; background: #c0392b;" onclick="deleteClinic('${c.key}')"><i class="fas fa-trash-alt"></i> حذف القسم</button>
+                            <div style="display:flex; gap:5px;">
+                                <button class="btn-main btn-gold" style="width:auto; padding:5px 12px; margin:0;" onclick="editClinicName('${c.key}', '${c.name.replace(/'/g,"\\'")}')"><i class="fas fa-edit"></i> تعديل</button>
+                                <button class="btn-main btn-danger" style="width:auto; padding:5px 12px; margin:0; background: #c0392b;" onclick="deleteClinic('${c.key}')"><i class="fas fa-trash-alt"></i> حذف</button>
+                            </div>
                         </div>
                         ${docs}
                     </div>
                     `;
                 }).join('') || '<p style="text-align:center; color:var(--muted);">لا توجد استشاريات مطابقة للبحث.</p>';
+            }
+        };
+
+        window.editClinicName = async (key, oldName) => {
+            const newName = prompt("أدخل اسم الاستشارية الجديد:", oldName);
+            if(newName && newName !== oldName) {
+                try {
+                    await update(ref(db, `clinics/${key}`), { name: newName });
+                    showAlert("✅ تم تحديث اسم الاستشارية بنجاح!", "success");
+                } catch(e) { showAlert("❌ حدث خطأ أثناء التحديث.", "error"); }
             }
         };
 
@@ -1482,11 +1588,10 @@
         window.currentEditClinicId = null;
         window.currentEditDocId = null;
 
-        window.editDoctor = (clinicKey, docKey, name, days, time) => {
+        window.editDoctor = (clinicKey, docKey, name, days) => {
             document.getElementById('selectClinicForDoc').value = clinicKey;
             document.getElementById('docName').value = name;
             document.getElementById('docDays').value = days;
-            document.getElementById('docTime').value = time;
             
             window.currentEditClinicId = clinicKey;
             window.currentEditDocId = docKey;
@@ -1502,23 +1607,21 @@
             const clinicId = document.getElementById('selectClinicForDoc').value;
             const name = document.getElementById('docName').value.trim();
             const days = document.getElementById('docDays').value.trim();
-            const time = document.getElementById('docTime').value.trim();
             
             if(!clinicId) return showAlert('⚠️ الرجاء اختيار الاستشارية من القائمة أولاً.', "error");
-            if(!name || !days || !time) return showAlert('⚠️ الرجاء إكمال بيانات الطبيب والمواعيد.', "error");
+            if(!name || !days) return showAlert('⚠️ الرجاء إكمال بيانات الطبيب واختيار التواريخ.', "error");
             
             try {
                 if (window.currentEditDocId) {
-                    await update(ref(db, `clinics/${window.currentEditClinicId}/doctors/${window.currentEditDocId}`), { name, days, time });
+                    await update(ref(db, `clinics/${window.currentEditClinicId}/doctors/${window.currentEditDocId}`), { name, days });
                     showAlert('✅ تم حفظ تعديلات الطبيب بنجاح!', "success");
                 } else {
-                    await push(ref(db, `clinics/${clinicId}/doctors`), { name, days, time });
+                    await push(ref(db, `clinics/${clinicId}/doctors`), { name, days });
                     showAlert('✅ تم إضافة الطبيب للجدول بنجاح!', "success");
                 }
                 
                 document.getElementById('docName').value = '';
                 document.getElementById('docDays').value = '';
-                document.getElementById('docTime').value = '';
                 
                 window.currentEditClinicId = null;
                 window.currentEditDocId = null;
