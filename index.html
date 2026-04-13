@@ -149,8 +149,14 @@
         .public-clinic-card .go-icon { background: rgba(0,0,0,0.03); width: 35px; height: 35px; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: var(--muted); transition: 0.3s; }
         .public-clinic-card:hover .go-icon { background: var(--gold); color: white; transform: translateX(-5px); box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
 
-        .schedule-table-container { background: white; border-radius: 15px; padding: 5px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #f0f2f5; overflow: hidden; margin-top: 15px; }
-        .schedule-table { width:100%; border-collapse: collapse; background: white; font-size: 0.95rem; }
+        .schedule-table-container { background: white; border-radius: 15px; padding: 5px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #f0f2f5; overflow-x: auto; margin-top: 15px; -webkit-overflow-scrolling: touch; }
+        .schedule-table { width:100%; border-collapse: collapse; background: white; font-size: 0.95rem; min-width: 400px; white-space: nowrap; }
+        
+        @media (max-width: 768px) {
+            .schedule-table { font-size: 0.85rem; }
+            .schedule-table th, .schedule-table td { padding: 12px 10px; }
+            .td-icon { padding: 6px; font-size: 1rem; }
+        }
         .schedule-table thead { background: linear-gradient(135deg, var(--primary), var(--secondary)); color:white; }
         .schedule-table th { padding: 18px 15px; text-align: right; font-weight: 900; font-size: 1rem; letter-spacing: 0.5px; border-bottom: 3px solid rgba(0,0,0,0.1); white-space: nowrap; }
         .schedule-table tbody tr { transition: all 0.3s ease; border-bottom: 1px solid #f0f2f5; }
@@ -323,7 +329,7 @@
             <button id="backBtn" onclick="showTab('home')" style="display:none; background:none; border:none; font-size:1.5rem; color:var(--primary); cursor:pointer; padding:0; margin-left:10px; transition: transform 0.2s;"><i class="fas fa-arrow-right"></i></button>
             <div class="hospital-logo" id="hospitalLogo"><i class="fas fa-hospital"></i></div>
             <div class="title-text">
-                <h1>مستشفى الإمام الحسن (ع)</h1>
+                <h1>مستشفى الإمام الحسن المجتبى (ع)</h1>
                 <p style="margin:0; font-size:0.75rem; color:var(--muted);">النظام المركزي - Yaseen ALtmeme</p>
             </div>
         </div>
@@ -720,15 +726,15 @@
     </div>
 
     <div id="ai-chat-btn" onclick="toggleChat()">
-        <i class="fas fa-robot"></i>
+        <i class="fas fa-brain"></i>
     </div>
     <div id="ai-chat-window">
         <div class="chat-header">
-            <div><i class="fas fa-robot"></i> المرشد الذكي للمستشفى</div>
+            <div><i class="fas fa-brain"></i> المرشد الذكي للمستشفى</div>
             <button onclick="toggleChat()"><i class="fas fa-times"></i></button>
         </div>
         <div class="chat-body" id="chatBody">
-            <div class="chat-msg ai-msg">أهلاً بك! أنا المرشد الذكي والمساعد الطبي لمستشفى الإمام الحسن (ع). تفضل، اسألني عن الأقسام، الاستشاريات، أو أي استشارة طبية وسأجيبك بكل سرور. 😊✨</div>
+            <div class="chat-msg ai-msg">أهلاً بك! أنا المرشد الذكي والمساعد الطبي لمستشفى الإمام الحسن المجتبى (ع). تفضل، اسألني عن الأقسام، الاستشاريات، أو أي استشارة طبية وسأجيبك بكل سرور. 😊✨</div>
         </div>
         <div class="chat-footer">
             <input type="text" id="chatInput" placeholder="اسألني عن شيء في النظام..." onkeypress="if(event.key === 'Enter') sendMessageToAI()">
@@ -798,6 +804,20 @@
             <div style="display:flex; gap:10px;">
                 <button class="btn-main" style="background:var(--secondary);" onclick="confirmCalendarSelection()">حفظ التواريخ</button>
                 <button class="btn-main btn-close" style="margin-top:0;" onclick="document.getElementById('calendarModal').style.display='none'">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="editClinicModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:6000; justify-content:center; align-items:center; backdrop-filter:blur(5px);">
+        <div id="customAlertBox" style="border: 2px solid var(--gold); background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);">
+            <i class="fas fa-edit" style="font-size:3.5rem; color:var(--gold); margin-bottom:15px; animation: pulseIcon 1s infinite alternate;"></i>
+            <h3 style="color:var(--primary); font-weight:900;">تعديل اسم الاستشارية</h3>
+            <div class="admin-form" style="margin-top:20px;">
+                <input type="text" id="editClinicNameInput" class="stealth-input" style="text-align:center; background:#f8f9fa!important; border-bottom:3px solid var(--gold)!important;">
+            </div>
+            <div style="display:flex; gap:10px; margin-top:20px;">
+                <button class="btn-main btn-gold" style="flex:1; margin:0; color:black;" onclick="confirmClinicNameEdit()">حفظ التعديل</button>
+                <button class="btn-main btn-close" style="flex:1; margin:0;" onclick="document.getElementById('editClinicModal').style.display='none'">إلغاء</button>
             </div>
         </div>
     </div>
@@ -893,7 +913,7 @@
                 chatWindow.style.display = 'none'; 
                 // تصفير المحادثة والذاكرة عند الإغلاق 
                 aiConversationHistory = []; 
-                document.getElementById('chatBody').innerHTML = `<div class="chat-msg ai-msg">أهلاً بك! أنا المرشد الذكي والمساعد الطبي لمستشفى الإمام الحسن (ع). تفضل، اسألني عن الأقسام، الاستشاريات، أو أي استشارة طبية وسأجيبك بكل سرور. 😊✨</div>`; 
+                document.getElementById('chatBody').innerHTML = `<div class="chat-msg ai-msg">أهلاً بك! أنا المرشد الذكي والمساعد الطبي لمستشفى الإمام الحسن المجتبى (ع). تفضل، اسألني عن الأقسام، الاستشاريات، أو أي استشارة طبية وسأجيبك بكل سرور. 😊✨</div>`; 
             } else { 
                 chatWindow.style.display = 'flex'; 
             } 
@@ -1108,51 +1128,44 @@
             const clinic = liveClinics.find(c => c.key === clinicId);
             if(!clinic) return;
             
-            let subtitle = currentClinicMonth ? `<span style="font-size:0.9rem; display:block; opacity:0.8;">الفترة: ${currentClinicMonth}</span>` : '';
-            document.getElementById('scheduleModalTitle').innerHTML = `<div><i class="fas fa-notes-medical" style="color:var(--gold); margin-left:10px;"></i> ${clinic.name} ${subtitle}</div>`;
+            document.getElementById('scheduleModalTitle').innerHTML = `<div><i class="fas fa-notes-medical" style="color:var(--gold); margin-left:10px;"></i> ${clinic.name}</div>`;
             
-            // Build schedule map: date -> [doctors]
-            const scheduleMap = {};
+            // Build schedule map: doctorName -> [dates]
+            const doctorSchedules = {};
             if(clinic.doctors) {
                 Object.values(clinic.doctors).forEach(d => {
-                    const dates = d.days.toString().split(',');
-                    dates.forEach(date => {
-                        const trimmedDate = date.trim();
-                        if(!scheduleMap[trimmedDate]) scheduleMap[trimmedDate] = [];
-                        scheduleMap[trimmedDate].push(d.name);
-                    });
+                    const dates = d.days.toString().split(',').map(date => date.trim()).filter(date => date);
+                    if(!doctorSchedules[d.name]) doctorSchedules[d.name] = [];
+                    doctorSchedules[d.name] = [...new Set([...doctorSchedules[d.name], ...dates])];
+                    doctorSchedules[d.name].sort((a,b) => parseInt(a) - parseInt(b));
                 });
             }
 
-            // Sort dates numerically
-            const sortedDates = Object.keys(scheduleMap).sort((a,b) => parseInt(a) - parseInt(b));
-
             let html = `
-            <div class="schedule-table-container" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
-                <table class="schedule-table" style="min-width: 450px; white-space: nowrap;">
+            <div class="schedule-table-container">
+                <table class="schedule-table">
                     <thead>
                         <tr>
-                            <th style="width:20%;">التاريخ</th>
-                            <th style="width:40%;">اسم الطبيب 1</th>
-                            <th style="width:40%;">اسم الطبيب 2</th>
+                            <th style="width:40%;">اسم الطبيب</th>
+                            <th style="width:60%;">التواريخ (${currentClinicMonth || ''})</th>
                         </tr>
                     </thead>
                     <tbody>
             `;
             
-            if(sortedDates.length > 0) {
-                sortedDates.forEach(date => {
-                    const docs = scheduleMap[date];
+            const doctorNames = Object.keys(doctorSchedules);
+            if(doctorNames.length > 0) {
+                doctorNames.forEach(name => {
+                    const dates = doctorSchedules[name].join(', ');
                     html += `
                         <tr>
-                            <td><div class="td-content"><i class="far fa-calendar-check td-icon"></i> <span>${date}</span></div></td>
-                            <td><div class="td-content">${docs[0] ? `<i class="fas fa-user-md td-icon" style="background:rgba(212, 175, 55, 0.1); color:var(--gold);"></i> <span><b style="color:var(--primary);">${docs[0]}</b></span>` : '-'}</div></td>
-                            <td><div class="td-content">${docs[1] ? `<i class="fas fa-user-md td-icon" style="background:rgba(52, 152, 219, 0.1); color:var(--secondary);"></i> <span><b style="color:var(--primary);">${docs[1]}</b></span>` : '-'}</div></td>
+                            <td><div class="td-content"><i class="fas fa-user-md td-icon" style="background:rgba(212, 175, 55, 0.1); color:var(--gold);"></i> <span><b style="color:var(--primary);">${name}</b></span></div></td>
+                            <td><div class="td-content"><i class="far fa-calendar-check td-icon"></i> <span>${dates}</span></div></td>
                         </tr>
                     `;
                 });
             } else {
-                html += `<tr><td colspan="3" style="text-align:center; padding:25px; color:var(--danger); font-weight:bold;">لا يوجد جدول متاح حالياً لهذه الاستشارية</td></tr>`;
+                html += `<tr><td colspan="2" style="text-align:center; padding:25px; color:var(--danger); font-weight:bold;">لا يوجد جدول متاح حالياً لهذه الاستشارية</td></tr>`;
             }
             
             html += `</tbody></table></div>`;
@@ -1565,12 +1578,19 @@
             }
         };
 
-        window.editClinicName = async (key, oldName) => {
-            const newName = prompt("أدخل اسم الاستشارية الجديد:", oldName);
-            if(newName && newName !== oldName) {
+        window.editClinicName = (key, oldName) => {
+            window.currentEditingClinicKey = key;
+            document.getElementById('editClinicNameInput').value = oldName;
+            document.getElementById('editClinicModal').style.display = 'flex';
+        };
+
+        window.confirmClinicNameEdit = async () => {
+            const newName = document.getElementById('editClinicNameInput').value.trim();
+            if(newName) {
                 try {
-                    await update(ref(db, `clinics/${key}`), { name: newName });
+                    await update(ref(db, `clinics/${window.currentEditingClinicKey}`), { name: newName });
                     showAlert("✅ تم تحديث اسم الاستشارية بنجاح!", "success");
+                    document.getElementById('editClinicModal').style.display = 'none';
                 } catch(e) { showAlert("❌ حدث خطأ أثناء التحديث.", "error"); }
             }
         };
