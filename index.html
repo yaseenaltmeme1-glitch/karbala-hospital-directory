@@ -1130,42 +1130,53 @@
             
             document.getElementById('scheduleModalTitle').innerHTML = `<div><i class="fas fa-notes-medical" style="color:var(--gold); margin-left:10px;"></i> ${clinic.name}</div>`;
             
-            // Build schedule map: doctorName -> [dates]
-            const doctorSchedules = {};
+            // Build schedule map: numericDay -> [doctorNames]
+            const scheduleMap = {};
             if(clinic.doctors) {
                 Object.values(clinic.doctors).forEach(d => {
                     const dates = d.days.toString().split(',').map(date => date.trim()).filter(date => date);
-                    if(!doctorSchedules[d.name]) doctorSchedules[d.name] = [];
-                    doctorSchedules[d.name] = [...new Set([...doctorSchedules[d.name], ...dates])];
-                    doctorSchedules[d.name].sort((a,b) => parseInt(a) - parseInt(b));
+                    dates.forEach(date => {
+                        // Keep only numeric part for the day
+                        const day = date.replace(/[^0-9]/g, '');
+                        if(day) {
+                            if(!scheduleMap[day]) scheduleMap[day] = [];
+                            if(!scheduleMap[day].includes(d.name)) {
+                                scheduleMap[day].push(d.name);
+                            }
+                        }
+                    });
                 });
             }
+
+            // Sort days numerically
+            const sortedDays = Object.keys(scheduleMap).sort((a,b) => parseInt(a) - parseInt(b));
 
             let html = `
             <div class="schedule-table-container">
                 <table class="schedule-table">
                     <thead>
                         <tr>
-                            <th style="width:40%;">اسم الطبيب</th>
-                            <th style="width:60%;">التواريخ (${currentClinicMonth || ''})</th>
+                            <th style="width:20%;">التاريخ (${currentClinicMonth || ''})</th>
+                            <th style="width:40%;">اسم الطبيب 1</th>
+                            <th style="width:40%;">اسم الطبيب 2</th>
                         </tr>
                     </thead>
                     <tbody>
             `;
             
-            const doctorNames = Object.keys(doctorSchedules);
-            if(doctorNames.length > 0) {
-                doctorNames.forEach(name => {
-                    const dates = doctorSchedules[name].join(', ');
+            if(sortedDays.length > 0) {
+                sortedDays.forEach(day => {
+                    const doctors = scheduleMap[day];
                     html += `
                         <tr>
-                            <td><div class="td-content"><i class="fas fa-user-md td-icon" style="background:rgba(212, 175, 55, 0.1); color:var(--gold);"></i> <span><b style="color:var(--primary);">${name}</b></span></div></td>
-                            <td><div class="td-content"><i class="far fa-calendar-check td-icon"></i> <span>${dates}</span></div></td>
+                            <td><div class="td-content"><i class="far fa-calendar-check td-icon"></i> <span>${day}</span></div></td>
+                            <td><div class="td-content">${doctors[0] ? `<i class="fas fa-user-md td-icon" style="background:rgba(212, 175, 55, 0.1); color:var(--gold);"></i> <span><b style="color:var(--primary);">${doctors[0]}</b></span>` : '-'}</div></td>
+                            <td><div class="td-content">${doctors[1] ? `<i class="fas fa-user-md td-icon" style="background:rgba(52, 152, 219, 0.1); color:var(--secondary);"></i> <span><b style="color:var(--primary);">${doctors[1]}</b></span>` : '-'}</div></td>
                         </tr>
                     `;
                 });
             } else {
-                html += `<tr><td colspan="2" style="text-align:center; padding:25px; color:var(--danger); font-weight:bold;">لا يوجد جدول متاح حالياً لهذه الاستشارية</td></tr>`;
+                html += `<tr><td colspan="3" style="text-align:center; padding:25px; color:var(--danger); font-weight:bold;">لا يوجد جدول متاح حالياً لهذه الاستشارية</td></tr>`;
             }
             
             html += `</tbody></table></div>`;
