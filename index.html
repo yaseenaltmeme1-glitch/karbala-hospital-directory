@@ -2202,6 +2202,36 @@
             event.target.value = '';
         };
 
+        // دالة الرفع من الكونسول
+window.runSync = async () => {
+    console.log("⏳ جاري الاتصال بالفايربيس وفحص السيارات القديمة...");
+    
+    // 1. نجيب كل السيارات الموجودة بالفايربيس حتى ما نكررها
+    const snapshot = await get(ref(db, 'cars'));
+    const existingData = snapshot.val() || {};
+    
+    // 2. نعزل أرقام اللوحات القديمة بصفحة
+    const existingPlates = [];
+    for (let key in existingData) {
+        existingPlates.push(existingData[key].plate);
+    }
+
+    let addedCount = 0;
+
+    // 3. نفتر على الملف مالتك (cars.js) سيارة سيارة
+    for (const localCar of carDb) {
+        // إذا السيارة ما موجودة بالفايربيس، ارفعها
+        if (!existingPlates.includes(localCar.plate)) {
+            await push(ref(db, 'cars'), localCar);
+            addedCount++;
+            console.log("➕ تم رفع سيارة جديدة: " + localCar.plate);
+        }
+    }
+
+    console.log("✅ انتهت العملية! عدد السيارات الجديدة اللي انضافت: " + addedCount);
+    showAlert("اكتمل الرفع! انضافت " + addedCount + " سيارة جديدة للفايربيس، والقديم بقى على حطته.", "success");
+};
+
     </script>
     
     <script>
