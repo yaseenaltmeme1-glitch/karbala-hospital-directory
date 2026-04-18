@@ -22,74 +22,176 @@
         .hospital-logo { width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: white; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; box-shadow: 0 0 15px rgba(0,75,73,0.5); animation: pulseIcon 2s infinite alternate; }
         .title-text h1 { margin: 0; font-size: 1.1rem; font-weight: 900; color: var(--primary); }
         
-        /* 🌟 ثورة الشاشة الرئيسية (البطاقات الذكية والنيون) 🌟 */
-        .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 15px; padding: 10px; perspective: 1000px; }
-        
-        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0px); } }
-        @keyframes popIn { 0% { opacity: 0; transform: scale(0.8) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
-        @keyframes pulseIcon { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
-        @keyframes neonGlowLogin { 0% { box-shadow: 0 0 10px rgba(39, 174, 96, 0.4), 0 0 20px rgba(39, 174, 96, 0.2); } 50% { box-shadow: 0 0 20px rgba(39, 174, 96, 0.7), 0 0 30px rgba(39, 174, 96, 0.4); } 100% { box-shadow: 0 0 10px rgba(39, 174, 96, 0.4), 0 0 20px rgba(39, 174, 96, 0.2); } }
-        @keyframes neonPulseRed { from { text-shadow: 0 0 10px #e74c3c, 0 0 20px #e74c3c, 0 0 30px #e74c3c; transform: scale(1); } to { text-shadow: 0 0 5px #e74c3c, 0 0 10px #c0392b, 0 0 15px #c0392b; transform: scale(1.05); } }
-        @keyframes borderGlow { 0% { border-color: rgba(0, 124, 119, 0.2); box-shadow: 0 0 10px rgba(0, 124, 119, 0.1); } 100% { border-color: rgba(0, 124, 119, 0.6); box-shadow: 0 0 20px rgba(0, 124, 119, 0.3); } }
-
-        .home-card { 
-            background: linear-gradient(145deg, #ffffff, #fdfdfd); 
-            border-radius: 18px; 
-            padding: 25px 15px; 
-            text-align: center; 
-            cursor: pointer; 
-            position: relative; 
+        /* 🚀 واجهة الفضاء السينمائي السائل (Liquid Cinematic Space) 🚀 */
+        #home { 
+            background: radial-gradient(circle at center, #004b49 0%, #001a19 70%, #000000 100%);
+            min-height: calc(100vh - 80px);
+            display: none; /* Changed from flex to handle tab logic properly */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
             overflow: hidden;
-            border: 1px solid rgba(0, 75, 73, 0.1);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.04), inset 0 0 0 1px rgba(255,255,255,0.5);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            animation: popIn 0.6s ease-out forwards, float 6s ease-in-out infinite;
-            opacity: 0; 
+            padding: 0;
+            margin: 0;
         }
-
-        .home-card:nth-child(1) { animation-delay: 0.1s, 0s; }
-        .home-card:nth-child(2) { animation-delay: 0.2s, 1s; }
-        .home-card:nth-child(3) { animation-delay: 0.3s, 2s; }
-        .home-card:nth-child(4) { animation-delay: 0.4s, 3s; }
-        .home-card:nth-child(5) { animation-delay: 0.5s, 4s; }
-        .home-card:nth-child(6) { animation-delay: 0.6s, 5s; }
-        #homeAdminCard, #mainLoginBtn { animation-delay: 0.7s, 0s; } 
-
-        .home-card:hover, .home-card:active { 
-            transform: translateY(-8px) scale(1.02); 
-            box-shadow: 0 15px 30px rgba(0, 75, 73, 0.15), 0 0 20px rgba(0, 75, 73, 0.1); 
-            border-color: var(--primary);
-        }
-
-        .home-card:nth-child(1):active i { color: var(--primary); text-shadow: 0 0 15px var(--primary); animation: pulseIcon 0.5s ease; }
-        .home-card:nth-child(2):active i { color: var(--primary); text-shadow: 0 0 15px var(--primary); animation: pulseIcon 0.5s ease; }
-        .home-card:nth-child(3):active i { color: var(--secondary); text-shadow: 0 0 15px var(--secondary); animation: pulseIcon 0.5s ease; }
-        .home-card:nth-child(4):active i { color: var(--danger); text-shadow: 0 0 15px var(--danger); animation: pulseIcon 0.5s ease; }
-        .home-card:nth-child(5):active i { color: var(--primary); text-shadow: 0 0 15px var(--primary); animation: pulseIcon 0.5s ease; }
-        .home-card:nth-child(6):active i { color: var(--gold); text-shadow: 0 0 15px var(--gold); animation: pulseIcon 0.5s ease; }
-
-        .home-card::before {
-            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%);
-            transform: skewX(-25deg); transition: 0.5s; z-index: 1; opacity: 0;
-        }
-        .home-card:active::before { left: 125%; transition: 0.5s ease-in-out; opacity: 1; }
-
-        .home-card i { font-size: 2.8rem; color: var(--primary); margin-bottom: 12px; transition: 0.3s; z-index: 2; position: relative; }
-        .home-card h3 { margin: 0; font-size: 1.05rem; color: var(--text); font-weight: 900; z-index: 2; position: relative; letter-spacing: -0.5px; }
         
-        #homeAdminCard { background: linear-gradient(135deg, var(--primary), #002b2a); border: 1px solid var(--gold); box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2); }
-        #homeAdminCard:active { box-shadow: 0 15px 35px rgba(212, 175, 55, 0.4), 0 0 20px rgba(212, 175, 55, 0.3); transform: translateY(-5px) scale(1.02); }
-        #homeAdminCard:active i { text-shadow: 0 0 20px var(--gold); animation: pulseIcon 0.5s ease; }
+        /* Add active state for #home */
+        #home.active {
+            display: flex;
+        }
 
-        /* تسجيل الدخول المركزي الفخم */
-        .home-login-card { background: linear-gradient(135deg, #27ae60, #2ecc71); grid-column: span 2; border: 2px solid rgba(255,255,255,0.5); animation: popIn 0.5s ease forwards, float 6s infinite, neonGlowLogin 3s infinite; }
-        .home-login-card:hover { transform: translateY(-5px) scale(1.01); border-color: white; }
-        .home-login-card i, .home-login-card h3 { color: white !important; text-shadow: 0 4px 15px rgba(0,0,0,0.2) !important; }
+        .center-stage {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+            z-index: 5;
+        }
+
+        .breathing-logo {
+            width: 160px;
+            height: 160px;
+            background: rgba(0, 75, 73, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 4.5rem;
+            color: #004b49;
+            box-shadow: 0 0 40px rgba(0, 75, 73, 0.3);
+            animation: breathingGlow 4s ease-in-out infinite;
+            backdrop-filter: blur(15px);
+            transition: transform 0.1s ease-out;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .breathing-logo i {
+            filter: drop-shadow(0 0 15px #004b49);
+            color: #004b49;
+        }
+
+        @keyframes breathingGlow {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 40px rgba(0, 75, 73, 0.3); border-color: rgba(212, 175, 55, 0.2); }
+            50% { transform: scale(1.05); box-shadow: 0 0 80px rgba(0, 124, 119, 0.5), 0 0 20px rgba(212, 175, 55, 0.3); border-color: rgba(212, 175, 55, 0.6); }
+        }
+
+        .floating-orb {
+            position: absolute;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: orbFloat 8s ease-in-out infinite;
+            z-index: 8;
+        }
+
+        .floating-orb i { font-size: 1.6rem; color: #fff; margin-bottom: 3px; }
+        .floating-orb span { font-size: 0.65rem; color: rgba(255,255,255,0.8); font-weight: 700; }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(15px, -20px) rotate(5deg); }
+            50% { transform: translate(-10px, 15px) rotate(-5deg); }
+            75% { transform: translate(10px, 10px) rotate(3deg); }
+        }
+
+        .login-orb { top: 15%; right: 15%; border-color: rgba(39, 174, 96, 0.4); animation-delay: 0s; box-shadow: 0 0 15px rgba(39, 174, 96, 0.2); }
+        .ai-orb { bottom: 25%; left: 12%; border-color: rgba(0, 124, 119, 0.4); animation-delay: -2s; box-shadow: 0 0 15px rgba(0, 124, 119, 0.2); }
+        .ann-orb { top: 20%; left: 15%; border-color: rgba(231, 76, 60, 0.4); animation-delay: -4s; box-shadow: 0 0 15px rgba(231, 76, 60, 0.2); }
+
+        .floating-orb:hover {
+            transform: scale(1.15) translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--gold);
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
+        }
+
+        .liquid-dock {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 92%;
+            max-width: 550px;
+            height: 75px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(25px);
+            border-radius: 40px;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            padding: 0 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+        }
+
+        .dock-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 65px;
+            position: relative;
+        }
+
+        .dock-item i { font-size: 1.5rem; margin-bottom: 5px; transition: 0.3s; }
+        .dock-item span { font-size: 0.7rem; font-weight: 900; opacity: 0.8; }
+
+        .dock-item:hover {
+            color: var(--gold);
+            transform: translateY(-8px);
+        }
+
+        .dock-item:hover i { transform: scale(1.2); filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5)); }
+
+        .dock-item::after {
+            content: ''; position: absolute; bottom: -12px; width: 5px; height: 5px;
+            background: var(--gold); border-radius: 50%; opacity: 0; transition: 0.3s;
+        }
+        .dock-item:hover::after { opacity: 1; bottom: -8px; }
+
+        /* Animation for clicking a dock item (Liquid Expansion) */
+        .liquid-expand-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--primary); z-index: 9999;
+            clip-path: circle(0% at var(--x, 50%) var(--y, 50%));
+            opacity: 0;
+            pointer-events: none;
+            transition: clip-path 0.6s ease-in-out, opacity 0.2s ease;
+        }
+        .liquid-expand-overlay.active { 
+            clip-path: circle(150% at var(--x, 50%) var(--y, 50%));
+            opacity: 1;
+        }
+
+        @keyframes pulseIcon { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
+        @keyframes neonGlowLogin { 0% { box-shadow: 0 0 10px rgba(39, 174, 96, 0.4); } 50% { box-shadow: 0 0 25px rgba(39, 174, 96, 0.7); } 100% { box-shadow: 0 0 10px rgba(39, 174, 96, 0.4); } }
+        @keyframes neonPulseRed { from { text-shadow: 0 0 10px #e74c3c; transform: scale(1); } to { text-shadow: 0 0 20px #e74c3c; transform: scale(1.05); } }
+        @keyframes borderGlow { 0% { border-color: rgba(0, 124, 119, 0.2); } 100% { border-color: rgba(0, 124, 119, 0.6); } }
 
         /* Tabs Handling */
         .tab-content { display: none; padding: 15px; animation: fadeIn 0.4s; max-width: 600px; margin: auto; }
         .tab-content.active { display: block; }
+        /* Override #home.tab-content since we changed it to flex */
+        #home.tab-content.active { display: flex; }
 
         /* 🚀 النافذة الموحدة لتسجيل الدخول 🚀 */
         #unifiedLoginModal, #createUserModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 75, 73, 0.85); z-index: 5000; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
@@ -350,41 +452,54 @@
     </div>
 
     <div id="home" class="tab-content active">
-        <div class="home-grid">
-            
-            <div class="home-card home-login-card" id="mainLoginBtn" onclick="document.getElementById('unifiedLoginModal').style.display='flex'">
-                <i class="fas fa-user-shield"></i>
-                <h3>بوابة الدخول المركزية</h3>
+        <div class="liquid-expand-overlay" id="liquidOverlay"></div>
+        
+        <div class="center-stage">
+            <div class="breathing-logo" id="mainHospitalLogo">
+                <i class="fas fa-hospital"></i>
             </div>
 
-            <div class="home-card" onclick="showTab('phones')">
-                <i class="fas fa-phone-alt"></i>
-                <h3>دليل الهواتف</h3>
+            <div class="floating-orb login-orb" id="mainLoginBtn" onclick="document.getElementById('unifiedLoginModal').style.display='flex'">
+                <i class="fas fa-user-shield"></i>
+                <span>الدخول</span>
             </div>
-            <div class="home-card" onclick="showTab('quick')">
-                <i class="fas fa-car"></i>
-                <h3>فحص العجلات</h3>
+
+            <div class="floating-orb ai-orb" onclick="toggleChat()">
+                <i class="fas fa-brain"></i>
+                <span>المرشد</span>
             </div>
-            <div class="home-card" onclick="showTab('clinics-tab')">
-                <i class="fas fa-hospital-user" style="color:var(--secondary);"></i>
-                <h3 style="color:var(--secondary);">الاستشاريات</h3>
-            </div>
-            <div class="home-card" onclick="showTab('announcements')">
+
+            <div class="floating-orb ann-orb" onclick="showTab('announcements')">
                 <span id="annBadge" class="blink-dot" style="display:none;"></span>
-                <i class="fas fa-bullhorn" style="color:var(--danger);"></i>
-                <h3 style="color:var(--danger);">الإعلانات</h3>
+                <i class="fas fa-bullhorn"></i>
+                <span>الإعلانات</span>
             </div>
-            <div class="home-card" onclick="showTab('secure')">
+        </div>
+
+        <div class="liquid-dock">
+            <div class="dock-item" onclick="triggerLiquidEffect(event, 'phones')">
+                <i class="fas fa-phone-alt"></i>
+                <span>الهواتف</span>
+            </div>
+            <div class="dock-item" onclick="triggerLiquidEffect(event, 'quick')">
+                <i class="fas fa-car"></i>
+                <span>العجلات</span>
+            </div>
+            <div class="dock-item" onclick="triggerLiquidEffect(event, 'clinics-tab')">
+                <i class="fas fa-hospital-user"></i>
+                <span>الاستشاريات</span>
+            </div>
+            <div class="dock-item" onclick="triggerLiquidEffect(event, 'secure')">
                 <i class="fas fa-shield-alt"></i>
-                <h3>الاستعلام الأمني</h3>
+                <span>الأمن</span>
             </div>
-            <div class="home-card" onclick="showTab('about')">
-                <i class="fas fa-info-circle" style="color:var(--gold);"></i>
-                <h3 style="color:var(--text);">حول النظام</h3>
+            <div class="dock-item" onclick="triggerLiquidEffect(event, 'about')">
+                <i class="fas fa-info-circle"></i>
+                <span>حول</span>
             </div>
-            <div class="home-card" id="homeAdminCard" style="display:none; grid-column: span 2;" onclick="showTab('admin')">
-                <i class="fas fa-user-cog" style="color:var(--gold); margin-bottom: 5px;"></i>
-                <h3 style="color:white;">لوحة الإدارة</h3>
+            <div class="dock-item" id="homeAdminCard" style="display:none;" onclick="triggerLiquidEffect(event, 'admin')">
+                <i class="fas fa-user-cog"></i>
+                <span>الإدارة</span>
             </div>
         </div>
     </div>
@@ -691,7 +806,7 @@
                     <button class="btn-main btn-gold" style="flex:1; min-width:150px; box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);" onclick="document.getElementById('createUserModal').style.display='flex'"><i class="fas fa-user-plus"></i> إنشاء حساب موظف جديد</button>
                 </div>
 
-                <h4 style="margin-bottom: 15px; color:var(--primary); font-weight:900;"><i class="fas fa-list"></i> قائمة الموظفين</h4>
+                <h4 style="margin-bottom: 15px; color:var(--primary); font-weight:900;"><i class="fas fa-list"></i> قائمة الموظفين (<span id="countUsers">0</span>)</h4>
                 <div id="usersList"></div>
             </div>
         </div>
@@ -779,7 +894,7 @@
                     <div style="flex:1;">
                         <label style="font-size:0.85rem; color:var(--muted); font-weight:bold;">الحالة</label>
                         <select id="profStatus" style="background:#f8f9fa;">
-                            <option value="approved">مفعل (approved)</option>
+                            <option value="approved">م مفعل (approved)</option>
                             <option value="pending">قيد الانتظار (pending)</option>
                         </select>
                     </div>
@@ -953,7 +1068,7 @@
  
             // 🚀 الشخصية الجديدة: مساعد طبي ومرشد مستشفى 🚀 
             const systemPrompt = ` 
- أنت "المرشد الذكي" لمستشفى الإمام الحسن المجتبى (ع)، ومساعد طبي افتراضي ذكي جداً. 
+ أنا "المرشد الذكي" لمستشفى الإمام الحسن المجتبى (ع)، ومساعد طبي افتراضي ذكي جداً. 
  مطور النظام هو المبدع: "Yaseen ALtmeme". 
  أسلوبك: محترم، مهني، لطيف، ومتعاطف مع المرضى، وتستخدم الإيموجيات بشكل مناسب. 
  
@@ -1051,8 +1166,8 @@
         };
 
         setTimeout(() => {
-            document.getElementById('countCars').innerText = liveCars.length;
-            document.getElementById('countPhones').innerText = livePhones.length;
+            if(document.getElementById('countCars')) document.getElementById('countCars').innerText = liveCars.length;
+            if(document.getElementById('countPhones')) document.getElementById('countPhones').innerText = livePhones.length;
             searchPhones();
         }, 100);
 
@@ -1290,8 +1405,10 @@
                     // Admin Panel Visibility Check
                     let hasAnyAdmin = roles.admin || roles.clinic || roles.phone;
                     if(hasAnyAdmin) {
-                        document.getElementById('homeAdminCard').style.display = 'block';
-                        document.querySelector('#homeAdminCard h3').innerText = roles.admin ? 'لوحة الإدارة' : (roles.clinic ? 'إدارة الاستشاريات' : 'إدارة النظام');
+                        document.getElementById('homeAdminCard').style.display = 'flex';
+                        if(document.querySelector('#homeAdminCard span')) {
+                            document.querySelector('#homeAdminCard span').innerText = roles.admin ? 'الإدارة' : (roles.clinic ? 'استشاريات' : 'النظام');
+                        }
                         
                         let firstVisibleTab = null;
                         document.querySelectorAll('.admin-nav-btn').forEach(btn => {
@@ -1312,7 +1429,7 @@
                 document.getElementById('secureSearchSection').style.display = 'none';
                 document.getElementById('secureLockedSection').style.display = 'flex';
                 document.getElementById('homeAdminCard').style.display = 'none';
-                document.getElementById('mainLoginBtn').style.display = 'block';
+                document.getElementById('mainLoginBtn').style.display = 'flex';
             }
         });
 
@@ -1670,7 +1787,7 @@
                 for(let k in data) livePhones.push({...data[k], key: k});
                 localStorage.setItem('offlinePhones', JSON.stringify(livePhones));
             }
-            document.getElementById('countPhones').innerText = livePhones.length; 
+            if(document.getElementById('countPhones')) document.getElementById('countPhones').innerText = livePhones.length; 
             searchPhones(); 
         });
 
@@ -1681,7 +1798,7 @@
                 for(let k in data) liveCars.push({...data[k], key: k});
                 localStorage.setItem('offlineCars', JSON.stringify(liveCars));
             }
-            document.getElementById('countCars').innerText = liveCars.length;
+            if(document.getElementById('countCars')) document.getElementById('countCars').innerText = liveCars.length;
         });
 
         window.searchPhones = () => {
@@ -1843,7 +1960,7 @@
                         </div>`;
                 }
                 document.getElementById('usersList').innerHTML = html;
-                document.getElementById('countUsers').innerText = count;
+                if(document.getElementById('countUsers')) document.getElementById('countUsers').innerText = count;
             });
         }
         
@@ -2232,6 +2349,47 @@ window.runSync = async () => {
     showAlert("اكتمل الرفع! انضافت " + addedCount + " سيارة جديدة للفايربيس، والقديم بقى على حطته.", "success");
 };
 
+        // 🚀 تأثيرات الواجهة السينمائية السائلة (Liquid Cinematic Effects) 🚀
+        
+        // 1. تأثير الجيروسكوب / الماوس للشعار المركزي
+        const mainLogo = document.getElementById('mainHospitalLogo');
+        if (mainLogo) {
+            document.addEventListener('mousemove', (e) => {
+                if (document.getElementById('home').classList.contains('active')) {
+                    const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+                    const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+                    mainLogo.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+                }
+            });
+
+            // دعم الجيروسكوب للموبايل
+            window.addEventListener('deviceorientation', (e) => {
+                if (document.getElementById('home').classList.contains('active')) {
+                    const tiltX = (e.beta - 45) / 2; // تعديل الزاوية المريحة للموبايل
+                    const tiltY = e.gamma / 2;
+                    mainLogo.style.transform = `rotateY(${tiltY}deg) rotateX(${tiltX}deg)`;
+                }
+            });
+        }
+
+        // 2. تأثير التمدد السائل عند الانتقال (Liquid Transition)
+        window.triggerLiquidEffect = (e, tabId) => {
+            const overlay = document.getElementById('liquidOverlay');
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = e.clientX || rect.left + rect.width / 2;
+            const y = e.clientY || rect.top + rect.height / 2;
+            
+            overlay.style.setProperty('--x', x + 'px');
+            overlay.style.setProperty('--y', y + 'px');
+            overlay.classList.add('active');
+            
+            setTimeout(() => {
+                showTab(tabId);
+                setTimeout(() => {
+                    overlay.classList.remove('active');
+                }, 600);
+            }, 400);
+        };
     </script>
     
     <script>
