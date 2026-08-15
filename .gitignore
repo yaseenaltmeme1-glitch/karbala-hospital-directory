@@ -1,0 +1,57 @@
+# ── بيانات شخصية — لا تُرفع إلى GitHub إطلاقاً ────────────────────────
+# مستودع GitHub Pages عام بطبيعته، ورفع هذين الملفين يعني نشر:
+#   staff.json      → ٤٠٥٤ موظفاً (اسم + وظيفة + قسم)
+#   cars-seed.json  → ٢٧٠٣ عجلة مع ٢٤٦٩ رقم هاتف
+# على github.com للعالم كله — وهذا يُبطل كل الحماية التي بُنيت في الخادم.
+#
+# الملفان يبقيان على جهازك ويُنشران مع الدوال عبر firebase deploy.
+# ⚠️ احتفظ بنسخة احتياطية منهما خارج المشروع — لا يوجد مصدر آخر لهما.
+functions/data/
+
+# ── الأسرار — لا يجوز رفع أي منها إطلاقاً ─────────────────────────────
+.env
+.env.*
+!.env.example
+service-account*.json
+serviceAccount*.json
+credentials*.json
+*-firebase-adminsdk-*.json
+*.pem
+*.p12
+*.key
+
+# ── الاعتماديات والبناء ───────────────────────────────────────────────
+node_modules/
+dist/
+*.tsbuildinfo
+
+# ── خرائط المصدر (لا تُنشر مع الإنتاج) ────────────────────────────────
+*.map
+
+# ── Firebase ──────────────────────────────────────────────────────────
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+firestore-debug.log
+database-debug.log
+ui-debug.log
+.runtimeconfig.json
+
+# ── نسخ احتياطية محلية وملفات مؤقتة ───────────────────────────────────
+*.bak
+*.orig
+*.tmp
+Hospital_Backup_*.json
+
+# ── إعدادات أدوات التطوير المحلية (لا علاقة لها بالمشروع) ─────────────
+.claude/
+
+# ── نظام التشغيل والمحررات ────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# ملاحظة: لا نتجاهل src/ ولا index.html ولا icon.png ولا manifest.json
+# ولا database.rules.json — كلها ملفات مشروع ضرورية.
